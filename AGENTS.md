@@ -1,20 +1,41 @@
 # Agent Rules
 
 ## Project
-Research changes in U.S. utilities' market beta and market-adjusted correlation with technology stocks since 1990.
-Follow `proposal.md` for data, methods, and checks.
-Use Python for analysis and Streamlit for the dashboard.
+Study U.S. utilities' market beta and market-adjusted correlation with technology stocks since 1990. Follow `proposal.md` for the research design.
 
 ## Conventions
-- Python code: `code/`; tests: `tests/`; task specifications: `tasks/`; generated results: `output/`.
-- After substantial tasks, save `logs/YYYY-MM-DD-task.md`: task, changed files, test commands and actual output, issues, dependency versions (if relevant), and `Human review: pending`.
-- Never commit secrets or sensitive data.
+
+### Paths
+- `README.md`: Project overview, setup, and execution.
+- `proposal.md`: Research question, data, methods, and validation.
+- `AGENTS.md`: Persistent agent instructions.
+- `code/`: Python analysis scripts.
+- `data/`: Original datasets.
+- `tests/`: Automated validation tests.
+- `tasks/`: Written agent task specifications.
+- `logs/`: Optional supplementary logs.
+- `literature/`: References and research notes.
+- `paper/`: Research drafts and interpretation.
+- `output/`: Generated tables and figures.
+- `.gitignore`: Files excluded from Git.
+
+### Packages
+- Use Python for data processing and statistical analysis.
+- Use Streamlit for interactive visualization.
+- Record dependencies in `requirements.txt`.
+
+### Logging
+- Document code changes through descriptive Git commits and pull requests.
+- Report executed tests, failures, and unresolved issues upon task completion.
+- If LLM APIs are used in the research pipeline, separately log calls, parameters, outputs, and errors without secrets. Do not duplicate Codex chat transcripts.
 
 ## Restrictions
-- Work on a separate branch; follow the permitted scope in `tasks/`. Do not commit directly to `main`.
-- Ask before changing `proposal.md`, `data/`, `tests/`, or research methods.
-- Fix and document period-selection rules before estimating risk metrics. Stop if decisions are unclear or tests fail.
+- Follow the permitted scope of the current task, whether in `tasks/` or directly specified by the user.
+- Work on a separate Git branch; do not commit directly to `main`.
+- Ask before modifying `proposal.md`, raw data, tests, or research methods.
+- Specify, document, and obtain approval for period-selection parameters and assignment rules before estimating risk metrics.
+- Never commit credentials or sensitive data; stop and ask when requirements are unclear or validation fails.
 
 ## Completion
-- Run relevant tests and report their actual results; do not claim success without output.
-- Summarize changes, unresolved issues, and checks requiring independent human review.
+- Run relevant tests and report actual results; agent-written tests do not replace independent human review.
+- Summarize changes, remaining issues, and items requiring human verification.
