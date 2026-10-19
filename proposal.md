@@ -4,7 +4,7 @@
 
 ## 1. Research Question
 
-How do the U.S. utilities sector's market beta and market-adjusted correlation with technology stocks compare across historical periods, including the dot-com era and the AI boom?
+How has the defensive behavior of U.S. utility stocks, measured by market beta, evolved since 1990, and how has their partial correlation with technology stocks changed, particularly during the AI boom?
 
 ## 2. Data and Sample
 
@@ -18,7 +18,7 @@ Data will be obtained from the **Kenneth French Data Library**, using value-weig
 
 ### Sample
 
-- **Period:** January 1980 to the latest available date.
+- **Period:** January 1990 to the latest available date.
 - **Frequency:** Daily returns compounded into weekly returns. Weekly market excess returns will be calculated from separately compounded total market returns and risk-free returns.
 - **Comparison periods:** The following historical phases are defined **in advance as comparison categories**, not fixed return-dependent date boundaries:
 
@@ -36,7 +36,7 @@ Data will be obtained from the **Kenneth French Data Library**, using value-weig
 
 All measures will use aligned **weekly excess returns**. Utilities and technology weekly total returns will be converted into excess returns by subtracting the compounded weekly risk-free return. **Mkt-RF** is an excess-return factor at its original frequency; weekly market excess returns will be computed consistently from separately compounded daily total market returns and RF, rather than summing or compounding daily excess returns as if they were total returns.
 
-- **Market Beta — Sharpe (1964):** Sensitivity of utilities excess returns to broad U.S. market excess returns:
+- **Market Beta — Sharpe (1964):** The primary measure of defensiveness, defined here as low systematic market risk: sensitivity of utilities excess returns to broad U.S. market excess returns. A lower beta indicates less market sensitivity, but does not necessarily imply protection during downturns:
 
   $$\beta_{U,M}=\frac{\operatorname{Cov}(R_U^e,R_M^e)}{\operatorname{Var}(R_M^e)}$$
 
