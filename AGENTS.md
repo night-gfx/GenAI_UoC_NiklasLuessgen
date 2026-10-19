@@ -27,7 +27,6 @@ Study U.S. utilities' market beta and market-adjusted correlation with technolog
 ### Logging
 - Document code changes through descriptive Git commits and pull requests.
 - Report executed tests, failures, and unresolved issues upon task completion.
-- If LLM APIs are used in the research pipeline, separately log calls, parameters, outputs, and errors without secrets. Do not duplicate Codex chat transcripts.
 
 ## Restrictions
 - Follow the permitted scope of the current task, whether in `tasks/` or directly specified by the user.
