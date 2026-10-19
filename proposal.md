@@ -1,7 +1,5 @@
 # The Changing Defensive Role of U.S. Utilities During the AI Boom
 
-**Status: Draft (work in progress).** The turning-point algorithm settings, assignment rules, and exact comparison dates are not yet finalized. They must be fixed and documented before estimating the risk measures.
-
 ## 1. Research Question
 
 How has the defensive behavior of U.S. utility stocks, measured by market beta, evolved since 1990, and how has their partial correlation with technology stocks changed, particularly during the AI boom?
