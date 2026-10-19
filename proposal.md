@@ -8,7 +8,7 @@ How has the defensive behavior of U.S. utility stocks, measured by market beta, 
 
 ### Data
 
-Data will be obtained from the **Kenneth French Data Library**, using value-weighted portfolios:
+The original datasets have already been downloaded from the **Kenneth French Data Library** and are stored locally in `data/`. The analysis uses value-weighted portfolios:
 
 - **Utilities:** 12-industry portfolio (Utils).
 - **Technology:** 12-industry portfolio (BusEq), used as a technology-oriented proxy.
@@ -83,7 +83,7 @@ The two period-specific estimates will be reported in a comparison table. Change
 
 ### Delegated to the AI Agent
 
-- **Data Preparation:** Download and process utilities, technology, and market data using predefined sources and rules.
+- **Data Preparation:** Process the utilities, technology, and market datasets already downloaded using predefined sources and rules.
 - **Analysis:** Calculate weekly returns, market beta, and partial correlation; run the specified regressions and report all predefined comparisons.
 - **Checks and Documentation:** Run predefined checks and record code changes, results, failures, and package versions.
 - **Reporting:** Produce comparison tables, develop a Streamlit dashboard, and draft verifiable data and methods descriptions.
