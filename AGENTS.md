@@ -31,8 +31,7 @@ Study U.S. utilities' market beta and market-adjusted correlation with technolog
 - Follow the permitted scope of the current task, whether in `tasks/` or directly specified by the user.
 - Work on a separate Git branch; do not commit directly to `main`.
 - Ask before modifying `proposal.md`, raw data, tests, or research methods.
-- Specify, document, and obtain approval for period-selection parameters and assignment rules before estimating risk metrics.
-- Never commit credentials or sensitive data; stop and ask when requirements are unclear or validation fails.
+- - Never commit credentials or sensitive data; stop and ask when requirements are unclear or validation fails.
 
 ## Completion
 - Run relevant tests and report actual results; agent-written tests do not replace independent human review.
