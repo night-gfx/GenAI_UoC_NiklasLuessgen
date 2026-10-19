@@ -6,26 +6,31 @@
 
 How do the U.S. utilities sector's market beta, downside beta, and market-adjusted correlation with technology stocks compare across historical periods, including the dot-com era and the AI boom?
 
-## 2. Data, Sample and Exclusions
+## 2. Data and Sample
 
 ### Data
 
 Data will be obtained from the **Kenneth French Data Library**, using value-weighted portfolios:
 
 - **Utilities:** 12-industry portfolio (Utils).
-- **Technology:** 12-industry portfolio (BusEq).
+- **Technology:** 12-industry portfolio (BusEq), used as a technology-oriented proxy.
 - **Market:** Fama–French market factor (Mkt-RF) and risk-free rate (RF).
 
 ### Sample
 
 - **Period:** January 1980 to the latest available date.
-- **Frequency:** Daily returns compounded into weekly returns. Weekly market excess returns will be calculated from separately compounded market and risk-free returns.
-- **Comparison periods:** Dot-com boom, dot-com bust, pre-AI period, and AI era. Historical turning points will be identified using Pagan and Sossounov (2003) on a cumulative return index constructed from monthly BusEq returns. Algorithm settings, selection rules, and date boundaries remain open and must be fixed before estimation.
+- **Frequency:** Daily returns compounded into weekly returns. Weekly market excess returns will be calculated from separately compounded total market returns and risk-free returns.
+- **Comparison periods:** The following historical phases are defined **in advance as comparison categories**, not fixed return-dependent date boundaries:
 
-### Exclusions
+| Comparison phase | Illustrative reference years (not final boundaries) |
+| --- | --- |
+| Dot-com boom | 1995–1999 |
+| Dot-com bust | 2000–2002 |
+| Global financial crisis | 2007–2009 |
+| Pre-AI benchmark | 2017–2019 |
+| AI boom | 2023–latest available date |
 
-- Non-U.S. markets and individual stocks.
-- Observations with missing return data.
+**Period selection to avoid cherry-picking:** Actual start/end dates will be determined systematically using the **Pagan and Sossounov (2003)** turning-point procedure applied to a cumulative index of **monthly BusEq total returns**. The procedure's settings and explicit rules for assigning detected market phases to the comparison categories (including how to handle the financial crisis, pre-AI benchmark, incomplete AI-era phase, and phases for which a matching turning point cannot be identified) must be specified, fixed, and documented **before** estimating beta or partial correlations. Illustrative reference years will not override the precommitted algorithm and assignment rules. Any phases not identified consistently will be reported as such, rather than selected manually to fit the results.
 
 ## 3. Constructed Variables
 
