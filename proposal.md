@@ -34,25 +34,21 @@ Data will be obtained from the **Kenneth French Data Library**, using value-weig
 
 ## 3. Constructed Variables
 
-All measures will use weekly returns. Utilities and technology returns will be converted to excess returns by subtracting the risk-free rate; **Mkt-RF** already represents market excess returns.
+All measures will use aligned **weekly excess returns**. Utilities and technology weekly total returns will be converted into excess returns by subtracting the compounded weekly risk-free return. **Mkt-RF** is an excess-return factor at its original frequency; weekly market excess returns will be computed consistently from separately compounded daily total market returns and RF, rather than summing or compounding daily excess returns as if they were total returns.
 
-- **Market Beta — Sharpe (1964):** Sensitivity of utilities returns to market movements:
+- **Market Beta — Sharpe (1964):** Sensitivity of utilities excess returns to broad U.S. market excess returns:
 
-  $$\beta_{U,M}=\frac{\operatorname{Cov}(R_U,R_M)}{\operatorname{Var}(R_M)}=\rho_{U,M}\frac{\sigma_U}{\sigma_M}$$
+  $$\beta_{U,M}=\frac{\operatorname{Cov}(R_U^e,R_M^e)}{\operatorname{Var}(R_M^e)}$$
 
-  Beta will also be decomposed into **market correlation** and **relative volatility** (utilities volatility divided by market volatility).
+  Estimated as the slope of a simple OLS regression of utilities excess returns on market excess returns, including an intercept.
 
-- **Downside Beta — Ang, Chen & Xing (2006):** Market sensitivity in weeks when market excess returns are below their mean within the comparison period:
+- **Partial Correlation — Kenett et al. (2015):** Market-adjusted co-movement between utilities and the technology proxy:
 
-  $$\beta^-_{U,M}=\frac{\operatorname{Cov}(R_U,R_M\mid R_M<\overline{R}_M)}{\operatorname{Var}(R_M\mid R_M<\overline{R}_M)}$$
+  $$\rho_{U,T\mid M}=\operatorname{Corr}(\varepsilon_U,\varepsilon_T)$$
 
-- **Partial Correlation — Kenett et al. (2015):** Correlation between utilities and technology returns after controlling for the overall market:
+  Here, $\varepsilon_U$ and $\varepsilon_T$ are residuals from **separate OLS regressions** of utilities and BusEq weekly excess returns on the same market excess-return series, each including an intercept. Their correlation measures association after removing the common linear market component. It is **not** a technology beta or evidence that AI caused utilities' returns.
 
-  $$\rho_{U,T\mid M}=\frac{\rho_{U,T}-\rho_{U,M}\rho_{T,M}}{\sqrt{(1-\rho_{U,M}^2)(1-\rho_{T,M}^2)}}$$
-
-  This will be calculated by separately regressing utilities and technology excess returns on market excess returns and correlating the residuals.
-
-*In the formulas, returns are excess returns.*
+*In the formulas, superscript $e$ denotes excess returns.*
 
 ## 4. Identification and Specification
 
