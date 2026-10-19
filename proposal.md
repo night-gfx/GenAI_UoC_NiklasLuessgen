@@ -102,9 +102,3 @@ The analysis will use Python with **pandas** and **numpy** for data processing a
 - **Independent Review:** Inspect code changes, independently rerun checks, validate results, and decide whether to merge the agent's branch.
 - **Interpretation and Writing:** Explain the findings and write the motivation, interpretation, conclusions, and limitations.
 - **Control:** Approve and document methodological changes.
-
-## References
-
-- Pagan, A. R., & Sossounov, K. A. (2003). A simple framework for analysing bull and bear markets. *Journal of Applied Econometrics, 18*(1), 23–46. https://doi.org/10.1002/jae.664
-- Kenett, D. Y., Huang, X., Vodenska, I., Havlin, S., & Stanley, H. E. (2015). Partial correlation analysis: Applications for financial markets. *Quantitative Finance, 15*(4), 569–578. https://doi.org/10.1080/14697688.2014.946660
-- Sharpe, W. F. (1964). Capital asset prices: A theory of market equilibrium under conditions of risk. *The Journal of Finance, 19*(3), 425–442. https://doi.org/10.1111/j.1540-6261.1964.tb02865.x
