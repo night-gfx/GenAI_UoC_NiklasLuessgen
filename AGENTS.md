@@ -1,8 +1,7 @@
 # Agent Rules
 
 ## Project
-Study U.S. utilities' market beta and market-adjusted correlation with technology stocks since 1990. Follow `proposal.md` for the research design.
-
+Study U.S. utilities' market beta and market-adjusted correlation with technology stocks since 1990.
 ## Conventions
 
 ### Paths
