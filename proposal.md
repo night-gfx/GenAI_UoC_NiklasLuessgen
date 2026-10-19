@@ -1,69 +1,69 @@
 # The Changing Defensive Role of U.S. Utilities During the AI Boom
 
-**Status: Draft (work in progress).** The turning-point algorithm settings, historical period-selection rules, and exact comparison dates are not yet finalized. They must be fixed and documented before estimating the risk measures.
+**Status: Draft (work in progress).** The turning-point algorithm settings, assignment rules, and exact comparison dates are not yet finalized. They must be fixed and documented before estimating the risk measures.
 
 ## 1. Research Question
 
-How do the U.S. utilities sector's market beta, downside beta, and market-adjusted correlation with technology stocks compare across historical periods, including the dot-com era and the AI boom?
+How do the U.S. utilities sector's market beta and market-adjusted correlation with technology stocks compare across historical periods, including the dot-com era and the AI boom?
 
-## 2. Data, Sample and Exclusions
+## 2. Data and Sample
 
 ### Data
 
 Data will be obtained from the **Kenneth French Data Library**, using value-weighted portfolios:
 
 - **Utilities:** 12-industry portfolio (Utils).
-- **Technology:** 12-industry portfolio (BusEq).
+- **Technology:** 12-industry portfolio (BusEq), used as a technology-oriented proxy.
 - **Market:** Fama–French market factor (Mkt-RF) and risk-free rate (RF).
 
 ### Sample
 
 - **Period:** January 1980 to the latest available date.
-- **Frequency:** Daily returns compounded into weekly returns. Weekly market excess returns will be calculated from separately compounded market and risk-free returns.
-- **Comparison periods:** Dot-com boom, dot-com bust, pre-AI period, and AI era. Historical turning points will be identified using Pagan and Sossounov (2003) on a cumulative return index constructed from monthly BusEq returns. Algorithm settings, selection rules, and date boundaries remain open and must be fixed before estimation.
+- **Frequency:** Daily returns compounded into weekly returns. Weekly market excess returns will be calculated from separately compounded total market returns and risk-free returns.
+- **Comparison periods:** The following historical phases are defined **in advance as comparison categories**, not fixed return-dependent date boundaries:
 
-### Exclusions
+| Comparison phase | Illustrative reference years (not final boundaries) |
+| --- | --- |
+| Dot-com boom | 1995–1999 |
+| Dot-com bust | 2000–2002 |
+| Global financial crisis | 2007–2009 |
+| Pre-AI benchmark | 2017–2019 |
+| AI boom | 2023–latest available date |
 
-- Non-U.S. markets and individual stocks.
-- Observations with missing return data.
+**Period selection to avoid cherry-picking:** Actual start/end dates will be determined systematically using the **Pagan and Sossounov (2003)** turning-point procedure applied to a cumulative index of **monthly BusEq total returns**. The procedure's settings and explicit rules for assigning detected market phases to the comparison categories (including how to handle the financial crisis, pre-AI benchmark, incomplete AI-era phase, and phases for which a matching turning point cannot be identified) must be specified, fixed, and documented **before** estimating beta or partial correlations. Illustrative reference years will not override the precommitted algorithm and assignment rules. Any phases not identified consistently will be reported as such, rather than selected manually to fit the results.
 
 ## 3. Constructed Variables
 
-All measures will use weekly returns. Utilities and technology returns will be converted to excess returns by subtracting the risk-free rate; **Mkt-RF** already represents market excess returns.
+All measures will use aligned **weekly excess returns**. Utilities and technology weekly total returns will be converted into excess returns by subtracting the compounded weekly risk-free return. **Mkt-RF** is an excess-return factor at its original frequency; weekly market excess returns will be computed consistently from separately compounded daily total market returns and RF, rather than summing or compounding daily excess returns as if they were total returns.
 
-- **Market Beta — Sharpe (1964):** Sensitivity of utilities returns to market movements:
+- **Market Beta — Sharpe (1964):** Sensitivity of utilities excess returns to broad U.S. market excess returns:
 
-  $$\beta_{U,M}=\frac{\operatorname{Cov}(R_U,R_M)}{\operatorname{Var}(R_M)}=\rho_{U,M}\frac{\sigma_U}{\sigma_M}$$
+  $$\beta_{U,M}=\frac{\operatorname{Cov}(R_U^e,R_M^e)}{\operatorname{Var}(R_M^e)}$$
 
-  Beta will also be decomposed into **market correlation** and **relative volatility** (utilities volatility divided by market volatility).
+  Estimated as the slope of a simple OLS regression of utilities excess returns on market excess returns, including an intercept.
 
-- **Downside Beta — Ang, Chen & Xing (2006):** Market sensitivity in weeks when market excess returns are below their mean within the comparison period:
+- **Partial Correlation — Kenett et al. (2015):** Market-adjusted co-movement between utilities and the technology proxy:
 
-  $$\beta^-_{U,M}=\frac{\operatorname{Cov}(R_U,R_M\mid R_M<\overline{R}_M)}{\operatorname{Var}(R_M\mid R_M<\overline{R}_M)}$$
+  $$\rho_{U,T\mid M}=\operatorname{Corr}(\varepsilon_U,\varepsilon_T)$$
 
-- **Partial Correlation — Kenett et al. (2015):** Correlation between utilities and technology returns after controlling for the overall market:
+  Here, $\varepsilon_U$ and $\varepsilon_T$ are residuals from **separate OLS regressions** of utilities and BusEq weekly excess returns on the same market excess-return series, each including an intercept. Their correlation measures association after removing the common linear market component. It is **not** a technology beta or evidence that AI caused utilities' returns.
 
-  $$\rho_{U,T\mid M}=\frac{\rho_{U,T}-\rho_{U,M}\rho_{T,M}}{\sqrt{(1-\rho_{U,M}^2)(1-\rho_{T,M}^2)}}$$
-
-  This will be calculated by separately regressing utilities and technology excess returns on market excess returns and correlating the residuals.
-
-*In the formulas, returns are excess returns.*
+*In the formulas, superscript $e$ denotes excess returns.*
 
 ## 4. Identification and Specification
 
 ### Identification
 
-This study uses a descriptive and correlational approach to compare utilities' risk characteristics across historical periods. It does not establish causality.
+The study adopts a **descriptive and correlational** design to compare utilities' market sensitivity and their market-adjusted co-movement with the technology proxy. The design cannot identify causal effects of the AI boom or attribute positive utilities performance to AI-driven electricity demand.
 
 ### Specification
 
-The following measures will be estimated separately for each period using weekly excess returns:
+The following measures will be estimated separately for each algorithm-defined historical comparison period using aligned weekly excess returns:
 
-- **Market Beta:** OLS regression of utilities excess returns on market excess returns, including a decomposition into market correlation and relative volatility.
-- **Downside Beta:** The same regression, restricted to market excess returns below their period mean.
-- **Partial Correlation:** Correlation between the residuals from separate OLS regressions of utilities and technology excess returns on market excess returns.
+1. **Market Beta:** Simple OLS regression of utilities excess returns on market excess returns (with intercept).
+2. **Partial Correlation:** Correlation of residuals from separate OLS regressions of utilities and BusEq excess returns on market excess returns (each with intercept).
 
-The period-specific estimates will be presented in a comparison table. Differences will be interpreted descriptively, without claims of statistical significance.
+The two period-specific estimates will be reported in a comparison table. Changes will be interpreted **descriptively**; no claims of statistical significance or causal attribution will be made solely from differences across periods.
 
 ### Technical Implementation
 
@@ -73,14 +73,16 @@ The analysis will use Python with **pandas** and **numpy** for data processing a
 
 ### Checks
 
-- **Data Quality:** Check for missing values and duplicate dates.
-- **Return Calculation:** Verify daily-to-weekly compounding, correct market excess-return and risk-free-rate calculations, and aligned dates.
-- **Beta Validation:** Verify that regression-based beta equals beta calculated from correlation and relative volatility.
+- **Data Quality:** Check for missing values, duplicate dates, and alignment of the three portfolios/factors.
+- **Return Calculation:** Verify daily-to-weekly compounding, correct weekly excess-return calculations, and aligned dates.
+- **Beta Validation:** Verify the simple-OLS market beta against the covariance/variance formula.
+- **Partial-Correlation Validation:** Verify that residual-based partial correlation agrees with the analytic partial-correlation formula (within numerical tolerance).
+- **Period Selection:** Record the predetermined turning-point and phase-assignment settings, candidate phases, detected dates, and any unmatched or incomplete phases before calculating risk metrics.
 
 ### Bounds
 
-- **Predefined Methodology:** Data sources, variables, and frequency are fixed. Period-selection rules and date boundaries must be documented before estimating the risk measures.
-- **No Cherry-Picking:** No observations will be removed based on their impact on the results.
+- **Predefined Methodology:** Data sources, variables, and frequency are fixed. Turning-point parameters, assignment rules, and final date boundaries must be documented before estimating risk measures.
+- **No Cherry-Picking:** The example periods do not dictate final dates. No observations or periods will be selected or removed based on their effect on estimated results.
 - **Documentation:** Any methodological changes will be documented in Git.
 
 ## 6. What Is Delegated and What Is Not
@@ -88,7 +90,7 @@ The analysis will use Python with **pandas** and **numpy** for data processing a
 ### Delegated to the AI Agent
 
 - **Data Preparation:** Download and process utilities, technology, and market data using predefined sources and rules.
-- **Analysis:** Calculate weekly returns, market beta, downside beta, and partial correlation; run the specified regressions and report all predefined comparisons.
+- **Analysis:** Calculate weekly returns, market beta, and partial correlation; run the specified regressions and report all predefined comparisons.
 - **Checks and Documentation:** Run predefined checks and record code changes, results, failures, and package versions.
 - **Reporting:** Produce comparison tables, develop a Streamlit dashboard, and draft verifiable data and methods descriptions.
 - **Task Boundaries:** Work on a separate Git branch in a restricted workspace with enforced file permissions and approval gates. Stop and ask if a protected file must change, a methodological decision is required, or validation failures cannot be resolved within the approved task.
@@ -104,6 +106,5 @@ The analysis will use Python with **pandas** and **numpy** for data processing a
 ## References
 
 - Pagan, A. R., & Sossounov, K. A. (2003). A simple framework for analysing bull and bear markets. *Journal of Applied Econometrics, 18*(1), 23–46. https://doi.org/10.1002/jae.664
-- Ang, A., Chen, J., & Xing, Y. (2006). Downside risk. *The Review of Financial Studies, 19*(4), 1191–1239. https://doi.org/10.1093/rfs/hhj035
 - Kenett, D. Y., Huang, X., Vodenska, I., Havlin, S., & Stanley, H. E. (2015). Partial correlation analysis: Applications for financial markets. *Quantitative Finance, 15*(4), 569–578. https://doi.org/10.1080/14697688.2014.946660
 - Sharpe, W. F. (1964). Capital asset prices: A theory of market equilibrium under conditions of risk. *The Journal of Finance, 19*(3), 425–442. https://doi.org/10.1111/j.1540-6261.1964.tb02865.x
