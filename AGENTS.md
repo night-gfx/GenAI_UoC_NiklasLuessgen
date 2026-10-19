@@ -20,7 +20,6 @@ Study U.S. utilities' market beta and market-adjusted correlation with technolog
 
 ### Packages
 - Use Python for data processing and statistical analysis.
-- Use Streamlit for interactive visualization.
 - Record dependencies in `requirements.txt`.
 
 ### Logging

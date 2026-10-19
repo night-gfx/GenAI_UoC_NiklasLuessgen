@@ -179,3 +179,33 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+
+# ============================================================
+# RESEARCH PROJECT
+# ============================================================
+
+# Local Codex configuration
+.codex/config.toml
+
+# Local VS Code settings
+.vscode/
+
+# macOS files
+.DS_Store
+.AppleDouble
+
+# Generated results
+output/
+
+# Credentials
+.env.*
+!.env.example
+.Renviron
+*.key
+*.pem
+*.p12
+
+# Temporary files
+*.tmp
+*.bak
