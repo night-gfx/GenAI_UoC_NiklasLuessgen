@@ -63,10 +63,6 @@ The following measures will be estimated separately for each algorithm-defined h
 
 The two period-specific estimates will be reported in a comparison table. Changes will be interpreted **descriptively**; no claims of statistical significance or causal attribution will be made solely from differences across periods.
 
-### Technical Implementation
-
-The analysis will use Python with **pandas** and **numpy** for data processing and calculations, **statsmodels** for OLS regressions, and **requests** for data retrieval. **Streamlit** and **Plotly** will be used to present the results interactively.
-
 ## 5. Checks and Bounds (Fixed Now)
 
 ### Checks
