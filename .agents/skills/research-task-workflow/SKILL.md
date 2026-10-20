@@ -28,16 +28,14 @@ description: Execute or resume one research task on its researcher-prepared bran
 - **Execution:** After branch verification, mark the task `In Progress` in
   `tasks/README.md`. Follow its GOAL, FILES, CONSTRAINTS, CHECK, OUTPUT and STOP.
 
-- **Files:** Save scripts and Python tests in `code/`, and generated results in
+- **Files:** Save scripts in `code/`, and generated results in
   `output/`. Name the main script after the task file, replacing `.md` with `.py`.
 
-   required checks using `.venv/bin/python`. Run relevant agent and researcher
 - **Log:** Maintain one chronological record in `logs/<task-name>.md`, covering
   the task conversation, actions, decisions with brief reasons, changed files,
-  execution/test commands, results, failures and fixes.
+  execution/check commands, results, failures and fixes.
 
 - **Self-check:** Review your work and run required checks using `.venv/bin/python`.
-  Run relevant agent and researcher tests with `-B -m pytest -p no:cacheprovider`.
   Fix in-scope errors and rerun checks. If unresolved, log the blocker, leave
   `In Progress` and stop.
 

@@ -7,7 +7,7 @@ Implement Python code (`code/prepare_returns.py`) with separate functions to loa
 ## FILES
 
 - **`code/`:** May add/edit only the task's own file, `code/prepare_returns.py`. All other contents are read-only.
-- **`logs/`:** May add/edit `logs/01_prepare_weekly_returns.md` to record all other results, execution and test logs.
+- **`logs/`:** May add/edit `logs/01_prepare_weekly_returns.md` to record all other results, execution and check logs.
 - **All others:** Read-only for direct edits. Only running the Python script may create or update `output/weekly_returns.csv`; the LLM must not write the CSV directly.
 
 ## CONSTRAINTS
@@ -42,7 +42,7 @@ Implement Python code (`code/prepare_returns.py`) with separate functions to loa
 
 - **Branch:** Work only on `agent/01_prepare_weekly_returns`; do not push or merge.
 - **Commits:** One descriptive commit per completed step (e.g. loading, validation, weekly calculation, CSV output).
-- **Final message:** Summarize code changes, CHECK results, test results, open issues and items for researcher verification; list the commit hashes and report `Ready for Review`.
+- **Final message:** Summarize code changes, CHECK results, open issues and items for researcher verification; list the commit hashes and report `Ready for Review`.
 
 ## STOP
 

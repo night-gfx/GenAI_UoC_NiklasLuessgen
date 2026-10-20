@@ -7,6 +7,8 @@ How has the defensive behavior of U.S. utility stocks, measured by market beta, 
 - **H1 – Market Beta:** U.S. utility stocks have become more sensitive to overall market movements during the AI boom.
 - **H2 – Partial Correlation:** The market-adjusted correlation between U.S. utility and technology stock returns has increased during the AI boom.
 
+Both hypotheses are assessed by descriptively comparing the AI boom estimates with those of all preceding periods; changes across periods are not tested statistically.
+
 ## 2. Data and Sample
 
 ### Data
@@ -79,7 +81,7 @@ The analysis uses data from the **Kenneth French Data Library**:
 
 ### Identification
 
-The study uses a descriptive empirical analysis to examine utilities’ market sensitivity and market-adjusted correlation with technology stocks. (Limitation: Differences across periods do not, by themselves, establish statistical significance or causality.)
+The study uses an empirical analysis to examine utilities’ market sensitivity and market-adjusted correlation with technology stocks. Market betas are tested for a statistically significant difference from one (H0: β = 1); partial correlations are reported descriptively. Differences across periods are compared descriptively. (Limitation: Descriptive differences across periods establish neither statistical significance nor causality.)
 
 ### Specification
 
@@ -105,7 +107,41 @@ All estimates use the same aligned weekly observations within the full sample an
 
 *Source: Gallup (2019), p. 602 (residual correlation), p. 606 (separate residual regressions), applied to sector excess returns with market excess returns and an intercept as controls.*
 
-| Comparison period | Utilities Beta | Technology Beta | Partial Correlation |
+**Regression Table: Market Betas**
+
+| Comparison period | Utilities Beta (SE) | Technology Beta (SE) | R² Utilities | R² Technology | N |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Full Sample | — | — | — | — | — |
+| Pre-Dot-Com | — | — | — | — | — |
+| Dot-com Crash | — | — | — | — | — |
+| Pre Financial Crisis | — | — | — | — | — |
+| Financial Crisis | — | — | — | — | — |
+| Pre-COVID | — | — | — | — | — |
+| COVID | — | — | — | — | — |
+| Pre-AI boom | — | — | — | — | — |
+| AI boom | — | — | — | — | — |
+
+*Standard errors in parentheses; stars test H0: β = 1 (two-sided): \* p < 0.10, \*\* p < 0.05, \*\*\* p < 0.01.*
+
+**Descriptive Statistics**
+
+*Panel A: Correlations*
+
+| Comparison period | Partial Correlation | Corr(U, T) | Corr(U, M) | Corr(T, M) | N |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Full Sample | — | — | — | — | — |
+| Pre-Dot-Com | — | — | — | — | — |
+| Dot-com Crash | — | — | — | — | — |
+| Pre Financial Crisis | — | — | — | — | — |
+| Financial Crisis | — | — | — | — | — |
+| Pre-COVID | — | — | — | — | — |
+| COVID | — | — | — | — | — |
+| Pre-AI boom | — | — | — | — | — |
+| AI boom | — | — | — | — | — |
+
+*Panel B: Volatilities (standard deviation of weekly excess returns, %)*
+
+| Comparison period | σ Utilities | σ Technology | σ Market |
 | --- | ---: | ---: | ---: |
 | Full Sample | — | — | — |
 | Pre-Dot-Com | — | — | — |
