@@ -8,6 +8,9 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from openpyxl import Workbook
+from openpyxl.styles import Alignment, Border, Font, Side
+from openpyxl.utils import get_column_letter
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -169,3 +172,86 @@ def format_descriptive_statistics(partial_correlations, regression_statistics):
     panel_b = joined[["period", "vol_U", "vol_T", "vol_M"]].copy()
     panel_b.columns = PANEL_B_COLUMNS
     return {"Panel A": panel_a.round(3), "Panel B": panel_b.round(3)}
+
+
+def save_results(panels, partial_correlations, output_dir):
+    """Save only the two named outputs, using percent values without rescaling."""
+    destination = Path(output_dir).resolve()
+    if destination != OUTPUT_DIR:
+        raise ValueError(f"The only approved output directory is {OUTPUT_DIR}")
+    _validate_partial_correlations(partial_correlations)
+    ordered = partial_correlations.set_index("period").loc[PERIOD_NAMES].reset_index()
+    if set(panels) != set(PANEL_TITLES):
+        raise ValueError("Expected Panel A and Panel B")
+    for name, columns in [("Panel A", PANEL_A_COLUMNS), ("Panel B", PANEL_B_COLUMNS)]:
+        panel = panels[name]
+        if list(panel.columns) != columns or panel.iloc[:, 0].tolist() != PERIOD_NAMES:
+            raise ValueError(f"{name}: invalid columns or period order")
+        numeric = panel.iloc[:, 1:].to_numpy(dtype=float)
+        if not np.isfinite(numeric).all() or not np.array_equal(numeric, np.round(numeric, 3)):
+            raise ValueError(f"{name}: expected finite values rounded to three decimals")
+    panel_a, panel_b = panels["Panel A"], panels["Panel B"]
+    if (not np.array_equal(panel_a["N"], ordered["n_obs"])
+            or not np.array_equal(panel_a["Partial Correlation"], ordered["partial_correlation"].round(3))
+            or (panel_a.iloc[:, 1:5].abs() > 1).any().any()
+            or (panel_b.iloc[:, 1:] < 0).any().any()):
+        raise ValueError("Panels contain inconsistent counts, correlations or volatilities")
+    excel_path = destination / "descriptive_statistics.xlsx"
+    csv_path = destination / "partial_correlations.csv"
+    if any(path.resolve() != path for path in (excel_path, csv_path)):
+        raise ValueError("Output paths must not redirect to other files")
+    destination.mkdir(parents=True, exist_ok=True)
+    book = Workbook()
+    book.remove(book.active)
+    for name in PANEL_TITLES:
+        panel = panels[name]
+        sheet = book.create_sheet(name)
+        sheet.merge_cells(start_row=1, start_column=1, end_row=1, end_column=len(panel.columns))
+        sheet.cell(1, 1, PANEL_TITLES[name])
+        sheet.cell(1, 1).font = Font(name="Calibri", size=12, bold=True)
+        sheet.cell(1, 1).alignment = Alignment(wrap_text=True, vertical="center")
+        sheet.row_dimensions[1].height = 34
+        for column, title in enumerate(panel.columns, start=1):
+            sheet.cell(3, column, title)
+        excel_row = 4
+        for i, row in enumerate(panel.itertuples(index=False, name=None)):
+            if i in (1, 3):
+                excel_row += 1
+            for column, value in enumerate(row, start=1):
+                sheet.cell(excel_row, column, value)
+            excel_row += 1
+        for row in sheet.iter_rows(min_row=3, max_row=excel_row - 1):
+            for cell in row:
+                cell.font = Font(name="Calibri", size=11, bold=cell.row == 3)
+                cell.alignment = Alignment(horizontal="left" if cell.column == 1 else "right")
+                if cell.row in (3, excel_row - 1):
+                    cell.border = Border(bottom=Side(style="thin", color="404040"))
+                if cell.row > 3 and cell.column > 1:
+                    cell.number_format = "0" if name == "Panel A" and cell.column == 6 else "0.000"
+        widths = [26, 22, 17, 17, 17, 9] if name == "Panel A" else [26, 20, 20, 20]
+        for column, width in enumerate(widths, start=1):
+            sheet.column_dimensions[get_column_letter(column)].width = width
+        sheet.freeze_panes = "B4"
+        sheet.sheet_view.showGridLines = False
+        sheet.print_area = f"A1:{get_column_letter(len(panel.columns))}{excel_row - 1}"
+        sheet.sheet_properties.pageSetUpPr.fitToPage = True
+        sheet.page_setup.orientation = "landscape"
+        sheet.page_setup.paperSize = sheet.PAPERSIZE_A4
+        sheet.page_setup.fitToWidth = 1
+        sheet.page_setup.fitToHeight = 1
+    book.save(excel_path)
+    ordered.to_csv(csv_path, index=False)
+
+
+def main():
+    """Load → partial correlation → analytic validation/format → save."""
+    residuals, statistics = load_inputs(RESIDUALS_PATH, STATISTICS_PATH)
+    partial_correlations = calculate_partial_correlations(residuals)
+    panels = format_descriptive_statistics(partial_correlations, statistics)
+    save_results(panels, partial_correlations, OUTPUT_DIR)
+    print(f"Saved {len(partial_correlations)} periods to {OUTPUT_DIR}")
+    print("descriptive_statistics.xlsx, partial_correlations.csv")
+
+
+if __name__ == "__main__":
+    main()

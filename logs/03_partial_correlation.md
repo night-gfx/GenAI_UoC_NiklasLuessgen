@@ -259,3 +259,150 @@ for name, panel in panels.items():
   Both original input frames retain full precision. Nine invalid input pairs
   rejected, including analytic mismatch, denominator zero and n_obs mismatch.
   `git diff --check` passed.
+
+## Step 4 — Export and final review
+
+- Step 3 commit: `cbdd25ac00397a3b14f73e7486d9bb35aa95f099`; author
+  verified as Codex. Added save_results and main. Save only to the two named
+  output paths; reject alternate directories, redirected paths, inconsistent
+  panels and invalid values. Read/validation/write errors propagate.
+- Workbook has Panel A and Panel B worksheets, each with the proposal's
+  title, columns, nine period rows and two group separators. Three-decimal
+  numeric formats, integer N, wrapped titles, explicit widths and landscape
+  A4 printing; percent values use numeric 0.000, without Excel percent scaling.
+- CSV retains unrounded correlations, integer counts, proposal order and
+  no index. Results are generated only by the task script.
+
+### Step 4 check
+
+```python
+import sys
+from pathlib import Path
+from hashlib import sha256
+from unittest.mock import patch
+import numpy as np
+import pandas as pd
+from openpyxl import load_workbook
+sys.path.insert(0, "code")
+import partial_correlation as m
+r, s = m.load_inputs(m.RESIDUALS_PATH, m.STATISTICS_PATH)
+p = m.calculate_partial_correlations(r)
+panels = m.format_descriptive_statistics(p, s)
+disk = pd.read_csv(m.OUTPUT_DIR / "partial_correlations.csv", float_precision="round_trip")
+pd.testing.assert_frame_equal(disk, p, check_exact=True)
+assert disk.shape == (9, 3) and disk.partial_correlation.between(-1, 1).all()
+assert disk.period.tolist() == m.PERIOD_NAMES
+book = load_workbook(m.OUTPUT_DIR / "descriptive_statistics.xlsx", data_only=False)
+assert book.sheetnames == ["Panel A", "Panel B"]
+data_rows = [4, 6, 7, 9, 10, 11, 12, 13, 14]
+for name, panel in panels.items():
+    sheet = book[name]
+    assert sheet.max_row == 14 and sheet.max_column == len(panel.columns)
+    assert sheet["A1"].value == m.PANEL_TITLES[name]
+    assert [sheet.cell(3, col).value for col in range(1, len(panel.columns)+1)] == list(panel.columns)
+    for i, row in enumerate(data_rows):
+        for col in range(1, len(panel.columns)+1):
+            cell = sheet.cell(row, col)
+            assert cell.value == panel.iloc[i, col-1]
+            if col > 1:
+                expected_format = "0" if name == "Panel A" and col == 6 else "0.000"
+                assert cell.number_format == expected_format
+                assert cell.data_type == "n"
+    for blank in (2, 5, 8):
+        assert all(sheet.cell(blank, col).value is None for col in range(1, len(panel.columns)+1))
+    assert sheet["A1"].alignment.wrap_text and sheet["A3"].font.bold
+    assert sheet.freeze_panes == "B4"
+    assert sheet.page_setup.fitToWidth == sheet.page_setup.fitToHeight == 1
+book.close()
+
+bad_panel = {name: panel.copy() for name, panel in panels.items()}
+bad_panel["Panel A"].loc[0, "Partial Correlation"] += 0.01
+bad_vol = {name: panel.copy() for name, panel in panels.items()}
+bad_vol["Panel B"].loc[0, "σ Market"] = np.inf
+bad_count = {name: panel.copy() for name, panel in panels.items()}
+bad_count["Panel A"].loc[0, "N"] += 1
+for pp, directory in [(panels, m.PROJECT_ROOT), (bad_panel, m.OUTPUT_DIR),
+                       (bad_vol, m.OUTPUT_DIR), (bad_count, m.OUTPUT_DIR),
+                       ({"Panel A": panels["Panel A"]}, m.OUTPUT_DIR)]:
+    try:
+        m.save_results(pp, p, directory)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Invalid output accepted")
+with patch.object(m.Workbook, "save", side_effect=OSError("Injected write error")):
+    try:
+        m.save_results(panels, p, m.OUTPUT_DIR)
+    except OSError:
+        pass
+    else:
+        raise AssertionError("Write error swallowed")
+baseline = {
+    "weekly_returns.csv": "40c2d638d4426384766d3b22b69c84043e3d29aa74b532421cc646a3078d9365",
+    "regression_table.xlsx": "bd78cc5cafb1c0b1a9679f56bf6106421d2009e027b310f47af9987b0064245b",
+    "regression_statistics.csv": "45516df4983ae2d6ca562b3d9c368b4e35ebe2f59f3f1ad100db090b6e8d7d57",
+    "market_residuals.csv": "8083c7d59a1375e1744440749fd36f714f0521aa063e561d061f6982ccaf3c30",
+}
+for name, digest in baseline.items():
+    assert sha256((m.OUTPUT_DIR / name).read_bytes()).hexdigest() == digest
+print("PASS: exact CSV round trip, both Excel panels/cells/format, 5 invalid outputs, write-error propagation")
+print("PASS: all four Task 01/02 output hashes unchanged")
+```
+
+Final reproducible check commands:
+
+```sh
+.venv/bin/python -B code/partial_correlation.py
+.venv/bin/python -B - <<'PY'
+from pathlib import Path
+blocks = Path('logs/03_partial_correlation.md').read_text().split('```python\n')[1:]
+for i, block in enumerate(blocks, 1):
+    print(f'CHECK block {i}', flush=True)
+    exec(compile(block.split('```')[0], f'CHECK block {i}', 'exec'), {'__name__': '__main__'})
+print('ALL TASK 03 CHECKS PASSED')
+PY
+git diff --check
+```
+
+### Final CHECK results and handoff
+
+- Ran `.venv/bin/python -B code/partial_correlation.py`: exit 0, saved all
+  nine periods. Ran all four fenced Python check blocks with the command
+  above: exit 0 and `ALL TASK 03 CHECKS PASSED`. `git diff --check` passed.
+- Input CHECK: both files read correctly at full precision; each residual
+  period's n_obs agrees with Task 02 and every prescribed Friday is present.
+  No rows dropped, filled or pooled. Invalid-key/value/count cases rejected.
+- Period CHECK: nine rows in proposal order, including Before AI boom;
+  n_obs = 1913, 1717, 196, 530, 139, 239, 92, 574, 104.
+- Calculation CHECK: every residual correlation matches the analytic formula
+  within 1e-12 absolute / 1e-10 relative tolerance; maximum error 1.22e-15.
+  Independently checked against scipy.stats.pearsonr within 1e-12 absolute /
+  relative. All values are in [-1, 1], without clipping. Synthetic known
+  positive/negative/zero correlations meet 1e-12 tolerances; exact +1/−1
+  cases, constant residuals and other invalid inputs tested successfully.
+- Descriptive-statistics CHECK: every Panel A/B value agrees with unrounded
+  Task 02 statistics and partial correlations after three-decimal rounding;
+  N is integer. Input order changes do not affect the one-to-one join or
+  output order. Unrounded source frames remain unchanged.
+- File-output CHECK: generated only by the task script:
+  - `output/descriptive_statistics.xlsx`: Panel A (9×6) and Panel B (9×4),
+    separate worksheets with proposal labels, group separators, numeric
+    three-decimal formats and percent units without rescaling.
+  - `output/partial_correlations.csv`: 9×3, exact floating-point round trip,
+    `period,n_obs,partial_correlation`, no index.
+- Checked every Excel cell/header/title, blank separators, number formats,
+  freezes and page settings. Alternate paths and invalid panels rejected;
+  an injected write error propagates. No actual validation failures remain.
+- SHA-256 comparisons confirm all four Task 01/02 generated files are
+  unchanged from the baseline above. Only code/partial_correlation.py,
+  tasks/README.md (Task 03 status) and this log are committed. Generated
+  outputs are ignored and not staged. No dependency or protected-source edits.
+- Status set to Ready for Review after all CHECK criteria passed. No open
+  implementation issues or methodological deviations. The known nonfatal
+  Git global ignore-file warning remains unrelated to the checks.
+- Researcher verification: independently inspect the four-step diff, rerun
+  the script and checks above, and view the Excel layout in a spreadsheet
+  application. Human acceptance and merge remain pending; do not mark
+  Completed before explicit approval. H3 testing belongs to Task 04.
+- Final commit includes saving, final checks and Ready for Review status.
+  Stop after Task 03; no push, pull request, merge or Task 04 execution.
