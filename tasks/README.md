@@ -1,5 +1,9 @@
 # Research Tasks
 
+Agent task specifications, executed in order, one branch per task.
+
+## Tasks
+
 | Order | Task specification | Purpose | Expected branch | Status |
 | --- | --- | --- | --- | --- |
 | Step 1 | [01_prepare_weekly_returns.md](01_prepare_weekly_returns.md) | Inspect CSV structure, load and validate daily data, construct and validate weekly excess returns | `agent/01_prepare_weekly_returns` | Planned |
@@ -22,9 +26,8 @@ The expected implementation branch uses the same identifier and task name.
 | Section | Meaning |
 | --- | --- |
 | `GOAL` | Required result when the task is finished. |
-| `FILES` | Files allowed to be created or modified, read-only inputs and expected branch. |
-| `CONSTRAINTS` | Required conventions, inputs and methodological restrictions. |
-| `STEPS` | Not used; all tasks use CHECK criteria instead. |
+| `FILES` | Files allowed to be created or modified; all others are read-only. |
+| `CONSTRAINTS` | Inputs, conventions and required functions. |
 | `CHECK` | Check commands and success criteria. |
-| `OUTPUT` | Required artifacts, commits and final handoff. |
+| `OUTPUT` | Branch, commits and final handoff. |
 | `STOP` | Conditions for stopping or asking the researcher. |

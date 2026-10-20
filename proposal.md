@@ -23,23 +23,21 @@ The analysis uses data from the **Kenneth French Data Library**:
 
 ### Sample
 
-- **Period:** January 1990 to the latest available date.
-
-*Source: Baele and Londono (2013) (also use U.S. industry portfolios, with 30 industries rather than the 12 used here).*
+- **Period:** January 1990 to 31 August 2026 (last full week ending on or before this date).
 
 - **Comparison periods:** Periods are fixed in advance to avoid cherry-picking.
 
 | Comparison period | Start | End |
 | --- | --- | --- |
-| Full Sample | January 1990 | Latest available date |
+| Full Sample | January 1990 | August 2026 |
 | Pre-Dot-Com | January 1990 | February 2000 |
 | Dot-com Crash | March 2000 | October 2002 |
 | Pre Financial Crisis | November 2002 | May 2007 |
 | Financial Crisis | June 2007 | February 2009 |
 | Pre-COVID | March 2009 | February 2020 |
-| Covid | March 2020 | February 2022 |
+| COVID | March 2020 | February 2022 |
 | Pre-AI boom | March 2022 | November 2022 |
-| AI boom | December 2022 | Latest available date |
+| AI boom | December 2022 | August 2026 |
 
 *Source: Ramesh et al. (2025) (provide the dates for the dot-com crash, global financial crisis, and COVID-19 crisis).*
 
@@ -165,7 +163,7 @@ All estimates use the same aligned weekly observations within the full sample an
 ### Bounds
 
 - **Predefined Methodology:** Data sources, variables, weekly return construction, estimation methods, and comparison-period boundaries are fixed before estimating the results.
-- **Fixed Sample Cutoff:** The analysis uses the latest common available week across all datasets at the time of data collection. The exact data retrieval date and final sample date must be recorded.
+- **Fixed Sample Cutoff:** The sample ends on 31 August 2026 (last full week ending on or before this date). The data retrieval date and the final sample week must be recorded.
 - **No Cherry-Picking:** Observations and period boundaries must not be selected, shifted, or excluded based on their effects on the estimated results. Data exclusions are permitted only for documented data-quality reasons.
 - **Documentation:** All methodological changes and deviations from the original proposal must be documented and tracked in Git, including their justification.
 

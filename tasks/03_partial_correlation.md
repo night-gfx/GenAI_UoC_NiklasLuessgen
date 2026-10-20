@@ -17,7 +17,7 @@ Implement Python code (`code/partial_correlation.py`) with separate functions to
 
 **Inputs:** `output/market_residuals.csv` and `output/regression_statistics.csv` from Task 02 (`n_obs`, `corr_UT`, `corr_UM`, `corr_TM`, `vol_U`, `vol_T`, `vol_M`); periods exactly as in the [proposal](../proposal.md). Tasks 01–02 must be `Completed`. Excel output requires `openpyxl`.
 
-**Conventions:** Keep full precision. Calculate the Pearson correlation of `utilities_residual` and `technology_residual` within each period; never combine residuals from different periods. Verify with `(corr_UT - corr_UM * corr_TM) / sqrt((1 - corr_UM ** 2) * (1 - corr_TM ** 2))`. Report descriptively: no significance tests, no clipping into `[-1, 1]`, no causal claims. Use the proposal's columns and row order (normalize only `Covid`/`COVID`); round only for display. Do not change Task 02 results; log unresolved errors, stop and ask.
+**Conventions:** Keep full precision. Calculate the Pearson correlation of `utilities_residual` and `technology_residual` within each period; never combine residuals from different periods. Verify with `(corr_UT - corr_UM * corr_TM) / sqrt((1 - corr_UM ** 2) * (1 - corr_TM ** 2))`. Report descriptively: no significance tests, no clipping into `[-1, 1]`, no causal claims. Use the proposal's columns and row order; round only for display. Do not change Task 02 results; log unresolved errors, stop and ask.
 
 | Function | Description | Failure |
 | --- | --- | --- |

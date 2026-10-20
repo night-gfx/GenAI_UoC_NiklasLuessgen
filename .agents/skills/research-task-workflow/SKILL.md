@@ -11,13 +11,13 @@ description: Execute or resume one research task on its researcher-prepared bran
 - **Task overview:** Read `tasks/README.md` for the separate execution tasks, their order,
   statuses and task specification structure.
 - **Selection:** Select the task marked `In Progress`, or the first `Planned` task.
-- **Specification:** Read the corresponding task specification in `tasks/` (e.g. `tasks/02_prepare_returns.md`).
+- **Specification:** Read the corresponding task specification in `tasks/` (e.g. `tasks/01_prepare_weekly_returns.md`).
 
 ## 2. Verify Branch
 
 - **Branch check:** Check the branch: `git branch --show-current`.
-- **Required branch:** Require `agent/<task-name>`; for example, `tasks/02_prepare_returns.md`
-  requires `agent/02_prepare_returns`. Reject `main` and detached HEAD.
+- **Required branch:** Require `agent/<task-name>`; for example, `tasks/01_prepare_weekly_returns.md`
+  requires `agent/01_prepare_weekly_returns`. Reject `main` and detached HEAD.
 - **Branch mismatch:** Otherwise, stop and ask the researcher to switch branches. Do not create
   or switch branches yourself.
 - **Working tree:** Inspect changes: `git status --short` and `git diff --cached`.
@@ -28,8 +28,8 @@ description: Execute or resume one research task on its researcher-prepared bran
 - **Execution:** After branch verification, mark the task `In Progress` in
   `tasks/README.md`. Follow its GOAL, FILES, CONSTRAINTS, CHECK, OUTPUT and STOP.
 
-- **Files:** Save scripts in `code/`, and generated results in
-  `output/`. Name the main script after the task file, replacing `.md` with `.py`.
+- **Files:** Use exactly the script and output paths named in the task specification
+  (scripts in `code/`, generated results in `output/`).
 
 - **Log:** Maintain one chronological record in `logs/<task-name>.md`, covering
   the task conversation, actions, decisions with brief reasons, changed files,
@@ -57,10 +57,8 @@ description: Execute or resume one research task on its researcher-prepared bran
 ## 4. Final Agent Review
 
 - **Final checks:** Run all final `CHECK` requirements in the task specification (`tasks/`).
-- **Results:** Save final results in `output/<task-name>.<extension>`, using the file type
-  required by the task; for example, `output/01_collect_data.json`. If there
-  are several result files, add a short name after the task name, such as
-  `output/01_collect_data_source_inventory.json`.
+- **Results:** Generate final results only by running the task script, at the output
+  paths named in the task specification (e.g. `output/weekly_returns.csv`).
 - **Final log:** Complete `logs/<task-name>.md` with the final check results, output paths,
   remaining issues and items for researcher review.
 - **Review status:** Only if all required checks pass, update the task status in

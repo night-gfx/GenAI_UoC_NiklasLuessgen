@@ -25,7 +25,7 @@ Implement Python code (`code/estimate_beta.py`) with separate functions to load 
 | `main ()` | Run load → OLS → format → save. | A function fails. |
 | `load_weekly_returns (weekly_path)` | Read the weekly returns and return them keyed by `(period, week_end)`: each week in its subperiod, plus all weeks as Full Sample. | File cannot be read; unassigned, overlapping or empty periods. |
 | `run_ols (weekly_periods)` | Fit both regressions per period, calculate all statistics and return `(regression_statistics, residuals)`. | Zero variance, singular design or nonfinite results. |
-| `format_regression_table (regression_statistics)` | Return the proposal's Regression Table (nine rows in proposal order; normalize only `Covid`/`COVID`). | Missing or invalid columns. |
+| `format_regression_table (regression_statistics)` | Return the proposal's Regression Table (nine rows in proposal order). | Missing or invalid columns. |
 | `save_results (regression_table, regression_statistics, residuals, output_dir)` | Write the regression table as Excel and the statistics and residuals as CSV, without a row index. | Invalid output path or write error. |
 
 ## CHECK
