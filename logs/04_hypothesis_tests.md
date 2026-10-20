@@ -319,3 +319,171 @@ print(m.test_h3(p).to_string(index=False))
   Actual raw difference −0.104679, Z −1.691393, right-tail p 0.954619.
   Ordered this log's sections chronologically before committing.
   `git diff --check` passed.
+
+## Step 5 — Table, saving and final agent review
+
+- Step 4 commit: `ac1ace397bfb7204f5ca0d08bc2165a504acfa8e`; author
+  verified as Codex. Added the four-row hypothesis table, exact proposal note,
+  three-decimal display, integer N, Excel formatting and full-precision CSV.
+- Added validation of ordered hypotheses, all p-values, counts and applicable
+  metadata. H1 split counts and H3 HAC lags remain blank as documented above.
+  H3 std_error is on the Fisher-z scale; the Excel table does not report SEs.
+- main runs H1 → H2 → H3, verifies the H2 pooled slopes against Task 02 at
+  1e-12 absolute / 1e-10 relative tolerance, then formats and saves only the
+  two permitted files. No changes to predecessor outputs or research methods.
+
+### Step 5 check
+
+```python
+import sys
+from pathlib import Path
+from hashlib import sha256
+from unittest.mock import patch
+import numpy as np
+import pandas as pd
+from openpyxl import load_workbook
+sys.path.insert(0, "code")
+import hypothesis_tests as m
+w, s, p = m.load_inputs(m.WEEKLY_PATH, m.STATISTICS_PATH, m.PARTIAL_PATH)
+h = pd.concat([m.test_h1(s), m.test_h2(w), m.test_h3(p)], ignore_index=True)
+original = h.copy(deep=True)
+table = m.format_hypothesis_table(h)
+assert h.hypothesis.tolist() == ["H1a", "H1b", "H2", "H3"]
+assert h.p_value_one_sided.between(0, 1).all()
+assert list(table.columns) == ["Hypothesis", "Estimate", "Test Statistic", "One-Sided p-Value", "N"]
+assert table.iloc[:, 0].tolist() == [m.HYPOTHESIS_LABELS[label] for label in ["H1a", "H1b", "H2", "H3"]]
+for i, row in h.iterrows():
+    for display, source in [("Estimate", "estimate"), ("Test Statistic", "test_statistic"), ("One-Sided p-Value", "p_value_one_sided")]:
+        assert table.loc[i, display] == round(row[source], 3)
+    assert table.loc[i, "N"] == row.n_obs == 1913
+pd.testing.assert_frame_equal(h, original, check_exact=True)
+disk = pd.read_csv(m.OUTPUT_DIR / "hypothesis_tests.csv", float_precision="round_trip",
+                   dtype={column: "Int64" for column in ["n_obs", "n_obs_bai", "n_obs_ai", "hac_lags"]})
+pd.testing.assert_frame_equal(disk, h, check_exact=True)
+assert disk.shape == (4, 9)
+assert disk.iloc[0].p_value_one_sided > 0 and disk.iloc[1].p_value_one_sided > 0
+book = load_workbook(m.OUTPUT_DIR / "hypothesis_tests.xlsx", data_only=False)
+assert book.sheetnames == ["Hypothesis Tests"]
+sheet = book.active
+assert sheet.max_row == 7 and sheet.max_column == 5
+assert [sheet.cell(1, c).value for c in range(1, 6)] == list(table.columns)
+for r in range(2, 6):
+    for c in range(1, 6):
+        cell = sheet.cell(r, c)
+        assert cell.value == table.iloc[r-2, c-1]
+        if c > 1:
+            assert cell.number_format == ("0" if c == 5 else "0.000")
+            assert cell.data_type == "n"
+assert sheet["A7"].value == table.attrs["note"] == "Estimates: β̂ for H1, γ̂_U for H2, ρ̂^AI − ρ̂^BAI for H3. Test statistics: t for H1 and H2, Z for H3. N: Full Sample weeks for H1 and H2; N_BAI + N_AI for H3."
+assert "A7:E7" in sheet.merged_cells and sheet["A7"].alignment.wrap_text
+assert sheet.freeze_panes == "B2"
+assert sheet.page_setup.fitToWidth == sheet.page_setup.fitToHeight == 1
+book.close()
+
+bad_lags = h.copy(); bad_lags.loc[3, "hac_lags"] = 4
+bad_counts = h.copy(); bad_counts.loc[2, "n_obs_ai"] += 1
+for bad in [h.drop(columns="std_error"), h.iloc[::-1], h.assign(p_value_one_sided=1.1),
+            h.assign(std_error=0), h.assign(n_obs=1.5), bad_lags, bad_counts]:
+    try:
+        m.format_hypothesis_table(bad)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Invalid table data accepted")
+bad_table = table.copy(); bad_table.loc[0, "Estimate"] += 1
+for tt, directory in [(table, m.PROJECT_ROOT), (bad_table, m.OUTPUT_DIR)]:
+    try:
+        m.save_results(tt, h, directory)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Invalid output accepted")
+with patch.object(m.Workbook, "save", side_effect=OSError("Injected write error")):
+    try:
+        m.save_results(table, h, m.OUTPUT_DIR)
+    except OSError:
+        pass
+    else:
+        raise AssertionError("Write error swallowed")
+baseline = {
+    "weekly_returns.csv": "40c2d638d4426384766d3b22b69c84043e3d29aa74b532421cc646a3078d9365",
+    "regression_table.xlsx": "bd78cc5cafb1c0b1a9679f56bf6106421d2009e027b310f47af9987b0064245b",
+    "regression_statistics.csv": "45516df4983ae2d6ca562b3d9c368b4e35ebe2f59f3f1ad100db090b6e8d7d57",
+    "market_residuals.csv": "8083c7d59a1375e1744440749fd36f714f0521aa063e561d061f6982ccaf3c30",
+    "descriptive_statistics.xlsx": "209bcdec1af1f09fc5c7142bc7d52830807fc88168d8eb7ef156c73e400c9048",
+    "partial_correlations.csv": "a80a0666f24f0b5236bf38e7c4a498b0acc49d18740d1501fcb255d5e4ddebc6",
+}
+for name, digest in baseline.items():
+    assert sha256((m.OUTPUT_DIR / name).read_bytes()).hexdigest() == digest
+print("PASS: 4-row table/Excel rounding and proposal note, exact CSV round trip, all p-values/counts")
+print("PASS: 7 invalid tables, 2 invalid exports, write-error propagation; all 6 predecessor hashes unchanged")
+print(table.to_string(index=False))
+```
+
+Final reproducible commands:
+
+```sh
+.venv/bin/python -B code/hypothesis_tests.py
+.venv/bin/python -B - <<'PY'
+from pathlib import Path
+blocks = Path('logs/04_hypothesis_tests.md').read_text().split('```python\n')[1:]
+for i, block in enumerate(blocks, 1):
+    print(f'CHECK block {i}', flush=True)
+    exec(compile(block.split('```')[0], f'CHECK block {i}', 'exec'), {'__name__': '__main__'})
+print('ALL TASK 04 CHECKS PASSED')
+PY
+git diff --check
+```
+
+### Final results and handoff
+
+- Ran `.venv/bin/python -B code/hypothesis_tests.py`: exit 0, saved both
+  requested outputs with four hypothesis rows. Ran all five check blocks
+  above with `.venv/bin/python -B`: exit 0, ALL TASK 04 CHECKS PASSED.
+  `git diff --check` passed. No actual validation failures remain.
+- Input CHECK: all three inputs read at full precision; all nine period
+  counts agree. Full Sample 1913 = Before AI boom 1717 + AI boom 196.
+  Fixed sample and December 2022 Friday assignment retained.
+- H1 CHECK: Task 02 t-statistics reproduced; normal one-sided p-values match
+  half or one-minus-half of the two-sided values according to direction.
+  Wrong-direction, zero and extreme-t cases tested; invalid inputs rejected.
+- H2 CHECK: pooled BAI beta and gamma match separate Task 02 betas within
+  1e-12 absolute / 1e-10 relative tolerance. N equals the Full Sample.
+  All four HAC SEs match independently computed Newey–West scalar lag sums
+  (maximum error 6.25e-17). Synthetic negative, zero and positive beta
+  differences recovered; no extra periods/factors/tests introduced.
+- H3 CHECK: Fisher statistic matches independent logarithm-based hand
+  calculation within 1e-12 absolute/relative. Equal correlations give exactly
+  Z=0 and p=0.5; known synthetic differences have the expected signs.
+  n<=4, noninteger counts, missing/duplicate periods and invalid rho rejected.
+- Table/file CHECK: four rows in proposal order, values and exact proposal
+  note verified cell-by-cell in Excel, three-decimal formats and integer N.
+  CSV round trip is exact, all p-values in [0,1]. Tiny H1 p-values are positive
+  in the CSV although their required three-decimal display is 0.000.
+  Invalid tables/exports rejected; injected write error propagated.
+- Outputs generated only by the task script, ignored and not staged:
+  - `output/hypothesis_tests.xlsx`: four data rows, five columns, table note.
+  - `output/hypothesis_tests.csv`: 4×9, full precision, no index; not-applicable
+    H1 split counts and H3 HAC lags are blank. H3 std_error is Fisher-z scale.
+- Unrounded one-sided results (rounded here for readability): H1a beta
+  0.565569, p 5.666856e-17; H1b beta 1.210095, p 2.405260e-09; H2 gamma
+  −0.286757, p 0.998899; H3 raw difference −0.104679, p 0.954619.
+  H1a/H1b are supported at 10%, 5% and 1%; the prespecified H2/H3 increase
+  alternatives are not supported at those levels. No causal claim is made.
+- SHA-256 comparisons confirm all six Task 01–03 outputs are unchanged.
+  Source edits are limited to code/hypothesis_tests.py; metadata edits are
+  this log and the authorized Task 03/04 statuses. No protected source or
+  dependency changes; no new human verification results claimed.
+- Task 03 Completed records the researcher's prior explicit review approval.
+  Task 04 set Ready for Review only after all CHECK criteria passed. This
+  is the fifth checked implementation step and final implementation commit.
+- Remaining integration item: reviewed Task 03 code/log commits still reside
+  on agent/03_partial_correlation and are not ancestors of this prepared
+  Task 04 branch. No merge or copy was performed. Researcher must integrate
+  that branch separately and reconcile the task overview if needed.
+- Researcher verification: inspect the five-step diff, independently rerun
+  the commands above, view Excel layout, and verify the documented Fisher
+  scale/metadata conventions and the fixed H3 independence/normality assumptions.
+  Task 04 acceptance and all merges remain with the researcher.
+- Stop after Task 04. No push, pull request or merge performed. Known nonfatal
+  Git global-ignore access warning has no effect on the passed checks.

@@ -10,6 +10,9 @@ import numpy as np
 import pandas as pd
 from scipy.stats import norm
 from statsmodels.regression.linear_model import OLS
+from openpyxl import Workbook
+from openpyxl.styles import Alignment, Border, Font, Side
+from openpyxl.utils import get_column_letter
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -42,6 +45,18 @@ RESULT_COLUMNS = [
     "n_obs", "n_obs_bai", "n_obs_ai", "hac_lags",
 ]
 HYPOTHESES = ["H1a", "H1b", "H2", "H3"]
+TABLE_COLUMNS = ["Hypothesis", "Estimate", "Test Statistic", "One-Sided p-Value", "N"]
+HYPOTHESIS_LABELS = {
+    "H1a": "H1a: β_U (FS) < 1",
+    "H1b": "H1b: β_T (FS) > 1",
+    "H2": "H2: β_U (AI) > β_U (BAI)",
+    "H3": "H3: ρ_U,T|M (AI) > ρ_U,T|M (BAI)",
+}
+TABLE_NOTE = (
+    "Estimates: β̂ for H1, γ̂_U for H2, ρ̂^AI − ρ̂^BAI for H3. "
+    "Test statistics: t for H1 and H2, Z for H3. "
+    "N: Full Sample weeks for H1 and H2; N_BAI + N_AI for H3."
+)
 
 
 def _period_row(table, period, columns):
@@ -197,3 +212,112 @@ def test_h3(partial_correlations):
         "H3", ai.partial_correlation - before.partial_correlation, se, statistic,
         norm.sf(statistic), before.n_obs + ai.n_obs, before.n_obs, ai.n_obs, None,
     ]])
+
+
+def _validate_results(tests):
+    if list(tests.columns) != RESULT_COLUMNS or tests["hypothesis"].tolist() != HYPOTHESES:
+        raise ValueError("Expected the four hypothesis rows and complete output schema in proposal order")
+    required = ["estimate", "std_error", "test_statistic", "p_value_one_sided", "n_obs"]
+    if (not np.isfinite(tests[required].to_numpy(dtype=float)).all()
+            or (tests["std_error"] <= 0).any()
+            or not tests["p_value_one_sided"].between(0, 1).all()):
+        raise ValueError("Invalid estimates, standard errors, test statistics or p-values")
+    n = tests["n_obs"].to_numpy(dtype=float)
+    if (n < 1).any() or (n != np.floor(n)).any() or not (n == n[0]).all():
+        raise ValueError("All tests must cover the same integer Full Sample count")
+    if (tests.iloc[:3]["hac_lags"].isna().any()
+            or not tests.iloc[:3]["hac_lags"].eq(HAC_LAGS).all()
+            or not pd.isna(tests.iloc[3]["hac_lags"])
+            or tests.iloc[:2][["n_obs_bai", "n_obs_ai"]].notna().any().any()):
+        raise ValueError("Invalid applicability of HAC lags or split counts")
+    for row in tests.iloc[2:].itertuples(index=False):
+        if pd.isna(row.n_obs_bai) or pd.isna(row.n_obs_ai):
+            raise ValueError("H2/H3 require split counts")
+        split = np.array([row.n_obs_bai, row.n_obs_ai], dtype=float)
+        if (not np.isfinite(split).all() or (split <= 4).any()
+                or (split != np.floor(split)).any() or split.sum() != row.n_obs):
+            raise ValueError("Invalid H2/H3 split counts")
+    if not np.array_equal(tests.iloc[2][["n_obs_bai", "n_obs_ai"]], tests.iloc[3][["n_obs_bai", "n_obs_ai"]]):
+        raise ValueError("H2 and H3 use different comparison counts")
+
+
+def format_hypothesis_table(hypothesis_tests):
+    """Return the proposal table; round only displayed values to three decimals."""
+    _validate_results(hypothesis_tests)
+    rows = [[
+        HYPOTHESIS_LABELS[row.hypothesis], round(row.estimate, 3),
+        round(row.test_statistic, 3), round(row.p_value_one_sided, 3), int(row.n_obs),
+    ] for row in hypothesis_tests.itertuples(index=False)]
+    table = pd.DataFrame(rows, columns=TABLE_COLUMNS)
+    table.attrs["note"] = TABLE_NOTE
+    return table
+
+
+def save_results(hypothesis_table, hypothesis_tests, output_dir):
+    """Save only the named workbook and full-precision CSV; propagate errors."""
+    destination = Path(output_dir).resolve()
+    if destination != OUTPUT_DIR:
+        raise ValueError(f"The only approved output directory is {OUTPUT_DIR}")
+    expected = format_hypothesis_table(hypothesis_tests)
+    if not hypothesis_table.equals(expected) or hypothesis_table.attrs.get("note") != TABLE_NOTE:
+        raise ValueError("Hypothesis table does not match the unrounded results")
+    paths = [destination / name for name in ("hypothesis_tests.xlsx", "hypothesis_tests.csv")]
+    if any(path.resolve() != path for path in paths):
+        raise ValueError("Output paths must not redirect to other files")
+    destination.mkdir(parents=True, exist_ok=True)
+    book = Workbook()
+    sheet = book.active
+    sheet.title = "Hypothesis Tests"
+    sheet.append(TABLE_COLUMNS)
+    for row in hypothesis_table.itertuples(index=False, name=None):
+        sheet.append(row)
+    sheet.merge_cells("A7:E7")
+    sheet["A7"] = TABLE_NOTE
+    sheet["A7"].font = Font(name="Calibri", size=10, italic=True)
+    sheet["A7"].alignment = Alignment(wrap_text=True, vertical="top")
+    sheet.row_dimensions[7].height = 48
+    for row in sheet.iter_rows(min_row=1, max_row=5):
+        for cell in row:
+            cell.font = Font(name="Calibri", size=11, bold=cell.row == 1)
+            cell.alignment = Alignment(horizontal="left" if cell.column == 1 else "right", wrap_text=True)
+            if cell.row in (1, 5):
+                cell.border = Border(bottom=Side(style="thin", color="404040"))
+            if cell.row > 1 and cell.column > 1:
+                cell.number_format = "0" if cell.column == 5 else "0.000"
+        sheet.row_dimensions[row[0].row].height = 30
+    for i, width in enumerate([45, 15, 18, 22, 9], start=1):
+        sheet.column_dimensions[get_column_letter(i)].width = width
+    sheet.freeze_panes = "B2"
+    sheet.sheet_view.showGridLines = False
+    sheet.print_area = "A1:E7"
+    sheet.sheet_properties.pageSetUpPr.fitToPage = True
+    sheet.page_setup.orientation = "landscape"
+    sheet.page_setup.paperSize = sheet.PAPERSIZE_A4
+    sheet.page_setup.fitToWidth = 1
+    sheet.page_setup.fitToHeight = 1
+    book.save(paths[0])
+    hypothesis_tests.to_csv(paths[1], index=False, na_rep="")
+
+
+def main():
+    """Load → H1 → H2 → H3 → format → save, retaining the fixed research design."""
+    weekly, statistics, partial = load_inputs(WEEKLY_PATH, STATISTICS_PATH, PARTIAL_PATH)
+    h1 = test_h1(statistics)
+    h2 = test_h2(weekly)
+    h3 = test_h3(partial)
+    before = _period_row(statistics, "Before AI boom", ["beta_U"])
+    ai = _period_row(statistics, "AI boom", ["beta_U"])
+    if not np.allclose(
+        [h2.attrs["coefficients"]["beta"], h2.iloc[0]["estimate"]],
+        [before.beta_U, ai.beta_U - before.beta_U], atol=1e-12, rtol=1e-10,
+    ):
+        raise ValueError("H2 pooled slopes disagree with Task 02 period betas")
+    tests = pd.concat([h1, h2, h3], ignore_index=True)
+    table = format_hypothesis_table(tests)
+    save_results(table, tests, OUTPUT_DIR)
+    print(f"Saved {len(tests)} hypothesis tests to {OUTPUT_DIR}")
+    print("hypothesis_tests.xlsx, hypothesis_tests.csv")
+
+
+if __name__ == "__main__":
+    main()
