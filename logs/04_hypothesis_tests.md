@@ -487,3 +487,17 @@ git diff --check
   Task 04 acceptance and all merges remain with the researcher.
 - Stop after Task 04. No push, pull request or merge performed. Known nonfatal
   Git global-ignore access warning has no effect on the passed checks.
+
+## 2026-10-21 — Researcher acceptance and completion
+
+- Researcher replied "ok fertig" after the verified Task 04 handoff. Recorded
+  this as explicit acceptance and changed Task 04 from Ready for Review to
+  Completed. All four task statuses are now Completed on this branch.
+- Before editing, verified branch agent/04_hypothesis_tests, clean working
+  tree and no staged changes. Final implementation commit is
+  2979536b622699054ddad55bb5952482539b8331, author verified as Codex.
+- Only tasks/README.md and this log changed. Analysis code, generated outputs
+  and the previously passed CHECK results are unchanged; no numerical rerun
+  needed for this status-only update. `git diff --check` passed.
+- Researcher retains merge authority, including integration of the separate
+  reviewed Task 03 branch. No branch switch, push, pull request or merge.
