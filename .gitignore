@@ -191,6 +191,9 @@ cython_debug/
 # Local VS Code settings
 .vscode/
 
+# Literature
+literature/pdf/
+
 # macOS files
 .DS_Store
 .AppleDouble
