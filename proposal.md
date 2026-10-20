@@ -141,5 +141,5 @@ All estimates use the same aligned weekly observations within the full sample an
 | Literature & Writing | Literature Search, Summaries & Drafting | Source Verification & Content Approval |
 | Data Analysis & Results | Coding, Estimation & Tables | Task Specification, Code & Results Review |
 | Validation | Automated Testing & Debugging | Independent Human Review |
-| Documentation | Code Documentation | Main and Branch Commits, Merge Approval |
+| Documentation | Branch Commits, Code Documentation | Main Commits, Merge Approval |
 | Interpretation | Interpretation Support | Scientific Judgment & Conclusions |
