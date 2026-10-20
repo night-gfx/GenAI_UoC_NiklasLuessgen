@@ -1,0 +1,49 @@
+Setup validation — research-task workflow
+Date: 2026-10-20 13:51 CEST
+Branch: docs/constructed-variables-literature  HEAD (input revision): 6b21535f905c451dfdff638018bb5a1c19937425
+
+1. Patch state (checked before removing code/setup_research_workflow.patch, sha256 c4c9baa9...)
+   git apply --check code/setup_research_workflow.patch      -> exit 1 (fails: already applied)
+   git apply --check -R code/setup_research_workflow.patch   -> exit 0 (fully applied)
+   Conclusion: the patch was fully applied in an earlier run; it was not applied a second time.
+
+2. Structural / scope tests
+   Command: PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -B -m pytest -p no:cacheprovider tests/agent/test_setup_workflow.py -v
+   ============================= test session starts ==============================
+   platform darwin -- Python 3.13.12, pytest-9.1.1, pluggy-1.7.0 -- /Users/luessgen/Documents/GitHub/GenAI_UoC_NiklasLüßgen/.venv/bin/python
+   rootdir: /Users/luessgen/Documents/GitHub/GenAI_UoC_NiklasLüßgen
+   collecting ... collected 26 items
+   
+   tests/agent/test_setup_workflow.py::test_task_sections_in_order[01_collect_data] PASSED [  3%]
+   tests/agent/test_setup_workflow.py::test_task_sections_in_order[02_prepare_returns] PASSED [  7%]
+   tests/agent/test_setup_workflow.py::test_task_sections_in_order[03_estimate_beta] PASSED [ 11%]
+   tests/agent/test_setup_workflow.py::test_task_sections_in_order[04_partial_correlation] PASSED [ 15%]
+   tests/agent/test_setup_workflow.py::test_task_sections_in_order[05_results] PASSED [ 19%]
+   tests/agent/test_setup_workflow.py::test_task_names_expected_branch[01_collect_data] PASSED [ 23%]
+   tests/agent/test_setup_workflow.py::test_task_names_expected_branch[02_prepare_returns] PASSED [ 26%]
+   tests/agent/test_setup_workflow.py::test_task_names_expected_branch[03_estimate_beta] PASSED [ 30%]
+   tests/agent/test_setup_workflow.py::test_task_names_expected_branch[04_partial_correlation] PASSED [ 34%]
+   tests/agent/test_setup_workflow.py::test_task_names_expected_branch[05_results] PASSED [ 38%]
+   tests/agent/test_setup_workflow.py::test_readme_order_and_status PASSED  [ 42%]
+   tests/agent/test_setup_workflow.py::test_status_sequence_and_researcher_control PASSED [ 46%]
+   tests/agent/test_setup_workflow.py::test_skill_frontmatter_and_rules PASSED [ 50%]
+   tests/agent/test_setup_workflow.py::test_agents_references_skill_and_readme_exception PASSED [ 53%]
+   tests/agent/test_setup_workflow.py::test_obsolete_setup_helpers_removed PASSED [ 57%]
+   tests/agent/test_setup_workflow.py::test_skill_identical_to_prepared_version PASSED [ 61%]
+   tests/agent/test_setup_workflow.py::test_protected_files_unchanged[.gitattributes] PASSED [ 65%]
+   tests/agent/test_setup_workflow.py::test_protected_files_unchanged[.gitignore] PASSED [ 69%]
+   tests/agent/test_setup_workflow.py::test_protected_files_unchanged[README.md] PASSED [ 73%]
+   tests/agent/test_setup_workflow.py::test_protected_files_unchanged[proposal.md] PASSED [ 76%]
+   tests/agent/test_setup_workflow.py::test_protected_files_unchanged[requirements.txt] PASSED [ 80%]
+   tests/agent/test_setup_workflow.py::test_protected_files_unchanged[data/raw/README.md] PASSED [ 84%]
+   tests/agent/test_setup_workflow.py::test_protected_files_unchanged[data/raw/12_Industry_Portfolios_Daily.csv] PASSED [ 88%]
+   tests/agent/test_setup_workflow.py::test_protected_files_unchanged[data/raw/F-F_Research_Data_Factors_daily.csv] PASSED [ 92%]
+   tests/agent/test_setup_workflow.py::test_protected_files_unchanged[literature/literature_matrix.md] PASSED [ 96%]
+   tests/agent/test_setup_workflow.py::test_no_research_artifacts_created PASSED [100%]
+   
+   ============================== 26 passed in 0.05s ==============================
+
+3. Researcher tests
+   tests/researcher/ contains 0 test files; none were run. This is not a passing result.
+
+4. Research tasks: not executed; all five remain Planned. data/adjusted/ is empty; code/ has no analysis scripts.
