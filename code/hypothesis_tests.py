@@ -9,6 +9,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from scipy.stats import norm
+from statsmodels.regression.linear_model import OLS
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -143,3 +144,37 @@ def test_h1(regression_statistics):
         p = norm.cdf(statistic) if hypothesis == "H1a" else norm.sf(statistic)
         results.append([hypothesis, beta, se, statistic, p, row.n_obs, None, None, HAC_LAGS])
     return _result_frame(results)
+
+
+def _fit_h2(weekly):
+    """Fit the prespecified pooled model, retaining chronological HAC ordering."""
+    _validate_weekly(weekly)
+    market = weekly["market_excess"].to_numpy(dtype=float)
+    dummy = (weekly["week_end"] >= AI_START).to_numpy(dtype=float)
+    n_ai, n_bai = int(dummy.sum()), int(len(dummy) - dummy.sum())
+    if n_ai == 0 or n_bai == 0 or len(weekly) <= 4:
+        raise ValueError("H2 requires observations in both periods and residual degrees of freedom")
+    design = np.column_stack([np.ones(len(weekly)), dummy, market, dummy * market])
+    if np.linalg.matrix_rank(design) != 4:
+        raise ValueError("Singular H2 dummy/interacted-market design")
+    fit = OLS(weekly["utilities_excess"].to_numpy(dtype=float), design, missing="raise").fit(
+        cov_type="HAC", use_t=False,
+        cov_kwds={"maxlags": HAC_LAGS, "kernel": "bartlett", "use_correction": False},
+    )
+    if (not np.isfinite(fit.params).all() or not np.isfinite(fit.bse).all()
+            or not np.isfinite(fit.resid).all() or fit.bse[3] <= 0):
+        raise ValueError("Nonfinite H2 results or nonpositive gamma standard error")
+    return fit, n_bai, n_ai
+
+
+def test_h2(weekly):
+    """Test gamma = beta_AI - beta_BAI > 0 using four-lag Newey–West SEs."""
+    fit, n_bai, n_ai = _fit_h2(weekly)
+    gamma, se = fit.params[3], fit.bse[3]
+    statistic = gamma / se
+    result = _result_frame([[
+        "H2", gamma, se, statistic, norm.sf(statistic), len(weekly), n_bai, n_ai, HAC_LAGS,
+    ]])
+    # In-memory coefficients support verification of the separate period slopes.
+    result.attrs["coefficients"] = dict(zip(["alpha", "delta", "beta", "gamma"], fit.params))
+    return result

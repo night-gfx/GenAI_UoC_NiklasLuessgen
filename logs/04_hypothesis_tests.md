@@ -153,3 +153,97 @@ print(h.to_string())
   Five invalid H1 cases rejected; source statistics unchanged.
   Actual p-values: H1a 5.666856e-17, H1b 2.405260e-09.
   `git diff --check` passed.
+
+## Step 3 — H2 pooled dummy/interaction regression
+
+- Step 2 commit: `9f732ed6053f91ef13e4b51cc911364741fe4188`; Codex author
+  verified. Added test_h2 using intercept, AI dummy, market and dummy×market.
+  AI starts on December 2022 Friday labels; before/AI weeks remain chronological.
+- HAC exactly follows Task 02: four lags, Bartlett weights, no finite-sample
+  multiplier, normal inference. Point estimates remain OLS. Invalid inputs,
+  absent comparison periods, singular designs and nonfinite results fail.
+- H2's split counts are recorded; coefficients are retained only in DataFrame
+  metadata for checks, without extra output files or columns.
+
+### Step 3 check
+
+```python
+import sys
+from math import erfc, sqrt
+import numpy as np
+import pandas as pd
+sys.path.insert(0, "code")
+import hypothesis_tests as m
+w, s, p = m.load_inputs(m.WEEKLY_PATH, m.STATISTICS_PATH, m.PARTIAL_PATH)
+original = w.copy(deep=True)
+result = m.test_h2(w)
+row = result.iloc[0]
+ss = s.set_index("period")
+np.testing.assert_allclose(row.estimate, ss.loc["AI boom", "beta_U"]-ss.loc["Before AI boom", "beta_U"], atol=1e-12, rtol=1e-10)
+np.testing.assert_allclose(result.attrs["coefficients"]["beta"], ss.loc["Before AI boom", "beta_U"], atol=1e-12, rtol=1e-10)
+assert row.n_obs == 1913 and row.n_obs_bai == 1717 and row.n_obs_ai == 196 and row.hac_lags == 4
+x = w.market_excess.to_numpy()
+d = (w.week_end >= pd.Timestamp("2022-12-01")).to_numpy(dtype=float)
+design = np.column_stack([np.ones(len(w)), d, x, d*x])
+coefficients = np.linalg.lstsq(design, w.utilities_excess.to_numpy(), rcond=None)[0]
+residuals = w.utilities_excess.to_numpy() - design@coefficients
+inverse = np.linalg.inv(design.T@design)
+# Independent Newey–West: explicit scalar lag sums for all 16 matrix entries.
+scores = design*residuals[:, None]
+meat = np.zeros((4, 4))
+for j in range(4):
+    for k in range(4):
+        meat[j, k] = sum(scores[t, j]*scores[t, k] for t in range(len(w)))
+        for lag in range(1, 5):
+            meat[j, k] += (1-lag/5)*sum(
+                scores[t, j]*scores[t-lag, k] + scores[t-lag, j]*scores[t, k]
+                for t in range(lag, len(w)))
+independent_se = np.sqrt(np.diag(inverse@meat@inverse))
+fit, _, _ = m._fit_h2(w)
+np.testing.assert_allclose(fit.params, coefficients, atol=1e-12, rtol=1e-12)
+np.testing.assert_allclose(fit.bse, independent_se, atol=1e-12, rtol=1e-10)
+np.testing.assert_allclose(row.std_error, independent_se[3], atol=1e-12, rtol=1e-10)
+np.testing.assert_allclose(row.test_statistic, coefficients[3]/independent_se[3], atol=1e-10, rtol=1e-10)
+np.testing.assert_allclose(row.p_value_one_sided, erfc(row.test_statistic/sqrt(2))/2, atol=1e-15, rtol=1e-12)
+# Independent within-period slopes also imply the pooled slope and difference.
+slopes = [np.cov(w.utilities_excess.to_numpy()[d == group], x[d == group], ddof=1)[0, 1]/np.var(x[d == group], ddof=1) for group in (0, 1)]
+np.testing.assert_allclose([coefficients[2], coefficients[3]], [slopes[0], slopes[1]-slopes[0]], atol=1e-12, rtol=1e-12)
+
+rng = np.random.default_rng(20261021)
+dates = pd.date_range("2021-01-01", periods=180, freq="W-FRI")
+x = rng.normal(size=len(dates)); d = (dates >= pd.Timestamp("2022-12-01")).astype(float)
+design = np.column_stack([np.ones(len(dates)), d, x, d*x])
+noise = rng.normal(size=len(dates))
+noise -= design@np.linalg.lstsq(design, noise, rcond=None)[0]
+for gamma in (-0.3, 0., 0.35):
+    expected = np.array([0.2, -0.4, 0.55, gamma])
+    synthetic = pd.DataFrame({"week_end": dates, "utilities_excess": design@expected+noise,
+                              "technology_excess": rng.normal(size=len(dates)), "market_excess": x})
+    recovered = m.test_h2(synthetic)
+    np.testing.assert_allclose(list(recovered.attrs["coefficients"].values()), expected, atol=1e-12, rtol=1e-12)
+    if gamma:
+        assert np.sign(recovered.iloc[0].test_statistic) == np.sign(gamma)
+for bad in [w.loc[w.week_end < m.AI_START], w.loc[w.week_end >= m.AI_START],
+            w.assign(market_excess=1.), w.assign(utilities_excess=np.nan), w.iloc[::-1]]:
+    try:
+        m.test_h2(bad)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Invalid H2 input accepted")
+pd.testing.assert_frame_equal(w, original, check_exact=True)
+print(f"PASS: H2 period identities and independent HAC; max SE error={np.max(np.abs(fit.bse-independent_se)):.3g}")
+print("PASS: synthetic negative/zero/positive beta differences; 5 invalid cases")
+print(result.to_string(index=False))
+```
+
+- Ran Step 3 with `.venv/bin/python -B`: PASS for the pooled BAI slope and
+  gamma difference versus Task 02 (1e-12 absolute / 1e-10 relative tolerance),
+  independent covariance/variance slopes, all four OLS coefficients and all
+  four independent HAC SEs (1e-12 absolute / 1e-10 relative). Maximum SE error
+  6.25e-17. t/p-value checks passed at declared tolerances in the block.
+- Synthetic negative/zero/positive gamma coefficients recovered within
+  1e-12 absolute/relative; five invalid H2 cases rejected. Source weekly
+  observations unchanged. Actual gamma −0.286757, t −3.061409, one-sided
+  p 0.998899: the prespecified alternative is an increase, not any change.
+  `git diff --check` passed.
