@@ -247,3 +247,157 @@ print(t.to_string(index=False))
   rows, rounding, stars, unchanged source precision, exact table note, eight
   p-value boundary cases and six invalid-statistics cases. `git diff --check`
   passed. The displayed table is ready for the Excel saving step.
+
+## Step 4 — Save outputs and final agent review
+
+- Step 3 commit: `796d073bf9ec03d360e19dcac5934035d85dc74e`, author verified
+  as Codex. Added save_results and main. Export paths are restricted to the
+  three named outputs and symlink redirection is rejected. Validation and
+  write errors propagate to the caller.
+- Excel uses the proposal's headers, two separator rows, nine data rows,
+  three-decimal display, integer N and the exact proposal note. Added column
+  widths, header rules, frozen labels and landscape A4 fit-to-page printing.
+- CSVs retain full floating-point precision, exact column order, ISO dates
+  and no row index. No output files are written directly by the LLM.
+- Final command: `.venv/bin/python -B code/estimate_beta.py`.
+
+### Step 4 check
+
+```python
+import sys
+from pathlib import Path
+from unittest.mock import patch
+import numpy as np
+import pandas as pd
+from openpyxl import load_workbook
+sys.path.insert(0, "code")
+import estimate_beta as m
+p = m.load_weekly_returns(m.WEEKLY_PATH)
+s, r = m.run_ols(p)
+t = m.format_regression_table(s)
+disk_s = pd.read_csv(m.OUTPUT_DIR / "regression_statistics.csv", float_precision="round_trip", parse_dates=["first_week", "last_week"])
+disk_r = pd.read_csv(m.OUTPUT_DIR / "market_residuals.csv", float_precision="round_trip", parse_dates=["week_end"])
+pd.testing.assert_frame_equal(disk_s, s, check_exact=True, check_dtype=False)
+pd.testing.assert_frame_equal(disk_r, r, check_exact=True, check_dtype=False)
+assert disk_s.shape == (9, 27) and disk_r.shape == (5504, 5)
+assert all("*" not in Path(m.OUTPUT_DIR / name).read_text() for name in ["regression_statistics.csv", "market_residuals.csv"])
+book = load_workbook(m.OUTPUT_DIR / "regression_table.xlsx", data_only=False)
+assert book.sheetnames == ["Market Betas"]
+sheet = book.active
+assert [sheet.cell(1, col).value for col in range(1, 7)] == list(t.columns)
+data_rows = [2, 4, 5, 7, 8, 9, 10, 11, 12]
+assert sheet.max_column == 6 and sheet.max_row == 14
+for source_i, excel_i in enumerate(data_rows):
+    for col in range(1, 7):
+        assert sheet.cell(excel_i, col).value == t.iloc[source_i, col-1]
+    for col in (4, 5):
+        assert sheet.cell(excel_i, col).number_format == "0.000"
+    assert sheet.cell(excel_i, 6).number_format == "0"
+for blank in (3, 6, 13):
+    assert all(sheet.cell(blank, col).value is None for col in range(1, 7))
+assert sheet["A14"].value == t.attrs["note"]
+assert "A14:F14" in sheet.merged_cells
+assert sheet["A14"].alignment.wrap_text and sheet["A1"].font.bold
+assert sheet.freeze_panes == "B2"
+assert sheet.page_setup.fitToWidth == sheet.page_setup.fitToHeight == 1
+book.close()
+
+# Rejection checks operate before writes; injected write errors also propagate.
+for table, stats, residuals, directory in [
+    (t, s, r, m.PROJECT_ROOT),
+    (t.iloc[::-1], s, r, m.OUTPUT_DIR),
+    (t, s, pd.concat([r, r.iloc[:1]]), m.OUTPUT_DIR),
+    (t, s, r.iloc[:-1], m.OUTPUT_DIR),
+    (t, s, r.assign(market_excess=np.inf), m.OUTPUT_DIR),
+]:
+    try:
+        m.save_results(table, stats, residuals, directory)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Invalid output accepted")
+with patch.object(m.Workbook, "save", side_effect=OSError("Injected write error")):
+    try:
+        m.save_results(t, s, r, m.OUTPUT_DIR)
+    except OSError:
+        pass
+    else:
+        raise AssertionError("Write error swallowed")
+print("PASS: exact CSV round trips, 9-row Excel/table/note/format match, 5 invalid outputs, write-error propagation")
+print(f"Statistics: {disk_s.shape}; residuals: {disk_r.shape}")
+```
+
+- First complete final run: all four blocks passed, including exact CSV
+  round trips and all Excel cells, note and formats; 9×27 statistics and
+  5,504×5 residuals. During final code review, strengthened the zero-variance
+  guard: a constant decimal can yield tiny positive computed variance through
+  rounding, so an exact range check also rejects constant inputs.
+
+### Constant-decimal regression guard
+
+```python
+import sys
+sys.path.insert(0, "code")
+import estimate_beta as m
+p = m.load_weekly_returns(m.WEEKLY_PATH)
+for column in m.RETURN_COLUMNS:
+    try:
+        m.run_ols(p.assign(**{column: 0.1}))
+    except ValueError as error:
+        assert "zero return variance" in str(error)
+    else:
+        raise AssertionError("Constant decimal accepted")
+print("PASS: constant 0.1 rejected in each of the three return series")
+```
+
+Final reproducible check command (runs every block above):
+
+```sh
+.venv/bin/python -B code/estimate_beta.py
+.venv/bin/python -B - <<'PY'
+from pathlib import Path
+blocks = Path('logs/02_estimate_beta.md').read_text().split('```python\n')[1:]
+for i, block in enumerate(blocks, 1):
+    print(f'CHECK block {i}', flush=True)
+    exec(compile(block.split('```')[0], f'CHECK block {i}', 'exec'), {'__name__': '__main__'})
+print('ALL TASK 02 CHECKS PASSED')
+PY
+git diff --check
+```
+
+### Final results and handoff
+
+- Re-ran the exact task command after the constant-decimal guard change:
+  exit 0, saved nine periods and 5,504 residual rows. All five verification
+  blocks then passed, followed by `git diff --check` (exit 0).
+- Input: 1,913 complete ordered Fridays, 1990-01-05–2026-08-28, percent
+  units unchanged, no missing rows, filling, exclusions or source changes.
+- Periods: Before AI boom 1,717 + AI boom 196 = Full Sample 1,913.
+  Six crisis subperiods 1,678 + gap March–November 2022 39 = 1,717;
+  exact calendar ranges verified independently, with no crisis overlap.
+- All 18 regressions passed covariance/variance and correlation/volatility
+  beta identities, R² identities, independent four-lag Bartlett HAC SEs,
+  normal t-statistic/p-value checks and residual reconstruction, centering,
+  market orthogonality and ddof=1 dispersion checks. Maximum HAC SE error
+  3.61e-16; declared numerical tolerances above were met. Known synthetic
+  intercepts/slopes recovered within 1e-12 absolute/relative tolerance.
+- Exported CSV values exactly match the computed floating-point results on
+  round-trip reading. Excel values, three-decimal formats, significance stars,
+  nine ordered data rows, separator rows and exact note all passed checks.
+- Generated only by `.venv/bin/python -B code/estimate_beta.py`:
+  - `output/regression_table.xlsx`: nine rows, six columns, proposal table note.
+  - `output/regression_statistics.csv`: nine rows, 27 columns, unrounded.
+  - `output/market_residuals.csv`: 5,504 rows, five columns, unrounded.
+- Source changes: only code/estimate_beta.py; metadata changes: Task 02 status
+  in tasks/README.md and this chronological log. Generated outputs remain
+  ignored and are not staged. No protected source files or dependencies changed.
+- Status set to Ready for Review only after all CHECK criteria passed.
+  No unresolved implementation failures or methodological deviations.
+  The earlier global Git ignore warning remains nonfatal.
+- Researcher review: inspect the four-step diff, rerun the task command and
+  checks above independently, and verify the Excel layout in the researcher's
+  spreadsheet application. Review the explicitly documented asymptotic HAC
+  convention (no finite-sample multiplier) and residual sample std (ddof=1).
+  Researcher acceptance and merge remain pending; do not mark Completed yet.
+- Final commit includes saving, final validation results and Ready for Review
+  status. Stop after Task 02; no push, pull request, merge or Task 03 execution.

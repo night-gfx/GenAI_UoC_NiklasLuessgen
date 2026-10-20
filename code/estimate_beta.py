@@ -7,6 +7,9 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from openpyxl import Workbook
+from openpyxl.styles import Alignment, Border, Font, Side
+from openpyxl.utils import get_column_letter
 from scipy.stats import norm
 from statsmodels.regression.linear_model import OLS
 
@@ -119,7 +122,8 @@ def run_ols(weekly_periods):
                 or len(weekly) <= HAC_LAGS):
             raise ValueError(f"{period}: invalid weekly dates or insufficient observations")
         values = weekly.to_numpy(dtype=float)
-        if (np.var(values, axis=0, ddof=1) <= 0).any():
+        # A constant decimal can have a tiny positive variance from rounding.
+        if (np.ptp(values, axis=0) == 0).any() or (np.var(values, axis=0, ddof=1) <= 0).any():
             raise ValueError(f"{period}: zero return variance")
         market = values[:, 2]
         design = np.column_stack([np.ones(len(weekly)), market])
@@ -207,3 +211,85 @@ def format_regression_table(regression_statistics):
     table = pd.DataFrame(rows, columns=TABLE_COLUMNS)
     table.attrs["note"] = TABLE_NOTE
     return table
+
+
+def save_results(regression_table, regression_statistics, residuals, output_dir):
+    """Save only the three authorized outputs; propagate validation/write errors."""
+    destination = Path(output_dir).resolve()
+    if destination != OUTPUT_DIR:
+        raise ValueError(f"The only approved output directory is {OUTPUT_DIR}")
+    expected_table = format_regression_table(regression_statistics)
+    if (not regression_table.equals(expected_table)
+            or regression_table.attrs.get("note") != TABLE_NOTE):
+        raise ValueError("Regression table does not match the unrounded statistics")
+    if (list(residuals.columns) != RESIDUAL_COLUMNS
+            or residuals.duplicated(["period", "week_end"]).any()
+            or residuals[["period", "week_end"]].isna().any().any()
+            or not np.isfinite(residuals[RESIDUAL_COLUMNS[2:]].to_numpy(dtype=float)).all()):
+        raise ValueError("Invalid residual schema, keys or values")
+    counts = residuals.groupby("period", sort=False).size()
+    if (counts.index.tolist() != PERIOD_NAMES
+            or not np.array_equal(counts.to_numpy(), regression_statistics["n_obs"].to_numpy())):
+        raise ValueError("Residual counts differ from regression statistics")
+    dates = pd.to_datetime(residuals["week_end"], errors="raise")
+    if (dates.dt.dayofweek != 4).any():
+        raise ValueError("Residual dates must be Fridays")
+    paths = [destination / name for name in (
+        "regression_table.xlsx", "regression_statistics.csv", "market_residuals.csv",
+    )]
+    if any(path.resolve() != path for path in paths):
+        raise ValueError("Output paths must not redirect to other files")
+    destination.mkdir(parents=True, exist_ok=True)
+
+    book = Workbook()
+    sheet = book.active
+    sheet.title = "Market Betas"
+    sheet.append(TABLE_COLUMNS)
+    for i, row in enumerate(regression_table.itertuples(index=False, name=None)):
+        if i in (1, 3):
+            sheet.append([None] * len(TABLE_COLUMNS))
+        sheet.append(row)
+    last_data_row = sheet.max_row
+    note_row = last_data_row + 2
+    sheet.merge_cells(start_row=note_row, start_column=1, end_row=note_row, end_column=6)
+    sheet.cell(note_row, 1, TABLE_NOTE)
+    sheet.cell(note_row, 1).font = Font(name="Calibri", size=10, italic=True)
+    sheet.cell(note_row, 1).alignment = Alignment(wrap_text=True, vertical="top")
+    sheet.row_dimensions[note_row].height = 32
+    for row in sheet.iter_rows(min_row=1, max_row=last_data_row):
+        for cell in row:
+            cell.font = Font(name="Calibri", size=11, bold=cell.row == 1)
+            cell.alignment = Alignment(horizontal="left" if cell.column == 1 else "right")
+            if cell.row == 1 or cell.row == last_data_row:
+                cell.border = Border(bottom=Side(style="thin", color="404040"))
+            if cell.row > 1 and cell.column in (4, 5):
+                cell.number_format = "0.000"
+            elif cell.row > 1 and cell.column == 6:
+                cell.number_format = "0"
+    for i, width in enumerate([26, 25, 25, 17, 17, 9], start=1):
+        sheet.column_dimensions[get_column_letter(i)].width = width
+    sheet.freeze_panes = "B2"
+    sheet.sheet_view.showGridLines = False
+    sheet.print_area = f"A1:F{note_row}"
+    sheet.sheet_properties.pageSetUpPr.fitToPage = True
+    sheet.page_setup.orientation = "landscape"
+    sheet.page_setup.paperSize = sheet.PAPERSIZE_A4
+    sheet.page_setup.fitToWidth = 1
+    sheet.page_setup.fitToHeight = 1
+    book.save(paths[0])
+    regression_statistics.to_csv(paths[1], index=False, date_format="%Y-%m-%d")
+    residuals.to_csv(paths[2], index=False, date_format="%Y-%m-%d")
+
+
+def main():
+    """Load → OLS → format → save, with no input scaling or row exclusions."""
+    weekly_periods = load_weekly_returns(WEEKLY_PATH)
+    statistics, residuals = run_ols(weekly_periods)
+    table = format_regression_table(statistics)
+    save_results(table, statistics, residuals, OUTPUT_DIR)
+    print(f"Saved {len(statistics)} periods and {len(residuals)} residual rows to {OUTPUT_DIR}")
+    print("regression_table.xlsx, regression_statistics.csv, market_residuals.csv")
+
+
+if __name__ == "__main__":
+    main()
