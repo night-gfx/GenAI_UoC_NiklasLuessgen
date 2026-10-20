@@ -51,7 +51,3 @@ Study U.S. utilities' market beta and market-adjusted correlation with technolog
 - **Test Results:** Record actual test results and report failures or unresolved issues. Save test outputs only in approved locations.
 - **Summary:** Summarize code changes, validation results, remaining issues, and items requiring human verification.
 - **Review Handoff:** Commit only approved task changes on the prepared feature branch, report the commit hashes, and leave the branch for researcher review without pushing or merging.
-
-## Skills
-
-- **Research Tasks:** Read and follow `.agents/skills/research-task-workflow/SKILL.md` for numbered research tasks; its rules are researcher-authorized.
