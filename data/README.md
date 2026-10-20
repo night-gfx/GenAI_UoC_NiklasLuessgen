@@ -4,7 +4,7 @@ Raw daily data from the [Kenneth French Data Library](https://mba.tuck.dartmouth
 
 ## Retrieval
 
-Downloaded: 2026-10-19 13:30. Sample used: January 1990 to 31 August 2026.
+Downloaded: 2026-10-19 13:30. Sample used: Monday, 1 January 1990 to Friday, 28 August 2026.
 
 ## Files
 

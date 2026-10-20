@@ -8,7 +8,7 @@ Kenneth French Data Library, daily: 12 industry portfolios (`Utils`, `BusEq`) an
 
 ## Method
 
-Weekly excess returns from January 1990 to 31 August 2026, nine predefined comparison periods. Per period: OLS market betas with Newey–West standard errors (test of β = 1) and partial correlations from regression residuals.
+Weekly excess returns (Monday–Friday, labeled by Friday) from 1 January 1990 to 28 August 2026, full sample and eight predefined comparison periods. Per period: OLS market betas with Newey–West standard errors (test of β = 1) and partial correlations from regression residuals. Hypothesis tests: betas against one (H1), AI-boom beta difference via a dummy-interaction regression (H2), and partial-correlation difference via a Fisher z-test (H3).
 
 ## Setup
 
@@ -26,6 +26,7 @@ Run in order; results are written to `output/`.
 | 1 | `code/prepare_returns.py` | `weekly_returns.csv` |
 | 2 | `code/estimate_beta.py` | `regression_table.xlsx`, `regression_statistics.csv`, `market_residuals.csv` |
 | 3 | `code/partial_correlation.py` | `descriptive_statistics.xlsx`, `partial_correlations.csv` |
+| 4 | `code/hypothesis_tests.py` | `hypothesis_tests.xlsx`, `hypothesis_tests.csv` |
 
 ```bash
 .venv/bin/python -B code/prepare_returns.py

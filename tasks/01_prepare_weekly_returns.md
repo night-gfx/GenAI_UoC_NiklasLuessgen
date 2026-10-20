@@ -2,7 +2,7 @@
 
 ## GOAL
 
-Implement Python code (`code/prepare_returns.py`) with separate functions to load and check the existing daily returns, then convert them into weekly excess returns for utilities, technology and the market from January 1990 onward. The script must save the weekly return results as a CSV file (`output/weekly_returns.csv`).
+Implement Python code (`code/prepare_returns.py`) with separate functions to load and check the existing daily returns, then convert them into weekly excess returns for utilities, technology and the market from Monday, 1 January 1990 to Friday, 28 August 2026. The script must save the weekly return results as a CSV file (`output/weekly_returns.csv`).
 
 ## FILES
 
@@ -13,9 +13,9 @@ Implement Python code (`code/prepare_returns.py`) with separate functions to loa
 
 ## CONSTRAINTS
 
-**Inputs:** `Utils`/`BusEq` (value-weighted) from [industry CSV](../data/12_Industry_Portfolios_Daily.csv); `Mkt-RF`/`RF` from [factor CSV](../data/F-F_Research_Data_Factors_daily.csv). Daily returns are given in percent: `0.02 = 0.02%`. Use January 1990 to the last full week ending on or before 31 August 2026; record the final sample week in the log.
+**Inputs:** `Utils`/`BusEq` (value-weighted) from [industry CSV](../data/12_Industry_Portfolios_Daily.csv); `Mkt-RF`/`RF` from [factor CSV](../data/F-F_Research_Data_Factors_daily.csv). Daily returns are given in percent: `0.02 = 0.02%`. Use Monday, 1 January 1990 to Friday, 28 August 2026; record the first and final sample week in the log.
 
-**Conventions:** Keep the source percent units in the output. Confirm week and boundary rules before calculation; keep valid holiday weeks. Loading reads, validation checks and calculation computes returns. Do not drop or fill data without approval; log unresolved errors, stop and ask.
+**Conventions:** Keep the source percent units in the output. Weeks run Monday–Friday and are labeled by their Friday date (`week_end`), also when that Friday is a trading holiday; keep valid holiday weeks. Loading reads, validation checks and calculation computes returns. Do not drop or fill data without approval; log unresolved errors, stop and ask.
 
 | Function | Description | Failure |
 | --- | --- | --- |
@@ -36,7 +36,7 @@ Implement Python code (`code/prepare_returns.py`) with separate functions to loa
 
 - **Weekly observations:** One row per shared week; valid holiday weeks are kept.
 - **Calculation:** Weekly returns match independent hand calculations for sample weeks, including holiday and boundary weeks.
-- **Sample period:** Data starts in January 1990 and ends with the last full week ending on or before 31 August 2026, covered by both files.
+- **Sample period:** The first week ends on Friday, 5 January 1990 and the last on Friday, 28 August 2026; every `week_end` is a Friday; both files cover the sample.
 - **CSV output:** Running `.venv/bin/python -B code/prepare_returns.py` creates `output/weekly_returns.csv` with `week_end`, `utilities_excess`, `technology_excess`, `market_excess` in source percent units (`0.02 = 0.02%`).
 
 ## OUTPUT

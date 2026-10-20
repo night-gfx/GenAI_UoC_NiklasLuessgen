@@ -4,7 +4,7 @@
 
 Implement Python code (`code/hypothesis_tests.py`) with separate functions to load the results of Tasks 01–03 and test H1–H3 as specified in the proposal. The script must save:
 
-- **Hypothesis tests table** (`output/hypothesis_tests.xlsx`), formatted as the proposal's Hypothesis Tests table: estimate, test statistic, one-sided p-value and N for H1a, H1b, H2 and H3, rounded to 3 decimals, with the proposal's table note.
+- **Hypothesis tests table** (`output/hypothesis_tests.xlsx`), formatted as the proposal's Hypothesis Tests table: estimate, test statistic, one-sided p-value and N (Full Sample weeks for H1 and H2, `n_obs_bai + n_obs_ai` for H3) for H1a, H1b, H2 and H3, rounded to 3 decimals, with the proposal's table note.
 - **Hypothesis test statistics** (`output/hypothesis_tests.csv`), unrounded, one row per hypothesis: `hypothesis`, `estimate`, `std_error`, `test_statistic`, `p_value_one_sided`, `n_obs`, `n_obs_bai`, `n_obs_ai`, `hac_lags`.
 
 ## FILES

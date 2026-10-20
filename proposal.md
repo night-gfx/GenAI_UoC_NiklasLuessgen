@@ -16,7 +16,7 @@ Has the defensive role of U.S. utility stocks changed during the AI boom? Specif
 
   $$H_{3}: \rho_{U,T\mid M}^{AI} > \rho_{U,T\mid M}^{BAI} \;\; \text{vs.} \;\; H_{0}: \rho_{U,T\mid M}^{AI} \leq \rho_{U,T\mid M}^{BAI}$$
 
-Superscripts $FS$, $BAI$, and $AI$ denote the full sample, before the AI boom, and the AI boom (Section 2); $\beta$ and $\rho_{U,T\mid M}$ are defined in Section 3. All hypotheses are tested one-sided at the 10%, 5%, and 1% levels.
+Superscripts $FS$, $BAI$, and $AI$ denote the full sample, before the AI boom, and the AI boom (Section 2); $\beta$ and $\rho_{U,T\mid M}$ are defined in Section 3. All hypotheses are tested one-sided at the 10%, 5%, and 1% levels. The three hypotheses are fixed in advance and tested without a multiple-testing correction.
 
 ## 2. Data and Sample
 
@@ -32,18 +32,18 @@ The analysis uses data from the **Kenneth French Data Library**:
 
 ### Sample
 
-- **Period:** January 1990 to 31 August 2026 (last full week ending on or before this date).
+- **Period:** Monday, 1 January 1990 to Friday, 28 August 2026 (the sample starts on a Monday and ends on a Friday, so it contains only full Monday–Friday weeks).
 
 - **Comparison periods:** Periods are fixed in advance to avoid cherry-picking.
 
 | Comparison period | Start | End |
 | --- | --- | --- |
-| Full Sample | January 1990 | August 2026 |
+| Full Sample | 1 January 1990 | 28 August 2026 |
 | | | |
-| Before AI boom | January 1990 | November 2022 |
-| AI boom | December 2022 | August 2026 |
+| Before AI boom | 1 January 1990 | November 2022 |
+| AI boom | December 2022 | 28 August 2026 |
 | | | |
-| Pre-Dot-Com | January 1990 | February 2000 |
+| Pre-Dot-Com | 1 January 1990 | February 2000 |
 | Dot-com Crash | March 2000 | October 2002 |
 | Pre Financial Crisis | November 2002 | May 2007 |
 | Financial Crisis | June 2007 | February 2009 |
@@ -52,7 +52,7 @@ The analysis uses data from the **Kenneth French Data Library**:
 
 *Source: Ramesh et al. (2025) (provide the dates for the dot-com crash, global financial crisis, and COVID-19 crisis).*
 
-*Manual Adjustments: Everything before crisis is pre-period. Begin of AI-Boom was release of ChatGPT by OpenAI. Before AI boom pools all weeks before the AI boom as the comparison period for H2 and H3. Weeks from March to November 2022 belong to no crisis subperiod and enter only the Full Sample and Before AI boom.*
+*Manual Adjustments: Everything before crisis is pre-period. Begin of AI-Boom was release of ChatGPT by OpenAI. Before AI boom pools all weeks before the AI boom as the comparison period for H2 and H3. Weeks from March to November 2022 belong to no crisis subperiod and enter only the Full Sample and Before AI boom. Weeks are assigned to periods by the calendar month of their Friday week end.*
 
 ## 3. Constructed Variables
 
@@ -60,13 +60,15 @@ The analysis uses data from the **Kenneth French Data Library**:
 
   $$R^e_{U,t} = R_{U,t} - R_{f,t}, \quad R^e_{T,t} = R_{T,t} - R_{f,t}, \quad R^e_{M,t} = R_{M,t} - R_{f,t}$$
 
+  **Week Rule:** A week runs from Monday to Friday and is labeled by its Friday date (`week_end`), also when that Friday is a trading holiday; weekly returns compound all trading days of the week.
+
   $R$ denotes total return; superscript $e$ denotes excess return; subscripts $U$, $T$, $M$, and $f$ identify utilities (Utils), technology (BusEq), market, and the risk-free asset; $t$ denotes the week.
 
   **Interpretation:** Positive (negative) excess returns indicate performance above (below) the risk-free return; zero indicates equal performance.
 
 *Sources: Black, Jensen and Scholes (1972), p. 2 (definition), p. 10 (monthly returns); Baele and Londono (2013), p. 35 (daily log returns).*
 
-- **Market Beta:** Sensitivity of utilities and technology excess returns to market excess returns; technology beta serves as a descriptive benchmark for utilities beta:
+- **Market Beta:** Sensitivity of utilities and technology excess returns to market excess returns; technology beta serves as a benchmark for utilities beta (tested against one in H1b, otherwise descriptive):
 
   $$\beta_U = \frac{\operatorname{Cov}(R_U^e, R_M^e)}{\operatorname{Var}(R_M^e)}, \qquad \beta_T = \frac{\operatorname{Cov}(R_T^e, R_M^e)}{\operatorname{Var}(R_M^e)}$$
 
@@ -90,7 +92,7 @@ The analysis uses data from the **Kenneth French Data Library**:
 
 ### Identification
 
-The study uses an empirical analysis to examine utilities’ market sensitivity and market-adjusted correlation with technology stocks. Market betas are tested against one (H1); the differences between the AI boom and before the AI boom are tested for utilities' market beta (H2) and the partial correlation (H3). All other period comparisons are descriptive. (Limitation: Descriptive differences across the remaining periods establish no statistical significance, and no comparison establishes causality. The comparison identifies changes during, not caused by, the AI boom; concurrent factors such as rising interest rates may contribute.)
+The study uses an empirical analysis to examine utilities’ market sensitivity and market-adjusted correlation with technology stocks. Market betas are tested against one (H1); the differences between the AI boom and before the AI boom are tested for utilities' market beta (H2) and the partial correlation (H3). All other period comparisons are descriptive. (Limitation: Descriptive differences across the remaining periods establish no statistical significance, and no comparison establishes causality. The comparison identifies changes during, not caused by, the AI boom; concurrent factors such as rising interest rates may contribute. Technology stocks are part of the market portfolio, and their market weight is high during the AI boom; a higher utilities beta and the market-adjusted correlation may therefore partly reflect the same co-movement with technology, and controlling for a technology-heavy market removes part of the technology return itself.)
 
 ### Specification
 
@@ -102,7 +104,7 @@ All estimates use the same aligned weekly observations within the full sample an
 
   $\alpha$ denotes the intercept. OLS minimizes the sum of squared residuals separately for each sector; hats denote estimated quantities. The estimated slopes $\hat{\beta}_U$ and $\hat{\beta}_T$ are the period-specific market betas.
 
-  **Interpretation:** Compare utilities’ market sensitivity across periods and with technology as a descriptive benchmark.
+  **Interpretation:** Compare utilities’ market sensitivity across periods and with technology as a benchmark.
 
 *Source: Black, Jensen and Scholes (1972), p. 7, Eq. (6), adapted to weekly sector excess returns.*
 
@@ -146,7 +148,7 @@ All estimates use the same aligned weekly observations within the full sample an
 
   **Interpretation:** $Z > 0$ indicates stronger market-adjusted utility–technology co-movement during the AI boom than before it. (Limitation: The test assumes independent, approximately normal observations; fat-tailed weekly returns may make it less accurate.)
 
-*Source: Fisher (1921), p. 7 (z-transformation), p. 14 (weight n − 3).*
+*Sources: Fisher (1921), p. 7 (z-transformation), p. 14 (weight n − 3 for a simple correlation); Fisher (1924) (weight n − 3 − k for a partial correlation with k controls, here k = 1, giving n − 4).*
 
 **Regression Table: Market Betas**
 
@@ -175,7 +177,7 @@ All estimates use the same aligned weekly observations within the full sample an
 | H2: $\beta_U^{AI} > \beta_U^{BAI}$ | — | — | — | — |
 | H3: $\rho_{U,T\mid M}^{AI} > \rho_{U,T\mid M}^{BAI}$ | — | — | — | — |
 
-*Estimates: $\hat{\beta}$ for H1, $\hat{\gamma}_U$ for H2, $\hat{\rho}^{AI} - \hat{\rho}^{BAI}$ for H3. Test statistics: $t$ for H1 and H2, $Z$ for H3.*
+*Estimates: $\hat{\beta}$ for H1, $\hat{\gamma}_U$ for H2, $\hat{\rho}^{AI} - \hat{\rho}^{BAI}$ for H3. Test statistics: $t$ for H1 and H2, $Z$ for H3. N: Full Sample weeks for H1 and H2; $N_{BAI} + N_{AI}$ for H3.*
 
 **Descriptive Statistics**
 
@@ -223,7 +225,7 @@ All estimates use the same aligned weekly observations within the full sample an
 ### Bounds
 
 - **Predefined Methodology:** Data sources, variables, weekly return construction, estimation methods, and comparison-period boundaries are fixed before estimating the results.
-- **Fixed Sample Cutoff:** The sample ends on 31 August 2026 (last full week ending on or before this date). The data retrieval date and the final sample week must be recorded.
+- **Fixed Sample Cutoff:** The sample ends on Friday, 28 August 2026. The data retrieval date and the final sample week must be recorded.
 - **No Cherry-Picking:** Observations and period boundaries must not be selected, shifted, or excluded based on their effects on the estimated results. Data exclusions are permitted only for documented data-quality reasons.
 - **Documentation:** All methodological changes and deviations from the original proposal must be documented and tracked in Git, including their justification.
 
