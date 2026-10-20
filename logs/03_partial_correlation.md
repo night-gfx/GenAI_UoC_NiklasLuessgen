@@ -189,3 +189,73 @@ print(p.to_string(index=False))
   exact +1/−1 endpoints and six rejection cases passed. `git diff --check`
   passed. Full-sample correlation is approximately −0.387235; no inference
   about differences or causality is made.
+
+## Step 3 — Descriptive statistics panels
+
+- Step 2 commit: `6ab9e5421eed3ccf9311bfc22f4fc59804b5cb52`; author
+  verified as Codex. Added format_descriptive_statistics, joining inputs
+  one-to-one by period and requiring equal n_obs before output.
+- The task script now verifies the analytic identity itself, before rounding.
+  A zero denominator or analytic mismatch raises an error without changing
+  Task 02 results. Fixed tolerances remain 1e-12 absolute / 1e-10 relative.
+- Panel A contains partial/raw correlations and N; Panel B contains the
+  three weekly percent volatilities from Task 02, without annualizing or
+  dividing by 100. Only display panels are rounded to three decimals.
+
+### Step 3 check
+
+```python
+import sys
+import numpy as np
+import pandas as pd
+sys.path.insert(0, "code")
+import partial_correlation as m
+r, s = m.load_inputs(m.RESIDUALS_PATH, m.STATISTICS_PATH)
+p = m.calculate_partial_correlations(r)
+original_p, original_s = p.copy(deep=True), s.copy(deep=True)
+panels = m.format_descriptive_statistics(p, s)
+assert list(panels) == ["Panel A", "Panel B"]
+assert list(panels["Panel A"].columns) == ["Comparison period", "Partial Correlation", "Corr(U, T)", "Corr(U, M)", "Corr(T, M)", "N"]
+assert list(panels["Panel B"].columns) == ["Comparison period", "σ Utilities", "σ Technology", "σ Market"]
+ss, pp = s.set_index("period"), p.set_index("period")
+for i, period in enumerate(m.PERIOD_NAMES):
+    a, b = panels["Panel A"].iloc[i], panels["Panel B"].iloc[i]
+    assert a.iloc[0] == b.iloc[0] == period
+    assert a["Partial Correlation"] == round(pp.loc[period, "partial_correlation"], 3)
+    for display, source in [("Corr(U, T)", "corr_UT"), ("Corr(U, M)", "corr_UM"), ("Corr(T, M)", "corr_TM")]:
+        assert a[display] == round(ss.loc[period, source], 3)
+    assert a["N"] == pp.loc[period, "n_obs"] == ss.loc[period, "n_obs"]
+    for display, source in [("σ Utilities", "vol_U"), ("σ Technology", "vol_T"), ("σ Market", "vol_M")]:
+        assert b[display] == round(ss.loc[period, source], 3)
+pd.testing.assert_frame_equal(p, original_p, check_exact=True)
+pd.testing.assert_frame_equal(s, original_s, check_exact=True)
+shuffled = m.format_descriptive_statistics(p.iloc[::-1], s.sample(frac=1, random_state=7))
+for panel in panels:
+    pd.testing.assert_frame_equal(panels[panel], shuffled[panel], check_exact=True)
+invalid = [
+    (p.iloc[:-1], s), (pd.concat([p, p.iloc[:1]]), s),
+    (p, s.iloc[:-1]), (p, pd.concat([s, s.iloc[:1]])),
+    (p.assign(n_obs=p.n_obs+1), s),
+    (p.assign(partial_correlation=p.partial_correlation+0.01), s),
+    (p.assign(partial_correlation=1.01), s),
+    (p, s.assign(corr_UM=1.0)), (p, s.assign(vol_M=np.nan)),
+]
+for bad_p, bad_s in invalid:
+    try:
+        m.format_descriptive_statistics(bad_p, bad_s)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Invalid panel inputs accepted")
+print("PASS: both 9-row panels, all rounded values/counts, precision preservation, shuffled join and 9 invalid cases")
+for name, panel in panels.items():
+    print(name)
+    print(panel.to_string(index=False))
+```
+
+- Ran the third fenced block with `.venv/bin/python -B`: PASS. All Panel A/B
+  values, period order and counts match unrounded inputs after rounding;
+  shuffled input orders produce identical panels and do not join by position.
+  Both original input frames retain full precision. Nine invalid input pairs
+  rejected, including analytic mismatch, denominator zero and n_obs mismatch.
+  `git diff --check` passed.

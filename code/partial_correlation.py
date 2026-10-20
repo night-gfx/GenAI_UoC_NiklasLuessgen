@@ -35,6 +35,14 @@ STATISTICS_REQUIRED = [
 PARTIAL_COLUMNS = ["period", "n_obs", "partial_correlation"]
 CHECK_ATOL = 1e-12
 CHECK_RTOL = 1e-10
+PANEL_A_COLUMNS = [
+    "Comparison period", "Partial Correlation", "Corr(U, T)", "Corr(U, M)", "Corr(T, M)", "N",
+]
+PANEL_B_COLUMNS = ["Comparison period", "σ Utilities", "σ Technology", "σ Market"]
+PANEL_TITLES = {
+    "Panel A": "Panel A: Correlations",
+    "Panel B": "Panel B: Volatilities (standard deviation of weekly excess returns, %)",
+}
 
 
 def _validate_periods(table, name):
@@ -130,3 +138,34 @@ def calculate_partial_correlations(residuals):
     partial_correlations = pd.DataFrame(rows, columns=PARTIAL_COLUMNS)
     _validate_partial_correlations(partial_correlations)
     return partial_correlations
+
+
+def format_descriptive_statistics(partial_correlations, regression_statistics):
+    """Join by period, verify the analytic identity, and round only panel displays."""
+    _validate_partial_correlations(partial_correlations)
+    _validate_statistics(regression_statistics)
+    joined = partial_correlations.merge(
+        regression_statistics[STATISTICS_REQUIRED], on="period", validate="one_to_one",
+        suffixes=("_partial", "_regression"),
+    ).set_index("period").loc[PERIOD_NAMES].reset_index()
+    if not np.array_equal(joined["n_obs_partial"], joined["n_obs_regression"]):
+        raise ValueError("Partial correlation counts differ from Task 02 n_obs")
+    denominator_squared = (1 - joined["corr_UM"]**2) * (1 - joined["corr_TM"]**2)
+    if (denominator_squared <= 0).any():
+        raise ValueError("Analytic partial correlation has a zero or invalid denominator")
+    analytic = (
+        (joined["corr_UT"] - joined["corr_UM"] * joined["corr_TM"])
+        / np.sqrt(denominator_squared)
+    )
+    matches = np.isclose(joined["partial_correlation"], analytic, atol=CHECK_ATOL, rtol=CHECK_RTOL)
+    if not matches.all():
+        failed = joined.loc[~matches, "period"].tolist()
+        raise ValueError(f"Residual and analytic partial correlations disagree: {failed}")
+    panel_a = joined[[
+        "period", "partial_correlation", "corr_UT", "corr_UM", "corr_TM", "n_obs_partial",
+    ]].copy()
+    panel_a.columns = PANEL_A_COLUMNS
+    panel_a["N"] = panel_a["N"].astype(int)
+    panel_b = joined[["period", "vol_U", "vol_T", "vol_M"]].copy()
+    panel_b.columns = PANEL_B_COLUMNS
+    return {"Panel A": panel_a.round(3), "Panel B": panel_b.round(3)}
