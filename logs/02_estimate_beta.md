@@ -192,3 +192,58 @@ print(stats[["period", "n_obs", "beta_U", "se_beta_U", "beta_T", "se_beta_T"]].t
   was 3.61e-16. `git diff --check` passed.
 - Full-sample betas (unrounded outputs retained in memory): utilities 0.565569,
   technology 1.210095. These are estimates, without causal interpretation.
+
+## Step 3 — Proposal regression table
+
+- Step 2 commit: `d646660bd5e636d87d912e72eb3411354cb504e8`, author verified
+  as Codex. Added format_regression_table with nine rows in proposal order,
+  displayed beta stars against one, three-decimal betas/SEs/R² and integer N.
+- Added validation for complete statistics, finite values, counts, dates,
+  SEs, p-values, volatilities and correlation/R² ranges. Kept the proposal's
+  table note in table metadata for the Excel export. Source statistics are
+  not rounded or modified.
+
+### Step 3 check
+
+```python
+import sys
+import numpy as np
+import pandas as pd
+sys.path.insert(0, "code")
+import estimate_beta as m
+s, _ = m.run_ols(m.load_weekly_returns(m.WEEKLY_PATH))
+original = s.copy(deep=True)
+t = m.format_regression_table(s)
+pd.testing.assert_frame_equal(s, original)
+assert list(t.columns) == ["Comparison period", "Utilities Beta (SE)", "Technology Beta (SE)", "R² Utilities", "R² Technology", "N"]
+assert t.iloc[:, 0].tolist() == m.PERIOD_NAMES
+assert t.attrs["note"] == "Newey–West standard errors in parentheses; stars test H0: β = 1 (two-sided): * p < 0.10, ** p < 0.05, *** p < 0.01."
+for i, row in s.iterrows():
+    for code, column in [("U", "Utilities Beta (SE)"), ("T", "Technology Beta (SE)")]:
+        p = row[f"p_beta_1_{code}"]
+        stars = "*" * sum(p < threshold for threshold in [0.10, 0.05, 0.01])
+        assert t.loc[i, column] == f"{row[f'beta_{code}']:.3f}{stars} ({row[f'se_beta_{code}']:.3f})"
+        assert t.loc[i, f"R² {'Utilities' if code == 'U' else 'Technology'}"] == round(row[f"r_squared_{code}"], 3)
+    assert t.loc[i, "N"] == row.n_obs
+for p, stars in [(0, "***"), (0.009999, "***"), (0.01, "**"), (0.049999, "**"),
+                  (0.05, "*"), (0.099999, "*"), (0.10, ""), (1, "")]:
+    modified = s.copy()
+    modified.loc[0, "p_beta_1_U"] = p
+    assert m.format_regression_table(modified).loc[0, "Utilities Beta (SE)"].split(" (")[0] == f"{s.loc[0, 'beta_U']:.3f}{stars}"
+invalid = [s.drop(columns="beta_U"), s.iloc[::-1], s.assign(beta_U=np.nan),
+           s.assign(p_beta_1_T=1.01), s.assign(se_beta_U=-1), s.assign(n_obs=1.5)]
+for bad in invalid:
+    try:
+        m.format_regression_table(bad)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Invalid statistics accepted")
+print("PASS: table values, note, precision preservation, 8 star boundaries, 6 invalid cases")
+print(t.to_string(index=False))
+```
+
+- Ran Step 3's fenced block with `.venv/bin/python -B`: PASS for all nine
+  rows, rounding, stars, unchanged source precision, exact table note, eight
+  p-value boundary cases and six invalid-statistics cases. `git diff --check`
+  passed. The displayed table is ready for the Excel saving step.

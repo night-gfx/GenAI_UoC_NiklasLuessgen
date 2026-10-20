@@ -42,6 +42,14 @@ STATISTICS_COLUMNS = [
 RESIDUAL_COLUMNS = [
     "period", "week_end", "utilities_residual", "technology_residual", "market_excess",
 ]
+TABLE_COLUMNS = [
+    "Comparison period", "Utilities Beta (SE)", "Technology Beta (SE)",
+    "R² Utilities", "R² Technology", "N",
+]
+TABLE_NOTE = (
+    "Newey–West standard errors in parentheses; stars test H0: β = 1 (two-sided): "
+    "* p < 0.10, ** p < 0.05, *** p < 0.01."
+)
 
 
 def load_weekly_returns(weekly_path):
@@ -153,3 +161,49 @@ def run_ols(weekly_periods):
             or not np.isfinite(residuals[RESIDUAL_COLUMNS[2:]].to_numpy(dtype=float)).all()):
         raise ValueError("Nonfinite regression results")
     return statistics, residuals
+
+
+def _validate_statistics(statistics):
+    """Reject missing, unordered or invalid statistics before table/export use."""
+    if (list(statistics.columns) != STATISTICS_COLUMNS
+            or statistics["period"].tolist() != PERIOD_NAMES):
+        raise ValueError("Expected the complete statistics schema and nine ordered periods")
+    numeric = statistics.drop(columns=["period", "first_week", "last_week"])
+    if not np.isfinite(numeric.to_numpy(dtype=float)).all():
+        raise ValueError("Nonfinite regression statistics")
+    n = statistics["n_obs"]
+    if (n <= HAC_LAGS).any() or (n != np.floor(n)).any() or not statistics["hac_lags"].eq(HAC_LAGS).all():
+        raise ValueError("Invalid observation counts or HAC lag length")
+    first = pd.to_datetime(statistics["first_week"], errors="raise")
+    last = pd.to_datetime(statistics["last_week"], errors="raise")
+    if first.isna().any() or last.isna().any() or (first > last).any():
+        raise ValueError("Invalid first/last weeks")
+    for sector in ("U", "T"):
+        if ((statistics[f"se_beta_{sector}"] <= 0).any()
+                or (statistics[f"se_alpha_{sector}"] < 0).any()
+                or (statistics[f"residual_std_{sector}"] < 0).any()
+                or not statistics[f"p_beta_1_{sector}"].between(0, 1).all()
+                or not statistics[f"r_squared_{sector}"].between(-1e-12, 1 + 1e-12).all()):
+            raise ValueError(f"Invalid {sector} standard errors, p-values or R²")
+    if (statistics[["vol_U", "vol_T", "vol_M"]] <= 0).any().any():
+        raise ValueError("Nonpositive volatility")
+    if (statistics[["corr_UM", "corr_TM", "corr_UT"]].abs() > 1 + 1e-12).any().any():
+        raise ValueError("Invalid Pearson correlations")
+
+
+def format_regression_table(regression_statistics):
+    """Return nine proposal rows, rounding only the displayed table to 3 decimals."""
+    _validate_statistics(regression_statistics)
+    rows = []
+    for row in regression_statistics.itertuples(index=False):
+        betas = []
+        for sector in ("U", "T"):
+            p = getattr(row, f"p_beta_1_{sector}")
+            stars = "***" if p < 0.01 else "**" if p < 0.05 else "*" if p < 0.10 else ""
+            betas.append(f"{getattr(row, f'beta_{sector}'):.3f}{stars} ({getattr(row, f'se_beta_{sector}'):.3f})")
+        rows.append([
+            row.period, *betas, round(row.r_squared_U, 3), round(row.r_squared_T, 3), int(row.n_obs),
+        ])
+    table = pd.DataFrame(rows, columns=TABLE_COLUMNS)
+    table.attrs["note"] = TABLE_NOTE
+    return table
