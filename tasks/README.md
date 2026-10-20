@@ -7,7 +7,7 @@ Agent task specifications, executed in order, one branch per task.
 | Order | Task specification | Purpose | Expected branch | Status |
 | --- | --- | --- | --- | --- |
 | Step 1 | [01_prepare_weekly_returns.md](01_prepare_weekly_returns.md) | Inspect CSV structure, load and validate daily data, construct and validate weekly excess returns | `agent/01_prepare_weekly_returns` | Completed |
-| Step 2 | [02_estimate_beta.md](02_estimate_beta.md) | Estimate market betas with significance tests and build regression table | `agent/02_estimate_beta` | Ready for Review |
+| Step 2 | [02_estimate_beta.md](02_estimate_beta.md) | Estimate market betas with significance tests and build regression table | `agent/02_estimate_beta` | Completed |
 | Step 3 | [03_partial_correlation.md](03_partial_correlation.md) | Calculate partial correlations and build descriptive statistics | `agent/03_partial_correlation` | Planned |
 | Step 4 | [04_hypothesis_tests.md](04_hypothesis_tests.md) | Test H1–H3 and build hypothesis tests table | `agent/04_hypothesis_tests` | Planned |
 

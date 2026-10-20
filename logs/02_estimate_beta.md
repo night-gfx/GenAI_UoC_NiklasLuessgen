@@ -401,3 +401,23 @@ git diff --check
   Researcher acceptance and merge remain pending; do not mark Completed yet.
 - Final commit includes saving, final validation results and Ready for Review
   status. Stop after Task 02; no push, pull request, merge or Task 03 execution.
+
+## 2026-10-21 — Researcher acceptance and follow-up
+
+- Final implementation commit: `3898572c83c7cd5b27539f005ffa07579f5092d8`;
+  author verified as Codex and working tree verified clean after committing.
+- User subsequently requested an Excel review workbook, then explicitly
+  cancelled that request: "ok ne lass das setz status auf fertig. und beginne
+  dann nächsten taks". No review workbook or supporting script was created.
+  Preliminary actions only inspected files and checked available tooling;
+  the Spreadsheet skill file and native Excel UI were inaccessible. No new
+  human review results are claimed.
+- Treated the explicit instruction to mark finished as researcher approval
+  of Task 02 and updated only its status to Completed. Analysis code and
+  generated results are unchanged; existing successful CHECK results remain
+  applicable. Checked `git diff --check` for this metadata-only change.
+- Read Task 03's specification to prepare the next task. Current branch is
+  still `agent/02_estimate_beta`; Task 03 requires the researcher-prepared
+  branch `agent/03_partial_correlation`. Per the workflow, do not create or
+  switch branches; ask the researcher to switch before starting Task 03.
+- No push, pull request or merge performed.
