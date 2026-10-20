@@ -1,77 +1,79 @@
 ---
 name: research-task-workflow
-description: Execute or resume one research task on its researcher-prepared branch, validate and commit each step, and stop for researcher review.
+description: Execute or resume one research task on its researcher-prepared branch, validate and one commit per step, and stop for researcher review.
 ---
 
 # Research Task Workflow
 
 ## 1. Select Task
 
-- Read `proposal.md` for an overview of the research project.
-- Read `tasks/README.md` for the separate execution tasks, their order,
+- **Project:** Read `proposal.md` for an overview of the research project.
+- **Task overview:** Read `tasks/README.md` for the separate execution tasks, their order,
   statuses and task specification structure.
-- Select the task marked `In Progress`, or the first `Planned` task.
-- Read the corresponding task specification in `tasks/` (e.g. `tasks/02_prepare_returns.md`).
+- **Selection:** Select the task marked `In Progress`, or the first `Planned` task.
+- **Specification:** Read the corresponding task specification in `tasks/` (e.g. `tasks/02_prepare_returns.md`).
 
 ## 2. Verify Branch
 
-- Check the branch: `git branch --show-current`.
-- Require `agent/<task-name>`; for example, `tasks/02_prepare_returns.md`
+- **Branch check:** Check the branch: `git branch --show-current`.
+- **Required branch:** Require `agent/<task-name>`; for example, `tasks/02_prepare_returns.md`
   requires `agent/02_prepare_returns`. Reject `main` and detached HEAD.
-- Otherwise, stop and ask the researcher to switch branches. Do not create
+- **Branch mismatch:** Otherwise, stop and ask the researcher to switch branches. Do not create
   or switch branches yourself.
-- Inspect changes: `git status --short` and `git diff --cached`.
+- **Working tree:** Inspect changes: `git status --short` and `git diff --cached`.
   Preserve unrelated changes; stop on overlapping edits or existing staged changes.
 
-## 3. Execute Steps of Task
+## 3. Task Execution
 
-- Mark the task `In Progress` in `tasks/README.md` after branch verification.
-- Execute the `STEPS` in the task specification (`tasks/`) sequentially.
+- **Execution:** After branch verification, mark the task `In Progress` in
+  `tasks/README.md`. Follow its GOAL, FILES, CONSTRAINTS, CHECK, OUTPUT and STOP.
 
-After each step of the task:
+- **Files:** Save scripts and Python tests in `code/`, and generated results in
+  `output/`. Name the main script after the task file, replacing `.md` with `.py`.
 
-1. **Self-check:** The executing agent reviews its own work and runs the
    required checks using `.venv/bin/python`. Run relevant agent and researcher
-   tests with `-B -m pytest -p no:cacheprovider`. Fix in-scope errors and rerun
-   checks. If unresolved, log the blocker, leave `In Progress` and stop.
+- **Log:** Maintain one chronological record in `logs/<task-name>.md`, covering
+  the task conversation, actions, decisions with brief reasons, changed files,
+  execution/test commands, results, failures and fixes.
 
-2. **Log:** Record actions and actual check results in `logs/<task-name>.md`
-   using the table below, with one row per check. Include failures and explain skips.
+- **Self-check:** Review your work and run required checks using `.venv/bin/python`.
+  Run relevant agent and researcher tests with `-B -m pytest -p no:cacheprovider`.
+  Fix in-scope errors and rerun checks. If unresolved, log the blocker, leave
+  `In Progress` and stop.
 
-   | UTC time | Step | Actions / changed paths | Exact check command | Result / evidence |
-   | --- | --- | --- | --- | --- |
-   | YYYY-MM-DD HH:MM | Step number | Action and file paths | `command` | PASS / FAIL / SKIP; exit code; output path or skip reason |
+- **Commits:** Create one local commit per successfully checked step. Set the
+  author to `Codex <codex@openai.com>` and verify it after committing. Stage only
+  task-related files; never use `git add .`. Do not push, open pull requests or
+  merge. Complete section 4 before the final commit so its results and final
+  status share that commit. Adapt the file list and description below:
 
-3. **Commit:** After successful checks, commit only the verified step's files
-   using the commands below. **Codex must explicitly set itself as the author:
-   `Codex <codex@openai.com>`.** Verify the recorded author after committing.
-
-   Replace the example file list and commit message with the current step's values:
-
-   ```bash
-   git diff --check
-   git diff
-   git add -- 'path/to/changed-file' 'logs/<task-name>.md' tasks/README.md
-   git diff --cached
-   git commit --author='Codex <codex@openai.com>' -m '<task-name>: step <n> - <description>'
-   git log -1 --format='%H %an <%ae>'
-   ```
-
-   **Create local commits only. Do not push, open pull requests or merge.**
-   Never stage unrelated files or use `git add .`. For the final step, complete
-   section 4 before committing so its results and final status share that commit.
+  ```bash
+  git diff --check
+  git diff
+  git add -- 'path/to/changed-file' 'logs/<task-name>.md' tasks/README.md
+  git diff --cached
+  git commit --author='Codex <codex@openai.com>' -m '<task-name>: <description>'
+  git log -1 --format='%H %an <%ae>'
+  ```
 
 ## 4. Final Agent Review
 
-- Run all final `CHECK` requirements in the task specification (`tasks/`).
-- Only if all required checks pass, update the task status in
+- **Final checks:** Run all final `CHECK` requirements in the task specification (`tasks/`).
+- **Results:** Save final results in `output/<task-name>.<extension>`, using the file type
+  required by the task; for example, `output/01_collect_data.json`. If there
+  are several result files, add a short name after the task name, such as
+  `output/01_collect_data_source_inventory.json`.
+- **Final log:** Complete `logs/<task-name>.md` with the final check results, output paths,
+  remaining issues and items for researcher review.
+- **Review status:** Only if all required checks pass, update the task status in
   `tasks/README.md` to `Ready for Review`.
-- Record final results in `logs/<task-name>.md` and commit using section 3.
+- **Final commit:** Commit the verified files and final log using section 3. Do not stage
+  generated files in `output/`, which is ignored by Git.
 
 ## 5. Researcher Review
 
-- The researcher independently reviews the diff and reruns checks, then accepts and merges or rejects the task and specifies corrections.
-- After explicit researcher approval, Codex sets the task status in
+- **Independent review:** The researcher independently reviews the diff and compares to its checks ("first check, then delegate"), then accepts and merges or rejects the task and specifies corrections.
+- **Approval:** After explicit researcher approval, Codex sets the task status in
   `tasks/README.md` to `Completed`. Never set it before approval.
-- Only the researcher performs merges.
-- Stop after one task. Do not push, open pull requests or merge automatically.
+- **Merge authority:** Only the researcher performs merges.
+- **Stop:** Stop after one task. Do not push, open pull requests or merge automatically.

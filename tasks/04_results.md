@@ -1,4 +1,4 @@
-# Task 05: Generate comparison results and final checks
+# Task 04: Generate comparison results and final checks
 
 ## GOAL
 
@@ -11,7 +11,7 @@ period. Verify the complete pipeline before researcher review.
 - **Read-only:** `proposal.md`, `AGENTS.md`, this specification,
   `.agents/skills/research-task-workflow/SKILL.md`, `requirements.txt`,
   `data/12_Industry_Portfolios_Daily.csv`,
-  `data/F-F_Research_Data_Factors_daily.csv`, `data/README.md`, `code/collect_data.py`, `code/prepare_returns.py`,
+  `data/F-F_Research_Data_Factors_daily.csv`, `data/README.md`, `code/prepare_returns.py`,
   `code/estimate_beta.py`, `code/partial_correlation.py`,
   `data/source_inventory.json`, `data/sample_metadata.json`,
   `data/weekly_returns.csv`, `data/beta_estimates.csv`,
@@ -21,12 +21,12 @@ period. Verify the complete pipeline before researcher review.
   `output/comparison_table.csv`,
   `output/comparison_table.md`,
   `output/reproducibility.json`,
-  `tests/agent/test_results.py`, `tests/agent/05_*`, `tasks/README.md`.
-- **Expected branch:** `agent/05_results`.
+  `tests/agent/test_results.py`, `tests/agent/04_*`, `tasks/README.md`.
+- **Expected branch:** `agent/04_results`.
 
 ## CONSTRAINTS
 
-- Tasks 01–04 must be `Completed`. Preserve their accepted inputs and outputs.
+- Tasks 01–03 must be `Completed`. Preserve their accepted inputs and outputs.
 - Use the exact period boundaries and row order from `proposal.md`: Full Sample,
   Pre-Dot-Com, Dot-com Crash, Pre Financial Crisis, Financial Crisis, Pre-COVID,
   COVID, Pre-AI boom and AI boom. Normalize only the proposal's inconsistent
@@ -55,7 +55,7 @@ period. Verify the complete pipeline before researcher review.
    the input revision from the final handoff commit reported after committing.
 3. **Run final checks:** Re-run all agent tests and relevant researcher tests.
    Reproduce calculations from the frozen raw inputs using isolated directories
-   under `tests/agent/05_reproduction/`; require script functions or destination
+   under `tests/agent/04_reproduction/`; require script functions or destination
    arguments so this does not overwrite accepted upstream artifacts. Compare
    recreated returns, coefficients, residuals and correlations with the accepted
    artifacts within declared tolerances. Recheck raw hashes. Record results,
@@ -70,7 +70,7 @@ period. Verify the complete pipeline before researcher review.
 - Verify all nine rows and all three metrics against upstream files, metadata
   consistency, fixed cutoff, unchanged originals and reproducibility results.
 - Save exact commands, environment information, pass/fail/skip counts and any
-  unresolved limitations in `tests/agent/05_checks.txt` and `tasks/README.md`.
+  unresolved limitations in `tests/agent/04_checks.txt` and `tasks/README.md`.
 
 ## OUTPUT
 

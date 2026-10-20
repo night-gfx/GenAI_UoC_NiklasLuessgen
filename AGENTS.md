@@ -40,11 +40,11 @@ Study U.S. utilities' market beta and market-adjusted correlation with technolog
 
 
 - **Authorization:** Create and modify files only in
-  `code/`, `tests/agent/`, `data/adjusted/`,
+  `code/`, `tests/agent/`,
   `tasks/README.md`, and the current task's log in `logs/`,
   within the approved task scope. Additional paths
   require explicit researcher authorization.
-- **Protected Files:** All other files and directories are read-only unless the researcher explicitly authorizes changes, including `data/raw/`, `tests/researcher/`, all other contents of `data/` and `tests/`, `README.md`, `proposal.md`, `AGENTS.md`, `requirements.txt`, `tasks/`, `literature/`, `output/`, `.gitignore`, `.gitattributes`, `.codex/`, `.venv/`, `.git/`, and `.DS_Store`; Git metadata updates through the permitted Git workflow are allowed, but direct edits to `.git/` are prohibited; never modify, overwrite, delete, or move raw-data originals without explicit approval.
+- **Protected Files:** All other files and directories are read-only unless the researcher explicitly authorizes changes, including `data/`, `tests/researcher/`, all other contents of `tests/`, `README.md`, `proposal.md`, `AGENTS.md`, `requirements.txt`, `tasks/`, `literature/`, `output/`, `.gitignore`, `.gitattributes`, `.codex/`, `.venv/`, `.git/`, and `.DS_Store`; Git metadata updates through the permitted Git workflow are allowed, but direct edits to `.git/` are prohibited; never modify, overwrite, delete, or move raw-data originals without explicit approval.
 - **Git Workflow:** Work only on the feature branch prepared by the researcher and create descriptive commits for completed task steps; do not push or open pull requests without explicit approval, and leave all merges to the researcher.
 - **Human Control:** The researcher independently reviews changes, reruns tests, and accepts or rejects the work; only the researcher approves and performs merges into `main` and decides whether to update GitHub.
 - **Methodology:** Follow the predefined research design. Obtain approval before changing data sources, variables, sample periods, or estimation methods.

@@ -1,4 +1,4 @@
-# Task 03: Estimate market betas
+# Task 02: Estimate market betas
 
 ## GOAL
 
@@ -13,15 +13,15 @@ predefined comparison periods, using the same aligned weekly observations.
   `tests/researcher/`.
 - **May create or modify:** `code/estimate_beta.py`,
   `data/beta_estimates.csv`, `data/market_residuals.csv`,
-  `tests/agent/test_estimate_beta.py`, `tests/agent/03_*`, `tasks/README.md`.
-- **Expected branch:** `agent/03_estimate_beta`.
+  `tests/agent/test_estimate_beta.py`, `tests/agent/02_*`, `tasks/README.md`.
+- **Expected branch:** `agent/02_estimate_beta`.
 
 ## CONSTRAINTS
 
 - Expose calculation functions or destination arguments for isolated reruns
-  under `tests/agent/05_reproduction/` in Task 05, without overwriting accepted
+  under `tests/agent/04_reproduction/` in Task 04, without overwriting accepted
   artifacts; ordinary execution writes only the paths authorized here.
-- Tasks 01–02 must be `Completed`. Preserve the frozen sample and period mapping.
+- Task 01 must be `Completed`. Preserve the frozen sample and period mapping.
 - Estimate separate OLS models with intercepts in every period:
   `utilities_excess = alpha_U + beta_U * market_excess + epsilon_U` and
   `technology_excess = alpha_T + beta_T * market_excess + epsilon_T`.
@@ -57,7 +57,7 @@ predefined comparison periods, using the same aligned weekly observations.
   residual dot products with market excess returns near zero, within declared
   scale-aware numerical tolerances.
 - Run relevant researcher tests without caches; record commands and actual
-  outcomes in `tests/agent/03_checks.txt` and `tasks/README.md`.
+  outcomes in `tests/agent/02_checks.txt` and `tasks/README.md`.
 
 ## OUTPUT
 

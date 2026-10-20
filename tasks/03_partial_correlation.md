@@ -1,4 +1,4 @@
-# Task 04: Calculate market-adjusted correlations
+# Task 03: Calculate market-adjusted correlations
 
 ## GOAL
 
@@ -14,15 +14,15 @@ excess returns, separately for the full sample and every comparison period.
   `tests/researcher/`.
 - **May create or modify:** `code/partial_correlation.py`,
   `data/partial_correlations.csv`,
-  `tests/agent/test_partial_correlation.py`, `tests/agent/04_*`, `tasks/README.md`.
-- **Expected branch:** `agent/04_partial_correlation`.
+  `tests/agent/test_partial_correlation.py`, `tests/agent/03_*`, `tasks/README.md`.
+- **Expected branch:** `agent/03_partial_correlation`.
 
 ## CONSTRAINTS
 
 - Expose calculation functions or destination arguments for isolated reruns
-  under `tests/agent/05_reproduction/` in Task 05, without overwriting accepted
+  under `tests/agent/04_reproduction/` in Task 04, without overwriting accepted
   artifacts; ordinary execution writes only the paths authorized here.
-- Tasks 01–03 must be `Completed`. Use Task 03's period-specific residuals
+- Tasks 01–02 must be `Completed`. Use Task 02's period-specific residuals
   without changing the regressions, sample or week assignments.
 - Calculate Pearson `Corr(utilities_residual, technology_residual)` on identical
   `(period, week_end)` pairs. Never combine residuals from different fits.
@@ -44,7 +44,7 @@ excess returns, separately for the full sample and every comparison period.
    the analytic identity independently of the saved residuals. Test that zero
    residual variance and degenerate denominators produce explicit failures.
 3. **Validate handoff:** Verify finite correlations within `[-1, 1]` up to the
-   stated numerical tolerance, exact sample agreement with Task 03 and residual
+   stated numerical tolerance, exact sample agreement with Task 02 and residual
    orthogonality to the market. Run final checks and relevant researcher tests.
 
 ## CHECK
@@ -56,7 +56,7 @@ excess returns, separately for the full sample and every comparison period.
 - Check agreement of residual correlation and the analytic expression for
   every period; a plausible range alone is insufficient validation.
 - Run relevant researcher tests without caches. Record actual commands,
-  tolerances and outcomes in `tests/agent/04_checks.txt` and `tasks/README.md`.
+  tolerances and outcomes in `tests/agent/03_checks.txt` and `tasks/README.md`.
 
 ## OUTPUT
 
