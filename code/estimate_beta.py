@@ -7,6 +7,8 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from scipy.stats import norm
+from statsmodels.regression.linear_model import OLS
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +30,18 @@ PERIODS = (
     ("COVID", "2020-03", "2022-02"),
 )
 PERIOD_NAMES = [name for name, _, _ in PERIODS]
+SECTOR_STATISTICS = [
+    "alpha", "se_alpha", "beta", "se_beta", "t_beta_1", "p_beta_1",
+    "r_squared", "residual_std",
+]
+STATISTICS_COLUMNS = [
+    "period", "n_obs", "first_week", "last_week", "hac_lags",
+    *[f"{stat}_{sector}" for sector in ("U", "T") for stat in SECTOR_STATISTICS],
+    "vol_U", "vol_T", "vol_M", "corr_UM", "corr_TM", "corr_UT",
+]
+RESIDUAL_COLUMNS = [
+    "period", "week_end", "utilities_residual", "technology_residual", "market_excess",
+]
 
 
 def load_weekly_returns(weekly_path):
@@ -70,3 +84,72 @@ def load_weekly_returns(weekly_path):
     )
     periods.attrs["units"] = "percent"
     return periods
+
+
+def run_ols(weekly_periods):
+    """Refit both sectors per period using OLS and four-lag Newey–West SEs.
+
+    HAC uses Bartlett weights and no finite-sample multiplier (the asymptotic
+    Newey–West estimator). Tests use the standard normal distribution.
+    residual_std is the sample standard deviation of residuals (ddof=1),
+    like the three reported weekly volatilities, rather than a regression RMSE.
+    """
+    if (not isinstance(weekly_periods.index, pd.MultiIndex)
+            or weekly_periods.index.names != ["period", "week_end"]
+            or not weekly_periods.index.is_unique
+            or list(weekly_periods.columns) != RETURN_COLUMNS
+            or list(weekly_periods.index.get_level_values("period").unique()) != PERIOD_NAMES):
+        raise ValueError("Expected unique (period, week_end) keys in proposal order")
+    if not np.isfinite(weekly_periods.to_numpy(dtype=float)).all():
+        raise ValueError("Nonfinite regression input")
+    rows, residual_frames = [], []
+    for period in PERIOD_NAMES:
+        weekly = weekly_periods.loc[period]
+        dates = weekly.index
+        if (not isinstance(dates, pd.DatetimeIndex) or dates.hasnans
+                or not dates.is_monotonic_increasing or (dates.dayofweek != 4).any()
+                or len(weekly) <= HAC_LAGS):
+            raise ValueError(f"{period}: invalid weekly dates or insufficient observations")
+        values = weekly.to_numpy(dtype=float)
+        if (np.var(values, axis=0, ddof=1) <= 0).any():
+            raise ValueError(f"{period}: zero return variance")
+        market = values[:, 2]
+        design = np.column_stack([np.ones(len(weekly)), market])
+        if np.linalg.matrix_rank(design) != 2:
+            raise ValueError(f"{period}: singular regression design")
+        row = {
+            "period": period, "n_obs": len(weekly), "first_week": dates[0],
+            "last_week": dates[-1], "hac_lags": HAC_LAGS,
+        }
+        residual_frame = pd.DataFrame({"period": period, "week_end": dates})
+        for i, (sector, residual_column) in enumerate([
+            ("U", "utilities_residual"), ("T", "technology_residual"),
+        ]):
+            fit = OLS(values[:, i], design, missing="raise").fit(
+                cov_type="HAC", use_t=False,
+                cov_kwds={"maxlags": HAC_LAGS, "kernel": "bartlett", "use_correction": False},
+            )
+            alpha, beta = fit.params
+            se_alpha, se_beta = fit.bse
+            if se_beta <= 0:
+                raise ValueError(f"{period}/{sector}: nonpositive beta standard error")
+            t_beta_1 = (beta - 1) / se_beta
+            stats = [
+                alpha, se_alpha, beta, se_beta, t_beta_1, 2 * norm.sf(abs(t_beta_1)),
+                fit.rsquared, np.std(fit.resid, ddof=1),
+            ]
+            row.update({f"{name}_{sector}": value for name, value in zip(SECTOR_STATISTICS, stats)})
+            residual_frame[residual_column] = fit.resid
+        row.update(dict(zip(["vol_U", "vol_T", "vol_M"], np.std(values, axis=0, ddof=1))))
+        correlations = np.corrcoef(values, rowvar=False)
+        row.update(corr_UM=correlations[0, 2], corr_TM=correlations[1, 2], corr_UT=correlations[0, 1])
+        residual_frame["market_excess"] = market
+        rows.append(row)
+        residual_frames.append(residual_frame)
+    statistics = pd.DataFrame(rows, columns=STATISTICS_COLUMNS)
+    residuals = pd.concat(residual_frames, ignore_index=True)[RESIDUAL_COLUMNS]
+    numeric = statistics.drop(columns=["period", "first_week", "last_week"])
+    if (not np.isfinite(numeric.to_numpy(dtype=float)).all()
+            or not np.isfinite(residuals[RESIDUAL_COLUMNS[2:]].to_numpy(dtype=float)).all()):
+        raise ValueError("Nonfinite regression results")
+    return statistics, residuals
