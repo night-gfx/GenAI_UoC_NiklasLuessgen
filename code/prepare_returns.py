@@ -86,7 +86,9 @@ def _sample_table(table, columns, name):
     values = sample.to_numpy(dtype=float)
     if not np.isfinite(values).all() or np.isin(values, [-99.99, -999]).any():
         raise ValueError(f"{name}: missing markers or nonfinite daily values")
-    if (values < -100).any():
+    # Mkt-RF is an excess return; its lower bound applies after RF is added back.
+    total_columns = [column for column in columns if column != "Mkt-RF"]
+    if (sample[total_columns].to_numpy(dtype=float) < -100).any():
         raise ValueError(f"{name}: daily return below -100 percent")
     return sample.astype(float)
 
@@ -150,3 +152,34 @@ def calculate_weekly_returns(
     }).rename_axis("week_end").reset_index()
     weekly.attrs["units"] = "percent"
     return weekly
+
+
+def save_weekly_returns(weekly, output_path):
+    """Write the verified schema only to the task's authorized CSV path."""
+    destination = Path(output_path)
+    if destination.resolve() != OUTPUT_PATH:
+        raise ValueError(f"The only approved output path is {OUTPUT_PATH}")
+    columns = ["week_end", "utilities_excess", "technology_excess", "market_excess"]
+    if list(weekly.columns) != columns or weekly.attrs.get("units") != "percent":
+        raise ValueError("Expected weekly excess-return schema in percent units")
+    expected = pd.date_range(SAMPLE_START, SAMPLE_END, freq="W-FRI")
+    if not pd.DatetimeIndex(weekly["week_end"]).equals(expected):
+        raise ValueError("Weekly output must contain every fixed-sample Friday exactly once")
+    if not np.isfinite(weekly[columns[1:]].to_numpy(dtype=float)).all():
+        raise ValueError("Weekly output contains invalid values")
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    weekly.to_csv(destination, index=False, date_format="%Y-%m-%d")
+
+
+def main():
+    """Load, validate, calculate and save; propagate failures to the caller."""
+    industry, factors = load_daily_returns(INDUSTRY_PATH, FACTORS_PATH)
+    validate_daily_returns(industry, factors)
+    weekly = calculate_weekly_returns(industry, factors)
+    save_weekly_returns(weekly, OUTPUT_PATH)
+    first, last = weekly["week_end"].iloc[[0, -1]].dt.strftime("%Y-%m-%d")
+    print(f"Saved {len(weekly)} weeks ({first} to {last}), percent units: {OUTPUT_PATH}")
+
+
+if __name__ == "__main__":
+    main()

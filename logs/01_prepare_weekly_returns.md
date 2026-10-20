@@ -88,3 +88,31 @@
   | 2026-08-28 | 5 | 0.144974 | 1.837445 | 0.306421 |
 
 - **Boundary/holiday verification:** First trading observation is 1990-01-02; first label is 1990-01-05. The 2024-03-29 label is retained although that Friday has no source observation (last observation 2024-03-28). The 2001-09-14 label retains its single shared day. Final label and final observation are 2026-08-28; 2026-08-31 and all pre-1990 data are excluded solely by the fixed sample rule.
+
+### Step 4 — CSV execution and final agent review
+
+- **Step 3 result:** Commit `e56351a49769a31758d9de51bcdcd1029e22884a`; Codex author verified.
+- **Implementation:** Added `save_weekly_returns` and `main`. The executable pipeline loads → validates → calculates → saves without catching failures. Saving checks the exact schema, documented percent units, full sequence of Friday labels and finite values, then writes ISO dates with no row index. Writes are restricted to the specified `output/weekly_returns.csv`; no raw-data or alternate output path is accepted. The script creates the output directory if necessary.
+- **Self-review fix:** Apply the -100% lower bound to sector/RF total returns and to reconstructed market total, rather than to Mkt-RF alone: an excess return can be below -100% when RF is positive. This corrects a validation detail, without changing inputs, observations or methodology. All final checks below ran after this fix.
+- **Final production command:** `.venv/bin/python -B code/prepare_returns.py` passed, exit 0, printing `Saved 1913 weeks (1990-01-05 to 2026-08-28), percent units: .../output/weekly_returns.csv`. This command alone generated the final results; the agent did not write the CSV directly. An initial production run before the self-review fix also succeeded; the final run replaced it using the final code.
+- **Final independent CHECK command:** `.venv/bin/python -B -` reloaded the production module and CSV, independently read both raw source blocks using `csv.reader`, grouped source dates using `datetime.date` plus `timedelta(days=4-day.weekday())`, and recomputed four gross-return products using 40-digit `Decimal`. Expected excess returns were `100 * (sector_product - RF_product)` and `100 * (market_total_product - RF_product)`, with daily market total = Mkt-RF + RF. Compared the entire final CSV and the in-memory weekly table against these expectations using absolute tolerance 1e-10 percentage points and zero relative tolerance. Exit 0; all 1,913 rows passed; maximum CSV error 7.904787935331115e-14 percentage points.
+- **Final CHECK results:**
+
+  | Requirement | Actual result |
+  | --- | --- |
+  | Both input files, value-weighted block, correct columns | PASS; full raw-cell loading check and independent final CSV reader |
+  | No missing/invalid selected sample data, duplicates or wrong units; detect mismatched coverage | PASS; 9,232 aligned daily rows, documented percent convention, 19 invalid-input cases rejected again in final checks |
+  | One output row per shared week; holiday weeks retained | PASS; 1,913 unique Fridays; observed day counts {1: 1, 3: 2, 4: 325, 5: 1585}; absent 2024-03-29 daily observation still yields Friday label |
+  | Independent daily-to-weekly compounding, including holiday/boundary weeks | PASS for every week; seven spot-check rows reproduced as in Step 3 |
+  | Fixed sample, Friday dates and both-file coverage | PASS; exactly `pd.date_range('1990-01-05', '2026-08-28', freq='W-FRI')` |
+  | Executable CSV output | PASS; shape (1913, 4), no row index, exact `week_end`, `utilities_excess`, `technology_excess`, `market_excess` schema, all finite, percent units retained |
+
+- **Additional final failure checks:** Three unsupported week/boundary cases and three unauthorized output paths (including the original industry source) raise ValueError. A mocked `DataFrame.to_csv` OSError propagates. These checks write no alternate files and do not alter the CSV. Deep equality checks confirm the loaded raw DataFrames remain unchanged.
+- **File integrity/review:** Reviewed the entire final script. `git diff --exit-code -- data requirements.txt proposal.md AGENTS.md README.md .gitignore` passed (exit 0); no source/dependency/design changes. `git check-ignore output/weekly_returns.csv` confirms generated output is ignored and will not be staged. The optional global Git-ignore sandbox warning remains, but staging/commits succeed.
+- **Final fingerprints (SHA-256):**
+  - `data/12_Industry_Portfolios_Daily.csv`: `25f9089cc5bb5332258d1e88ee65bd241376054dcf63d985cfe5aee491fdcc1e`
+  - `data/F-F_Research_Data_Factors_daily.csv`: `c2dc30c9e89eeea05a689c81fb426f4d76711270733b3731997615cbdff5b247`
+  - `output/weekly_returns.csv`: `40c2d638d4426384766d3b22b69c84043e3d29aa74b532421cc646a3078d9365`
+- **Final changed files:** `code/prepare_returns.py`, this chronological log, and only Task 01's status in `tasks/README.md`; generated CSV is local and ignored. Existing numpy/pandas dependencies suffice; no environment or dependency edits.
+- **Status:** All required CHECKs passed; Task 01 changed to **Ready for Review**, pending the final local CSV/review commit. No unresolved implementation or data-validation failures. Earlier interpreter/Git blockers are resolved.
+- **Researcher handoff:** Independently review the code/diff, rerun `.venv/bin/python -B code/prepare_returns.py`, compare boundary/holiday spot calculations and final CSV, and verify original data provenance/retrieval (2026-10-19 13:30). Review the documented limitation that a date absent from both sources cannot be detected by cross-file alignment alone. Researcher acceptance is still required; the task is not Completed. Stop after this task; no push, PR or merge. Only the researcher merges.
