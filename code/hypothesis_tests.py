@@ -178,3 +178,22 @@ def test_h2(weekly):
     # In-memory coefficients support verification of the separate period slopes.
     result.attrs["coefficients"] = dict(zip(["alpha", "delta", "beta", "gamma"], fit.params))
     return result
+
+
+def test_h3(partial_correlations):
+    """Compare partial correlations with the prespecified Fisher n−4 formula.
+
+    std_error is on the Fisher-z difference scale, not the raw rho-difference
+    scale. HAC lags are not applicable to this non-regression test (CSV blank).
+    """
+    before = _period_row(partial_correlations, "Before AI boom", ["n_obs", "partial_correlation"])
+    ai = _period_row(partial_correlations, "AI boom", ["n_obs", "partial_correlation"])
+    for row in (before, ai):
+        if row.n_obs <= 4 or row.n_obs != np.floor(row.n_obs) or abs(row.partial_correlation) >= 1:
+            raise ValueError("H3 requires integer n_obs > 4 and correlations strictly inside (-1, 1)")
+    se = np.sqrt(1 / (ai.n_obs - 4) + 1 / (before.n_obs - 4))
+    statistic = (np.arctanh(ai.partial_correlation) - np.arctanh(before.partial_correlation)) / se
+    return _result_frame([[
+        "H3", ai.partial_correlation - before.partial_correlation, se, statistic,
+        norm.sf(statistic), before.n_obs + ai.n_obs, before.n_obs, ai.n_obs, None,
+    ]])

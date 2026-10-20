@@ -247,3 +247,75 @@ print(result.to_string(index=False))
   observations unchanged. Actual gamma −0.286757, t −3.061409, one-sided
   p 0.998899: the prespecified alternative is an increase, not any change.
   `git diff --check` passed.
+
+## Step 4 — H3 Fisher partial-correlation comparison
+
+- Step 3 commit: `78fa2c98334155ff42ad3b89f41fb8545a2dd82a`; author
+  verified as Codex. Added H3 using atanh(rho), the specified n−4 weights,
+  the AI-minus-BAI difference and the normal right tail.
+- H3 estimate is the raw correlation difference. Its CSV std_error is the
+  denominator on the Fisher-z difference scale, not an SE for the raw
+  correlation difference. H3's hac_lags field is blank (not applicable);
+  no HAC adjustment is introduced into the fixed Fisher test.
+- Missing/duplicate required periods, nonfinite values, integer counts <=4
+  and correlations at or outside ±1 fail without clipping or changing inputs.
+
+### Step 4 check
+
+```python
+import sys
+from math import log, sqrt, erfc
+import numpy as np
+import pandas as pd
+sys.path.insert(0, "code")
+import hypothesis_tests as m
+w, s, p = m.load_inputs(m.WEEKLY_PATH, m.STATISTICS_PATH, m.PARTIAL_PATH)
+original = p.copy(deep=True)
+row = m.test_h3(p).iloc[0]
+keyed = p.set_index("period")
+rho_bai, rho_ai = keyed.loc["Before AI boom", "partial_correlation"], keyed.loc["AI boom", "partial_correlation"]
+n_bai, n_ai = int(keyed.loc["Before AI boom", "n_obs"]), int(keyed.loc["AI boom", "n_obs"])
+z_bai = 0.5*log((1+rho_bai)/(1-rho_bai))
+z_ai = 0.5*log((1+rho_ai)/(1-rho_ai))
+denominator = sqrt(1/(n_ai-4)+1/(n_bai-4))
+expected = (z_ai-z_bai)/denominator
+np.testing.assert_allclose(row.test_statistic, expected, atol=1e-12, rtol=1e-12)
+np.testing.assert_allclose(row.std_error, denominator, atol=1e-12, rtol=1e-12)
+assert row.estimate == rho_ai-rho_bai and row.n_obs == n_bai+n_ai == 1913
+assert row.n_obs_bai == n_bai and row.n_obs_ai == n_ai and pd.isna(row.hac_lags)
+np.testing.assert_allclose(row.p_value_one_sided, erfc(expected/sqrt(2))/2, atol=1e-15, rtol=1e-12)
+for rho in (-0.8, 0., 0.8):
+    identical = p.assign(partial_correlation=rho)
+    equal = m.test_h3(identical).iloc[0]
+    assert equal.estimate == equal.test_statistic == 0 and equal.p_value_one_sided == 0.5
+for left, right, sign in [(0.15, 0.5, 1), (0.5, 0.15, -1), (-0.4, 0.2, 1)]:
+    synthetic = pd.DataFrame({"period": ["Before AI boom", "AI boom"],
+        "n_obs": [160, 190], "partial_correlation": [left, right]})
+    actual = m.test_h3(synthetic).iloc[0]
+    hand = (0.5*log((1+right)/(1-right))-0.5*log((1+left)/(1-left)))/sqrt(1/186+1/156)
+    np.testing.assert_allclose(actual.test_statistic, hand, atol=1e-12, rtol=1e-12)
+    assert np.sign(actual.test_statistic) == sign
+    np.testing.assert_allclose(actual.estimate, right-left, atol=1e-15, rtol=1e-12)
+for bad in [p.loc[p.period.ne("AI boom")], pd.concat([p, p.loc[p.period.eq("AI boom")]]),
+            p.assign(n_obs=4), p.assign(n_obs=4.5), p.assign(partial_correlation=1.),
+            p.assign(partial_correlation=-1.), p.assign(partial_correlation=1.01),
+            p.assign(partial_correlation=np.nan)]:
+    try:
+        m.test_h3(bad)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Invalid H3 input accepted")
+pd.testing.assert_frame_equal(p, original, check_exact=True)
+print("PASS: independent Fisher hand calculation, identical-correlation null, expected difference signs, 8 invalid cases")
+print(m.test_h3(p).to_string(index=False))
+```
+
+- Ran Step 4's block with `.venv/bin/python -B`: PASS against the independent
+  logarithm-based hand calculation (1e-12 absolute/relative); p-value check
+  1e-15 absolute / 1e-12 relative. Identical correlations give exactly Z=0,
+  p=0.5; positive/negative synthetic differences have the expected signs.
+- All eight invalid H3 cases rejected and input partial correlations unchanged.
+  Actual raw difference −0.104679, Z −1.691393, right-tail p 0.954619.
+  Ordered this log's sections chronologically before committing.
+  `git diff --check` passed.
