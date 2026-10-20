@@ -12,9 +12,7 @@ Study U.S. utilities' market beta and market-adjusted correlation with technolog
 - **`proposal.md`:** Research question, data, methods, and validation.
 - **`AGENTS.md`:** Persistent agent instructions.
 - **`code/`:** Python analysis scripts.
-- **`data/`:** Original and adjusted datasets.
-- **`data/raw/`:** Read-only original datasets.
-- **`data/adjusted/`:** Working copies and processed datasets; agent edits permitted within the task scope.
+- **`data/`:** Original datasets.
 - **`tests/`:** Validation tests and saved test outputs.
 - **`tests/researcher/`:** Researcher-maintained tests and their outputs; protected from agent edits.
 - **`tests/agent/`:** Agent-written tests and their outputs.
@@ -24,6 +22,9 @@ Study U.S. utilities' market beta and market-adjusted correlation with technolog
 - **`.gitignore`:** Files excluded from Git.
 - **`.codex/`:** Project-specific Codex configuration.
 - **`.venv/`:** Local Python virtual environment.
+- **`logs/`:** Execution logs for individual research tasks.
+- **`.agents/skills/`:** Reusable Codex workflow skills.
+
 
 ### Packages
 
@@ -37,7 +38,12 @@ Study U.S. utilities' market beta and market-adjusted correlation with technolog
 
 ## Restrictions (Task Boundaries)
 
-- **Authorization:** Create and modify files only in `code/`, `tests/agent/`, and `data/adjusted/` within the approved task scope; read and copy raw data into `data/adjusted/` for processing, and save agent test outputs in `tests/agent/`.
+
+- **Authorization:** Create and modify files only in
+  `code/`, `tests/agent/`, `data/adjusted/`,
+  `tasks/README.md`, and the current task's log in `logs/`,
+  within the approved task scope. Additional paths
+  require explicit researcher authorization.
 - **Protected Files:** All other files and directories are read-only unless the researcher explicitly authorizes changes, including `data/raw/`, `tests/researcher/`, all other contents of `data/` and `tests/`, `README.md`, `proposal.md`, `AGENTS.md`, `requirements.txt`, `tasks/`, `literature/`, `output/`, `.gitignore`, `.gitattributes`, `.codex/`, `.venv/`, `.git/`, and `.DS_Store`; Git metadata updates through the permitted Git workflow are allowed, but direct edits to `.git/` are prohibited; never modify, overwrite, delete, or move raw-data originals without explicit approval.
 - **Git Workflow:** Work only on the feature branch prepared by the researcher and create descriptive commits for completed task steps; do not push or open pull requests without explicit approval, and leave all merges to the researcher.
 - **Human Control:** The researcher independently reviews changes, reruns tests, and accepts or rejects the work; only the researcher approves and performs merges into `main` and decides whether to update GitHub.

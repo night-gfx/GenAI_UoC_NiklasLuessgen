@@ -5,12 +5,6 @@ description: Execute or resume one research task on its researcher-prepared bran
 
 # Research Task Workflow
 
-All datasets are stored directly in `data/`, without subfolders. The researcher
-authorizes task-specified processed files there as an explicit exception to
-the path restrictions in `AGENTS.md`. The originals
-`data/12_Industry_Portfolios_Daily.csv`, `data/F-F_Research_Data_Factors_daily.csv`
-and `data/README.md` remain read-only.
-
 ## 1. Select Task
 
 - Read `proposal.md` for an overview of the research project.
@@ -70,7 +64,8 @@ After each step of the task:
 ## 4. Final Agent Review
 
 - Run all final `CHECK` requirements in the task specification (`tasks/`).
-- Update the task status in `tasks/README.md` to `Ready for Review`.
+- Only if all required checks pass, update the task status in
+  `tasks/README.md` to `Ready for Review`.
 - Record final results in `logs/<task-name>.md` and commit using section 3.
 
 ## 5. Researcher Review
