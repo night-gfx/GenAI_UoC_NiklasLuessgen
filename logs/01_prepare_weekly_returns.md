@@ -69,3 +69,22 @@
 - **Negative checks:** Same command rejected 19 mutated input cases: seven invalid values (sentinels, NaN, infinity, text, below -100%, empty), four invalid date cases, duplicate dates, a one-file missing date, missing column, decimal unit metadata, reverse ordering, truncated sample coverage, impossible reconstructed market return and a week missing from both inputs. No bad inputs were written to disk.
 - **Holiday handling decision:** No five-observation minimum is imposed. Observed week sizes are five days (1,585 weeks), four days (325), three days (2) and one day (1). In particular 2001-09-14 has only 2001-09-10 in both sources; 2007-01-05 and 2012-11-02 have three days. Retain shared observations without adding/filling days, including exceptional closure weeks. No new data source or trading calendar is introduced.
 - **Validation boundary for researcher review:** Cross-file daily agreement and full weekly coverage cannot establish whether the same individual day is erroneously absent from both raw sources. The script uses their shared observed trading days; an independent exchange-calendar audit is outside the specified inputs. Percent units are verified against source provenance and exact raw-cell loading, not guessed from magnitudes.
+
+### Step 3 — Weekly compounding
+
+- **Step 2 result:** Commit `259f9edc41b0b7913863bf6a2e634bfb9a0d6b3b`; Codex author verified.
+- **Implementation:** Added `calculate_weekly_returns(industry, factors, week_rule="W-FRI", boundary_rule="full_sample_weeks")`. Unsupported rules fail; fixed boundaries must be Monday/Friday. Reconstruct daily market total as Mkt-RF + RF; separately compound Utils, BusEq, market total and RF using `100 * (product(1 + r / 100) - 1)`; subtract compounded RF from the three total returns. Retain percent units, Friday labels and all shared trading days. No output file written in this step.
+- **Independent check command:** `.venv/bin/python -B -` used a separate `csv.reader` implementation on raw files, Python `datetime`/`timedelta` Friday grouping and 40-digit `decimal.Decimal` multiplication, without production parsing/calculation helpers for expected values. Compared every weekly row with `np.testing.assert_allclose(..., rtol=0, atol=1e-10)` (percentage points). PASS: all 1,913 rows, maximum absolute discrepancy 7.904787935331115e-14 percentage points; exact columns, percent metadata and every Friday 1990-01-05–2026-08-28. Three unsupported week/boundary rule cases rejected. Exit 0.
+- **Hand-calculation spot checks:** Values below are utilities/technology/market weekly excess returns, percent, rounded to six decimals. The check also evaluated all underlying daily gross-return products independently.
+
+  | Friday label | Shared days | Utilities | Technology | Market |
+  | --- | ---: | ---: | ---: | ---: |
+  | 1990-01-05 | 4 | -2.744478 | 2.791517 | -0.196432 |
+  | 1990-01-12 | 5 | -2.225223 | -3.473827 | -3.546332 |
+  | 2001-09-14 | 1 | -0.820000 | 1.220000 | 0.370000 |
+  | 2007-01-05 | 3 | -1.672065 | 1.011253 | -0.621131 |
+  | 2012-11-02 | 3 | -1.014780 | 0.105578 | 0.267803 |
+  | 2024-03-29 | 4 | 2.553152 | -1.157503 | 0.456699 |
+  | 2026-08-28 | 5 | 0.144974 | 1.837445 | 0.306421 |
+
+- **Boundary/holiday verification:** First trading observation is 1990-01-02; first label is 1990-01-05. The 2024-03-29 label is retained although that Friday has no source observation (last observation 2024-03-28). The 2001-09-14 label retains its single shared day. Final label and final observation are 2026-08-28; 2026-08-31 and all pre-1990 data are excluded solely by the fixed sample rule.

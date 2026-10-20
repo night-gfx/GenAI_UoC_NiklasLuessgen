@@ -121,3 +121,32 @@ def validate_daily_returns(industry, factors):
     documented convention, not an inference from the size of observed returns.
     """
     _aligned_sample(industry, factors)
+
+
+def calculate_weekly_returns(
+    industry, factors, week_rule="W-FRI", boundary_rule="full_sample_weeks"
+):
+    """Compound each total return and RF separately, then subtract weekly RF.
+
+    Only W-FRI and full_sample_weeks are supported: sample boundaries enclose
+    whole Monday–Friday weeks; all observed trading days, including short holiday
+    weeks, are kept. Labels remain Friday even when Friday itself is a holiday.
+    """
+    if week_rule != "W-FRI" or boundary_rule != "full_sample_weeks":
+        raise ValueError("Use W-FRI with full_sample_weeks; other rules are not approved")
+    if SAMPLE_START.dayofweek != 0 or SAMPLE_END.dayofweek != 4:
+        raise ValueError("Fixed sample boundaries must enclose full Monday–Friday weeks")
+    daily = _aligned_sample(industry, factors)
+    labels = daily.index.to_period(week_rule).end_time.normalize()
+    gross = 1 + daily[["Utils", "BusEq", "market_total", "RF"]] / 100
+    totals = 100 * (gross.groupby(labels).prod() - 1)
+    excess = totals[["Utils", "BusEq", "market_total"]].subtract(totals["RF"], axis=0)
+    if not np.isfinite(excess.to_numpy()).all():
+        raise ValueError("Nonfinite compounded weekly returns")
+    weekly = excess.rename(columns={
+        "Utils": "utilities_excess",
+        "BusEq": "technology_excess",
+        "market_total": "market_excess",
+    }).rename_axis("week_end").reset_index()
+    weekly.attrs["units"] = "percent"
+    return weekly
