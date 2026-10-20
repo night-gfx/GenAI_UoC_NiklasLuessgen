@@ -198,8 +198,8 @@ literature/pdf/
 .DS_Store
 .AppleDouble
 
-# Generated results
-output/
+# Generated script results in output/ are not version controlled
+/output/
 
 # Credentials
 .env.*

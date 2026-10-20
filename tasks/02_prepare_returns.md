@@ -9,11 +9,12 @@ returns from the verified daily inputs, using the fixed research sample.
 
 - **Read-only:** `proposal.md`, `AGENTS.md`, this specification,
   `.agents/skills/research-task-workflow/SKILL.md`, `requirements.txt`,
-  `code/collect_data.py`, `data/raw/`, `data/adjusted/source_inventory.json`,
+  `code/collect_data.py`, `data/12_Industry_Portfolios_Daily.csv`,
+  `data/F-F_Research_Data_Factors_daily.csv`, `data/README.md`, `data/source_inventory.json`,
   `tests/researcher/`.
 - **May create or modify:** `code/prepare_returns.py`,
-  `data/adjusted/daily_returns.csv`, `data/adjusted/weekly_returns.csv`,
-  `data/adjusted/sample_metadata.json`, `tests/agent/test_prepare_returns.py`,
+  `data/daily_returns.csv`, `data/weekly_returns.csv`,
+  `data/sample_metadata.json`, `tests/agent/test_prepare_returns.py`,
   `tests/agent/02_*`, `tasks/README.md`.
 - **Expected branch:** `agent/02_prepare_returns`.
 

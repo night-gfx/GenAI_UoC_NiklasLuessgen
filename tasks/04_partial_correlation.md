@@ -9,11 +9,11 @@ excess returns, separately for the full sample and every comparison period.
 
 - **Read-only:** `proposal.md`, `AGENTS.md`, this specification,
   `.agents/skills/research-task-workflow/SKILL.md`, `requirements.txt`,
-  `data/adjusted/weekly_returns.csv`, `data/adjusted/sample_metadata.json`,
-  `data/adjusted/beta_estimates.csv`, `data/adjusted/market_residuals.csv`,
+  `data/weekly_returns.csv`, `data/sample_metadata.json`,
+  `data/beta_estimates.csv`, `data/market_residuals.csv`,
   `tests/researcher/`.
 - **May create or modify:** `code/partial_correlation.py`,
-  `data/adjusted/partial_correlations.csv`,
+  `data/partial_correlations.csv`,
   `tests/agent/test_partial_correlation.py`, `tests/agent/04_*`, `tasks/README.md`.
 - **Expected branch:** `agent/04_partial_correlation`.
 

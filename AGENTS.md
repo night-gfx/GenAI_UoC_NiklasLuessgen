@@ -33,6 +33,7 @@ Study U.S. utilities' market beta and market-adjusted correlation with technolog
 ### Code Documentation
 
 - **Code Changes:** Identify and explain code changes in the completion summary; add concise comments for non-obvious logic.
+- **Git Commits:** Set Codex as the author of agent-created commits: `Codex <codex@openai.com>`.
 
 ## Restrictions (Task Boundaries)
 

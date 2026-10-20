@@ -19,6 +19,12 @@ SECTIONS = ["GOAL", "FILES", "CONSTRAINTS", "STEPS", "CHECK", "OUTPUT", "STOP"]
 STATUSES = {"Planned", "In Progress", "In Review", "Completed"}
 SKILL = ROOT / ".agents/skills/research-task-workflow/SKILL.md"
 BASELINE = json.loads((ROOT / "tests/agent/setup_baseline.json").read_text())
+# Preserve the historical baseline keys and original content hashes after relocation.
+BASELINE_PATHS = {
+    "data/README.md": "data/raw/README.md",
+    "data/12_Industry_Portfolios_Daily.csv": "data/raw/12_Industry_Portfolios_Daily.csv",
+    "data/F-F_Research_Data_Factors_daily.csv": "data/raw/F-F_Research_Data_Factors_daily.csv",
+}
 
 # Files outside the authorized setup scope must match the pre-setup baseline.
 PROTECTED = [
@@ -27,9 +33,9 @@ PROTECTED = [
     "README.md",
     "proposal.md",
     "requirements.txt",
-    "data/raw/README.md",
-    "data/raw/12_Industry_Portfolios_Daily.csv",
-    "data/raw/F-F_Research_Data_Factors_daily.csv",
+    "data/README.md",
+    "data/12_Industry_Portfolios_Daily.csv",
+    "data/F-F_Research_Data_Factors_daily.csv",
     "literature/literature_matrix.md",
 ]
 
@@ -103,7 +109,7 @@ def test_skill_holds_workflow_permissions():
     text = SKILL.read_text()
     for phrase in (
         "researcher-authorized and refine the task boundaries",
-        "within\n  `code/`, `tests/agent/` and `data/adjusted/`",
+        "within\n  `code/`, `tests/agent/` and `data/`",
         "Additionally update `tasks/README.md`, solely to track task status",
         "explicit exception to the protection\n  of `tasks/` in `AGENTS.md`",
         "Status values, in order: `Planned`, `In Progress`, `In Review`, `Completed`.",
@@ -123,10 +129,14 @@ def test_obsolete_setup_helpers_removed():
 @pytest.mark.parametrize("rel", PROTECTED)
 def test_protected_files_unchanged(rel):
     digest = hashlib.sha256((ROOT / rel).read_bytes()).hexdigest()
-    assert digest == BASELINE["sha256"][rel]
+    assert digest == BASELINE["sha256"][BASELINE_PATHS.get(rel, rel)]
 
 
 def test_no_research_artifacts_created():
     assert not list((ROOT / "code").glob("*.py"))
-    adjusted = ROOT / "data/adjusted"
-    assert not adjusted.exists() or not any(adjusted.iterdir())
+    data_entries = {p.name for p in (ROOT / "data").iterdir() if p.name != ".DS_Store"}
+    assert data_entries == {
+        "README.md",
+        "12_Industry_Portfolios_Daily.csv",
+        "F-F_Research_Data_Factors_daily.csv",
+    }

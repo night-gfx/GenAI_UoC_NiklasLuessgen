@@ -10,16 +10,17 @@ period. Verify the complete pipeline before researcher review.
 
 - **Read-only:** `proposal.md`, `AGENTS.md`, this specification,
   `.agents/skills/research-task-workflow/SKILL.md`, `requirements.txt`,
-  `data/raw/`, `code/collect_data.py`, `code/prepare_returns.py`,
+  `data/12_Industry_Portfolios_Daily.csv`,
+  `data/F-F_Research_Data_Factors_daily.csv`, `data/README.md`, `code/collect_data.py`, `code/prepare_returns.py`,
   `code/estimate_beta.py`, `code/partial_correlation.py`,
-  `data/adjusted/source_inventory.json`, `data/adjusted/sample_metadata.json`,
-  `data/adjusted/weekly_returns.csv`, `data/adjusted/beta_estimates.csv`,
-  `data/adjusted/market_residuals.csv`,
-  `data/adjusted/partial_correlations.csv`, `tests/researcher/`.
+  `data/source_inventory.json`, `data/sample_metadata.json`,
+  `data/weekly_returns.csv`, `data/beta_estimates.csv`,
+  `data/market_residuals.csv`,
+  `data/partial_correlations.csv`, `tests/researcher/`.
 - **May create or modify:** `code/results.py`,
-  `data/adjusted/results/comparison_table.csv`,
-  `data/adjusted/results/comparison_table.md`,
-  `data/adjusted/results/reproducibility.json`,
+  `output/comparison_table.csv`,
+  `output/comparison_table.md`,
+  `output/reproducibility.json`,
   `tests/agent/test_results.py`, `tests/agent/05_*`, `tasks/README.md`.
 - **Expected branch:** `agent/05_results`.
 
@@ -35,7 +36,10 @@ period. Verify the complete pipeline before researcher review.
 - Keep the core table columns `Comparison period`, `Utilities Beta`,
   `Technology Beta` and `Partial Correlation`. Put observation counts and sample
   dates in reproducibility metadata or accompanying table notes.
-- Do not write to protected `output/`, edit the proposal or introduce statistical
+- Save final script results directly in `output/`, without subdirectories.
+  This folder is ignored by Git; do not stage or force-add its contents.
+  This destination is explicitly researcher-authorized.
+- Do not edit the proposal or introduce statistical
   significance or causal conclusions. Report descriptive differences only.
 
 ## STEPS
@@ -47,7 +51,7 @@ period. Verify the complete pipeline before researcher review.
 2. **Prepare reproducibility record:** Write input/artifact hashes, original
    retrieval date, fixed sample cutoff, approved weekly rules, periods, counts,
    package versions, execution commands and limitations to
-   `reproducibility.json`. Obtain Git revision information from Git; distinguish
+   `output/reproducibility.json`. Obtain Git revision information from Git; distinguish
    the input revision from the final handoff commit reported after committing.
 3. **Run final checks:** Re-run all agent tests and relevant researcher tests.
    Reproduce calculations from the frozen raw inputs using isolated directories
@@ -83,6 +87,6 @@ period. Verify the complete pipeline before researcher review.
 - Ask before modifying accepted upstream scripts/artifacts: record the needed
   correction for researcher-directed reopening rather than silently fixing it
   outside this task's file scope.
-- Ask before writing to `output/` or changing dependencies or methodology.
+- Ask before changing dependencies or methodology.
 - Stop for researcher review after the final commit; do not mark `Completed`,
   push, open a pull request or merge.

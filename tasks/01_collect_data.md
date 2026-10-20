@@ -10,10 +10,10 @@ original files and their recorded retrieval date.
 
 - **Read-only:** `proposal.md`, `AGENTS.md`, this specification,
   `.agents/skills/research-task-workflow/SKILL.md`, `requirements.txt`,
-  `data/raw/README.md`, `data/raw/12_Industry_Portfolios_Daily.csv`,
-  `data/raw/F-F_Research_Data_Factors_daily.csv`, `tests/researcher/`.
+  `data/README.md`, `data/12_Industry_Portfolios_Daily.csv`,
+  `data/F-F_Research_Data_Factors_daily.csv`, `tests/researcher/`.
 - **May create or modify:** `code/collect_data.py`,
-  `data/adjusted/source_inventory.json`,
+  `data/source_inventory.json`,
   `tests/agent/test_collect_data.py`, `tests/agent/01_*`, `tasks/README.md`.
 - **Expected branch:** `agent/01_collect_data`.
 
@@ -26,7 +26,7 @@ original files and their recorded retrieval date.
   versions, replace originals, or substitute portfolios without approval.
 - Use only value-weighted `Utils` and `BusEq`, plus daily `Mkt-RF` and `RF`.
   Distinguish the value-weighted block from other blocks in the industry file.
-- Record the original download timestamp from `data/raw/README.md` separately
+- Record the original download timestamp from `data/README.md` separately
   from the inventory creation timestamp; do not invent a download timezone.
 - Do not choose a sample cutoff based on estimated outcomes. Task 02 determines
   the final common complete week after the weekly convention is approved.
@@ -42,7 +42,7 @@ original files and their recorded retrieval date.
    numeric fields, units, source missing markers and overlapping coverage from
    January 1990. Report gaps and invalid observations without silent repair.
    Run the relevant tests; resolve parsing errors within scope.
-3. **Freeze handoff:** Write `data/adjusted/source_inventory.json`, including
+3. **Freeze handoff:** Write `data/source_inventory.json`, including
    the latest common daily date, quality issues and unresolved weekly-convention
    decisions. Re-run the inventory and tests to verify deterministic source
    fields and unchanged raw hashes. Complete the final checks before review.

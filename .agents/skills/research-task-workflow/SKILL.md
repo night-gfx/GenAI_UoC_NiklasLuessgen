@@ -1,94 +1,82 @@
 ---
 name: research-task-workflow
-description: Execute this repository's numbered research tasks sequentially on researcher-prepared task branches, track progress in tasks/README.md, run validation, and commit each verified step. Use when asked to execute or resume a research task; stop for independent researcher review after each task.
+description: Execute or resume one research task on its researcher-prepared branch, validate and commit each step, and stop for researcher review.
 ---
 
 # Research Task Workflow
 
-## Authority and permissions
+All datasets are stored directly in `data/`, without subfolders. The researcher
+authorizes task-specified processed files there as an explicit exception to
+the path restrictions in `AGENTS.md`. The originals
+`data/12_Industry_Portfolios_Daily.csv`, `data/F-F_Research_Data_Factors_daily.csv`
+and `data/README.md` remain read-only.
 
-These rules are researcher-authorized and refine the task boundaries in
-`AGENTS.md` for numbered research tasks. `proposal.md` defines the research
-design; each task specification defines its permitted files and checks. Any
-other protected-file change still requires explicit researcher authorization.
+## 1. Select Task
 
-- Modify only paths authorized by the current task specification, within
-  `code/`, `tests/agent/` and `data/adjusted/`. Read raw originals without
-  modifying them.
-- Additionally update `tasks/README.md`, solely to track task status, progress,
-  check results and blockers. This is an explicit exception to the protection
-  of `tasks/` in `AGENTS.md`.
-- All other task specifications and this skill remain read-only unless the
-  researcher explicitly authorizes changes.
-- Status values, in order: `Planned`, `In Progress`, `In Review`, `Completed`.
-  `In Review` means **Ready for Review** and may be set only after successful
-  final checks. Only the researcher may set `Completed`.
+- Read `proposal.md` for an overview of the research project.
+- Read `tasks/README.md` for the separate execution tasks, their order,
+  statuses and task specification structure.
+- Select the task marked `In Progress`, or the first `Planned` task.
+- Read the corresponding task specification in `tasks/` (e.g. `tasks/02_prepare_returns.md`).
 
-## 1. Select task
+## 2. Verify Branch
 
-- Read `AGENTS.md`, `proposal.md` and `tasks/README.md` from the repository root.
-- Select the single task marked `In Progress`, otherwise the first `Planned`
-  task. Stop if selection is ambiguous, a preceding task is not `Completed`, or
-  a task is awaiting review. If all are `Completed`, report that no task remains.
-- Read the selected specification, including its `GOAL`, `FILES`, `CONSTRAINTS`,
-  `STEPS`, `CHECK`, `OUTPUT` and `STOP` sections. Do not execute tasks merely
-  because this skill or the task specifications are being edited.
-- Derive the expected branch from the filename:
-  `tasks/02_prepare_returns.md` means `agent/02_prepare_returns`.
+- Check the branch: `git branch --show-current`.
+- Require `agent/<task-name>`; for example, `tasks/02_prepare_returns.md`
+  requires `agent/02_prepare_returns`. Reject `main` and detached HEAD.
+- Otherwise, stop and ask the researcher to switch branches. Do not create
+  or switch branches yourself.
+- Inspect changes: `git status --short` and `git diff --cached`.
+  Preserve unrelated changes; stop on overlapping edits or existing staged changes.
 
-## 2. Verify branch and scope
-
-- Inspect `git branch --show-current`, `git status --short` and staged changes.
-- Require the exact expected branch; `main`, detached HEAD and any other branch
-  are invalid. Stop and ask the researcher to prepare or switch the branch.
-  Do not create, switch or merge branches yourself.
-- Confirm accepted predecessor artifacts are present and match their recorded
-  metadata. Respect the task's authorized paths and all protected files.
-- Preserve unrelated existing changes. Never stage them or commit them. Stop
-  if existing edits overlap task work or unrelated changes are already staged
-  and cannot safely be separated without modifying the researcher's work.
-- Resolve methodological ambiguities with the researcher before dependent work.
-  Use installed dependencies; ask before editing `requirements.txt` or `.venv/`.
-
-## 3. Execute steps
+## 3. Execute Steps of Task
 
 - Mark the task `In Progress` in `tasks/README.md` after branch verification.
-- Follow `STEPS` in order. When resuming, inspect progress, commits and artifacts
-  and rerun relevant checks before continuing; never trust status alone.
-- For each step:
-  1. Implement only the authorized changes for that step.
-  2. Run its relevant checks and applicable researcher-maintained tests without
-     modifying those tests. Disable bytecode/cache writes outside allowed paths.
-  3. Fix in-scope implementation errors and rerun checks. Never weaken tests,
-     loosen tolerances to hide failure or alter methodology without approval.
-  4. Save actual check commands and pass/fail/skip results under `tests/agent/`;
-     explain absent tests and skips. Record the verified step, artifacts and
-     evidence in `tasks/README.md`.
-  5. Review `git diff`, stage only explicit authorized paths or isolated hunks,
-     inspect `git diff --cached`, and create one descriptive commit for the
-     verified step. Report the resulting hash from Git.
-- Continue only after the step's checks pass and its commit succeeds. On an
-  unresolved failure, leave status `In Progress`, record the blocker and stop.
-  Never claim unrun tests passed. Do not automatically reset, stash or discard
-  changes to make a commit possible.
+- Execute the `STEPS` in the task specification (`tasks/`) sequentially.
 
-## 4. Finish task
+After each step of the task:
 
-- Run all final `CHECK` requirements and relevant researcher-maintained and
-  agent-written tests. Missing researcher tests must be disclosed explicitly.
-- Verify required outputs, unchanged raw data and no out-of-scope modifications.
-- In the final step's commit, include final check evidence and change status
-  to `In Review` in `tasks/README.md`. This is the canonical status for
-  **Ready for Review**; do not introduce a second spelling in the status table.
-- Report changes, commit hashes, exact checks and outcomes, artifact locations,
-  remaining issues and items requiring human verification. Retrieve the final
-  commit hash after committing; do not write a self-referential hash into it.
+1. **Self-check:** The executing agent reviews its own work and runs the
+   required checks using `.venv/bin/python`. Run relevant agent and researcher
+   tests with `-B -m pytest -p no:cacheprovider`. Fix in-scope errors and rerun
+   checks. If unresolved, log the blocker, leave `In Progress` and stop.
 
-## 5. Human review
+2. **Log:** Record actions and actual check results in `logs/<task-name>.md`
+   using the table below, with one row per check. Include failures and explain skips.
 
-- Stop after one task. Do not begin the next task while review is pending.
-- The researcher independently reviews the diff and reruns checks, then accepts
-  and merges or rejects the task and specifies corrections.
-- Only the researcher may mark a task `Completed` and perform merges.
-- Do not push or open pull requests without explicit authorization. Never merge
-  automatically. A request to execute this workflow does not authorize either.
+   | UTC time | Step | Actions / changed paths | Exact check command | Result / evidence |
+   | --- | --- | --- | --- | --- |
+   | YYYY-MM-DD HH:MM | Step number | Action and file paths | `command` | PASS / FAIL / SKIP; exit code; output path or skip reason |
+
+3. **Commit:** After successful checks, commit only the verified step's files
+   using the commands below. **Codex must explicitly set itself as the author:
+   `Codex <codex@openai.com>`.** Verify the recorded author after committing.
+
+   Replace the example file list and commit message with the current step's values:
+
+   ```bash
+   git diff --check
+   git diff
+   git add -- 'path/to/changed-file' 'logs/<task-name>.md' tasks/README.md
+   git diff --cached
+   git commit --author='Codex <codex@openai.com>' -m '<task-name>: step <n> - <description>'
+   git log -1 --format='%H %an <%ae>'
+   ```
+
+   **Create local commits only. Do not push, open pull requests or merge.**
+   Never stage unrelated files or use `git add .`. For the final step, complete
+   section 4 before committing so its results and final status share that commit.
+
+## 4. Final Agent Review
+
+- Run all final `CHECK` requirements in the task specification (`tasks/`).
+- Update the task status in `tasks/README.md` to `Ready for Review`.
+- Record final results in `logs/<task-name>.md` and commit using section 3.
+
+## 5. Researcher Review
+
+- The researcher independently reviews the diff and reruns checks, then accepts and merges or rejects the task and specifies corrections.
+- After explicit researcher approval, Codex sets the task status in
+  `tasks/README.md` to `Completed`. Never set it before approval.
+- Only the researcher performs merges.
+- Stop after one task. Do not push, open pull requests or merge automatically.

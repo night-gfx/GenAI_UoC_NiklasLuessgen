@@ -9,10 +9,10 @@ predefined comparison periods, using the same aligned weekly observations.
 
 - **Read-only:** `proposal.md`, `AGENTS.md`, this specification,
   `.agents/skills/research-task-workflow/SKILL.md`, `requirements.txt`,
-  `data/adjusted/weekly_returns.csv`, `data/adjusted/sample_metadata.json`,
+  `data/weekly_returns.csv`, `data/sample_metadata.json`,
   `tests/researcher/`.
 - **May create or modify:** `code/estimate_beta.py`,
-  `data/adjusted/beta_estimates.csv`, `data/adjusted/market_residuals.csv`,
+  `data/beta_estimates.csv`, `data/market_residuals.csv`,
   `tests/agent/test_estimate_beta.py`, `tests/agent/03_*`, `tasks/README.md`.
 - **Expected branch:** `agent/03_estimate_beta`.
 
