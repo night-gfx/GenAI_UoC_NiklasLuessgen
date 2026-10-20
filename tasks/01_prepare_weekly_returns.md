@@ -7,6 +7,7 @@ Implement Python code (`code/prepare_returns.py`) with separate functions to loa
 ## FILES
 
 - **`code/`:** May add/edit only the task's own file, `code/prepare_returns.py`. All other contents are read-only.
+- **`tasks/README.md`:** May update only this task's status.
 - **`logs/`:** May add/edit `logs/01_prepare_weekly_returns.md` to record all other results, execution and check logs.
 - **All others:** Read-only for direct edits. Only running the Python script may create or update `output/weekly_returns.csv`; the LLM must not write the CSV directly.
 

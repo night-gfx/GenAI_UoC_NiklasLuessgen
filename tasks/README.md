@@ -9,6 +9,7 @@ Agent task specifications, executed in order, one branch per task.
 | Step 1 | [01_prepare_weekly_returns.md](01_prepare_weekly_returns.md) | Inspect CSV structure, load and validate daily data, construct and validate weekly excess returns | `agent/01_prepare_weekly_returns` | Planned |
 | Step 2 | [02_estimate_beta.md](02_estimate_beta.md) | Estimate market betas with significance tests and build regression table | `agent/02_estimate_beta` | Planned |
 | Step 3 | [03_partial_correlation.md](03_partial_correlation.md) | Calculate partial correlations and build descriptive statistics | `agent/03_partial_correlation` | Planned |
+| Step 4 | [04_hypothesis_tests.md](04_hypothesis_tests.md) | Test H1–H3 and build hypothesis tests table | `agent/04_hypothesis_tests` | Planned |
 
 ## Statuses
 
@@ -20,7 +21,7 @@ Agent task specifications, executed in order, one branch per task.
 ## Task specification structure
 
 Each task specification is stored in `tasks/NN_task_name.md`, where `NN` is
-the execution order from `01` to `03` (e.g. `tasks/01_prepare_weekly_returns.md`).
+the execution order from `01` to `04` (e.g. `tasks/01_prepare_weekly_returns.md`).
 The expected implementation branch uses the same identifier and task name.
 
 | Section | Meaning |

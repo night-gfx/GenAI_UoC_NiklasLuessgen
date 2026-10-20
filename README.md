@@ -1,6 +1,6 @@
 # The Changing Defensive Role of U.S. Utilities During the AI Boom
 
-How have U.S. utilities' market beta and their market-adjusted (partial) correlation with technology stocks changed since 1990, particularly during the AI boom? Research design: [proposal.md](proposal.md).
+Has the defensive role of U.S. utility stocks changed during the AI boom? The project compares utilities' market beta and their market-adjusted correlation with technology stocks during the AI boom with the period since 1990 before it. Research design: [proposal.md](proposal.md).
 
 ## Data
 

@@ -2,12 +2,21 @@
 
 ## 1. Research Question
 
-How has the defensive behavior of U.S. utility stocks, measured by market beta, evolved since 1990, and how has their partial correlation with technology stocks changed, particularly during the AI boom?
+Has the defensive role of U.S. utility stocks changed during the AI boom? Specifically, how do utilities' market beta and their market-adjusted correlation with technology stocks during the AI boom compare with the period since 1990 before it?
 
-- **H1 – Market Beta:** U.S. utility stocks have become more sensitive to overall market movements during the AI boom.
-- **H2 – Partial Correlation:** The market-adjusted correlation between U.S. utility and technology stock returns has increased during the AI boom.
+- **H1 (Defensive Utilities, Cyclical Technology):** Over the full sample, the market beta of U.S. utility stocks is below one and the market beta of technology stocks is above one.
 
-Both hypotheses are assessed by descriptively comparing the AI boom estimates with those of all preceding periods; changes across periods are not tested statistically.
+  $$H_{1a}: \beta_U^{FS} < 1 \;\; \text{vs.} \;\; H_{0}: \beta_U^{FS} \geq 1, \qquad H_{1b}: \beta_T^{FS} > 1 \;\; \text{vs.} \;\; H_{0}: \beta_T^{FS} \leq 1$$
+
+- **H2 (Higher Market Sensitivity of Utilities in the AI Boom):** The market beta of U.S. utility stocks is higher during the AI boom than before the AI boom.
+
+  $$H_{2}: \beta_U^{AI} > \beta_U^{BAI} \;\; \text{vs.} \;\; H_{0}: \beta_U^{AI} \leq \beta_U^{BAI}$$
+
+- **H3 (Stronger Utility–Technology Co-Movement in the AI Boom):** The market-adjusted correlation between U.S. utility and technology stock returns is higher during the AI boom than before the AI boom.
+
+  $$H_{3}: \rho_{U,T\mid M}^{AI} > \rho_{U,T\mid M}^{BAI} \;\; \text{vs.} \;\; H_{0}: \rho_{U,T\mid M}^{AI} \leq \rho_{U,T\mid M}^{BAI}$$
+
+Superscripts $FS$, $BAI$, and $AI$ denote the full sample, before the AI boom, and the AI boom (Section 2); $\beta$ and $\rho_{U,T\mid M}$ are defined in Section 3. All hypotheses are tested one-sided at the 10%, 5%, and 1% levels.
 
 ## 2. Data and Sample
 
@@ -30,18 +39,20 @@ The analysis uses data from the **Kenneth French Data Library**:
 | Comparison period | Start | End |
 | --- | --- | --- |
 | Full Sample | January 1990 | August 2026 |
+| | | |
+| Before AI boom | January 1990 | November 2022 |
+| AI boom | December 2022 | August 2026 |
+| | | |
 | Pre-Dot-Com | January 1990 | February 2000 |
 | Dot-com Crash | March 2000 | October 2002 |
 | Pre Financial Crisis | November 2002 | May 2007 |
 | Financial Crisis | June 2007 | February 2009 |
 | Pre-COVID | March 2009 | February 2020 |
 | COVID | March 2020 | February 2022 |
-| Pre-AI boom | March 2022 | November 2022 |
-| AI boom | December 2022 | August 2026 |
 
 *Source: Ramesh et al. (2025) (provide the dates for the dot-com crash, global financial crisis, and COVID-19 crisis).*
 
-*Manual Adjustments: Everything before crisis is pre-period. Begin of AI-Boom was release of ChatGPT by OpenAI.*
+*Manual Adjustments: Everything before crisis is pre-period. Begin of AI-Boom was release of ChatGPT by OpenAI. Before AI boom pools all weeks before the AI boom as the comparison period for H2 and H3. Weeks from March to November 2022 belong to no crisis subperiod and enter only the Full Sample and Before AI boom.*
 
 ## 3. Constructed Variables
 
@@ -79,7 +90,7 @@ The analysis uses data from the **Kenneth French Data Library**:
 
 ### Identification
 
-The study uses an empirical analysis to examine utilities’ market sensitivity and market-adjusted correlation with technology stocks. Market betas are tested for a statistically significant difference from one (H0: β = 1); partial correlations are reported descriptively. Differences across periods are compared descriptively. (Limitation: Descriptive differences across periods establish neither statistical significance nor causality.)
+The study uses an empirical analysis to examine utilities’ market sensitivity and market-adjusted correlation with technology stocks. Market betas are tested against one (H1); the differences between the AI boom and before the AI boom are tested for utilities' market beta (H2) and the partial correlation (H3). All other period comparisons are descriptive. (Limitation: Descriptive differences across the remaining periods establish no statistical significance, and no comparison establishes causality. The comparison identifies changes during, not caused by, the AI boom; concurrent factors such as rising interest rates may contribute.)
 
 ### Specification
 
@@ -95,6 +106,12 @@ All estimates use the same aligned weekly observations within the full sample an
 
 *Source: Black, Jensen and Scholes (1972), p. 7, Eq. (6), adapted to weekly sector excess returns.*
 
+- **Robust Standard Errors:** All regression standard errors ($\operatorname{SE}$) are Newey–West standard errors with a lag length of four weeks; point estimates remain the OLS estimates.
+
+  **Interpretation:** Unlike conventional OLS standard errors, they remain valid when return volatility changes over time or returns are serially correlated.
+
+*Source: Newey and West (1987).*
+
 - **Partial Correlation Estimation:** Calculate residuals from the two regressions above and then their Pearson correlation:
 
   $$\hat{\varepsilon}_{U,t} = R^e_{U,t} - \hat{\alpha}_U - \hat{\beta}_U R^e_{M,t}, \qquad \hat{\varepsilon}_{T,t} = R^e_{T,t} - \hat{\alpha}_T - \hat{\beta}_T R^e_{M,t}$$
@@ -105,21 +122,60 @@ All estimates use the same aligned weekly observations within the full sample an
 
 *Source: Gallup (2019), p. 602 (residual correlation), p. 606 (separate residual regressions), applied to sector excess returns with market excess returns and an intercept as controls.*
 
+- **H1 Test (Beta Against One):** One-sided t-tests of the full-sample OLS betas against one:
+
+  $$t_U = \frac{\hat{\beta}_U^{FS} - 1}{\operatorname{SE}(\hat{\beta}_U^{FS})}, \qquad t_T = \frac{\hat{\beta}_T^{FS} - 1}{\operatorname{SE}(\hat{\beta}_T^{FS})}$$
+
+  $\operatorname{SE}$ denotes the Newey–West standard error; both statistics are asymptotically standard normal under $H_0$. $H_{1a}$ is supported for significantly negative $t_U$, $H_{1b}$ for significantly positive $t_T$.
+
+  **Interpretation:** The regression table stars report the corresponding two-sided test (H0: β = 1) for every period; for an estimate in the hypothesized direction, the one-sided p-value equals half the two-sided p-value.
+
+- **H2 Test (Beta Difference):** Estimate one pooled regression over the full sample with an AI-boom dummy $D_t$ ($D_t = 1$ from December 2022, otherwise $0$) interacted with the market excess return:
+
+  $$R^e_{U,t} = \alpha_U + \delta_U D_t + \beta_U^{BAI} R^e_{M,t} + \gamma_U \left(D_t \cdot R^e_{M,t}\right) + \varepsilon_{U,t}, \qquad t_{\gamma} = \frac{\hat{\gamma}_U}{\operatorname{SE}(\hat{\gamma}_U)}$$
+
+  $\delta_U$ allows a separate intercept and $\gamma_U = \beta_U^{AI} - \beta_U^{BAI}$ is the beta difference. $H_2$ is supported for a significantly positive $t_{\gamma}$ (one-sided, asymptotically standard normal).
+
+  **Interpretation:** $\hat{\gamma}_U > 0$ indicates higher market sensitivity of utilities during the AI boom than before it.
+
+- **H3 Test (Correlation Difference):** Compare the two partial correlations of the non-overlapping periods with a Fisher z-test:
+
+  $$z_k = \tfrac{1}{2}\ln\frac{1 + \hat{\rho}^{k}_{U,T\mid M}}{1 - \hat{\rho}^{k}_{U,T\mid M}}, \qquad Z = \frac{z_{AI} - z_{BAI}}{\sqrt{\dfrac{1}{N_{AI} - 4} + \dfrac{1}{N_{BAI} - 4}}}, \qquad k \in \{AI, BAI\}$$
+
+  $\ln$ denotes the natural logarithm; $N_k$ is the number of weekly observations in period $k$. The subtracted 4 accounts for the controlled market variable. $H_3$ is supported for a significantly positive $Z$ (one-sided, standard normal).
+
+  **Interpretation:** $Z > 0$ indicates stronger market-adjusted utility–technology co-movement during the AI boom than before it. (Limitation: The test assumes independent, approximately normal observations; fat-tailed weekly returns may make it less accurate.)
+
+*Source: Fisher (1921), p. 7 (z-transformation), p. 14 (weight n − 3).*
+
 **Regression Table: Market Betas**
 
 | Comparison period | Utilities Beta (SE) | Technology Beta (SE) | R² Utilities | R² Technology | N |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Full Sample | — | — | — | — | — |
+| | | | | | |
+| Before AI boom | — | — | — | — | — |
+| AI boom | — | — | — | — | — |
+| | | | | | |
 | Pre-Dot-Com | — | — | — | — | — |
 | Dot-com Crash | — | — | — | — | — |
 | Pre Financial Crisis | — | — | — | — | — |
 | Financial Crisis | — | — | — | — | — |
 | Pre-COVID | — | — | — | — | — |
 | COVID | — | — | — | — | — |
-| Pre-AI boom | — | — | — | — | — |
-| AI boom | — | — | — | — | — |
 
-*Standard errors in parentheses; stars test H0: β = 1 (two-sided): \* p < 0.10, \*\* p < 0.05, \*\*\* p < 0.01.*
+*Newey–West standard errors in parentheses; stars test H0: β = 1 (two-sided): \* p < 0.10, \*\* p < 0.05, \*\*\* p < 0.01.*
+
+**Hypothesis Tests**
+
+| Hypothesis | Estimate | Test Statistic | One-Sided p-Value | N |
+| --- | ---: | ---: | ---: | ---: |
+| H1a: $\beta_U^{FS} < 1$ | — | — | — | — |
+| H1b: $\beta_T^{FS} > 1$ | — | — | — | — |
+| H2: $\beta_U^{AI} > \beta_U^{BAI}$ | — | — | — | — |
+| H3: $\rho_{U,T\mid M}^{AI} > \rho_{U,T\mid M}^{BAI}$ | — | — | — | — |
+
+*Estimates: $\hat{\beta}$ for H1, $\hat{\gamma}_U$ for H2, $\hat{\rho}^{AI} - \hat{\rho}^{BAI}$ for H3. Test statistics: $t$ for H1 and H2, $Z$ for H3.*
 
 **Descriptive Statistics**
 
@@ -128,28 +184,32 @@ All estimates use the same aligned weekly observations within the full sample an
 | Comparison period | Partial Correlation | Corr(U, T) | Corr(U, M) | Corr(T, M) | N |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Full Sample | — | — | — | — | — |
+| | | | | | |
+| Before AI boom | — | — | — | — | — |
+| AI boom | — | — | — | — | — |
+| | | | | | |
 | Pre-Dot-Com | — | — | — | — | — |
 | Dot-com Crash | — | — | — | — | — |
 | Pre Financial Crisis | — | — | — | — | — |
 | Financial Crisis | — | — | — | — | — |
 | Pre-COVID | — | — | — | — | — |
 | COVID | — | — | — | — | — |
-| Pre-AI boom | — | — | — | — | — |
-| AI boom | — | — | — | — | — |
 
 *Panel B: Volatilities (standard deviation of weekly excess returns, %)*
 
 | Comparison period | σ Utilities | σ Technology | σ Market |
 | --- | ---: | ---: | ---: |
 | Full Sample | — | — | — |
+| | | | |
+| Before AI boom | — | — | — |
+| AI boom | — | — | — |
+| | | | |
 | Pre-Dot-Com | — | — | — |
 | Dot-com Crash | — | — | — |
 | Pre Financial Crisis | — | — | — |
 | Financial Crisis | — | — | — |
 | Pre-COVID | — | — | — |
 | COVID | — | — | — |
-| Pre-AI boom | — | — | — |
-| AI boom | — | — | — |
 
 ## 5. Checks and Bounds (Fixed Now)
 
