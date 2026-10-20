@@ -5,6 +5,25 @@ description: Execute this repository's numbered research tasks sequentially on r
 
 # Research Task Workflow
 
+## Authority and permissions
+
+These rules are researcher-authorized and refine the task boundaries in
+`AGENTS.md` for numbered research tasks. `proposal.md` defines the research
+design; each task specification defines its permitted files and checks. Any
+other protected-file change still requires explicit researcher authorization.
+
+- Modify only paths authorized by the current task specification, within
+  `code/`, `tests/agent/` and `data/adjusted/`. Read raw originals without
+  modifying them.
+- Additionally update `tasks/README.md`, solely to track task status, progress,
+  check results and blockers. This is an explicit exception to the protection
+  of `tasks/` in `AGENTS.md`.
+- All other task specifications and this skill remain read-only unless the
+  researcher explicitly authorizes changes.
+- Status values, in order: `Planned`, `In Progress`, `In Review`, `Completed`.
+  `In Review` means **Ready for Review** and may be set only after successful
+  final checks. Only the researcher may set `Completed`.
+
 ## 1. Select task
 
 - Read `AGENTS.md`, `proposal.md` and `tasks/README.md` from the repository root.

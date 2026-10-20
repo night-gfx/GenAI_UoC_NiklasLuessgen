@@ -86,25 +86,38 @@ def test_skill_frontmatter_and_rules():
         assert phrase in text
 
 
-def test_agents_references_skill_and_readme_exception():
+def test_agents_only_points_to_skill():
     text = read("AGENTS.md")
-    assert "## Research Task Workflow" in text
-    assert "`.agents/skills/research-task-workflow/SKILL.md`" in text
-    assert "may additionally update `tasks/README.md` solely to track task status" in text
-    assert "Only the researcher may set `Completed`" in text
+    skills = text[text.index("## Skills"):]
+    # AGENTS.md carries a single pointer; all workflow rules live in the skill.
+    assert skills.count("\n- ") == 1
+    assert "`.agents/skills/research-task-workflow/SKILL.md`" in skills
+    assert "## Research Task Workflow" not in text
+    assert "tasks/README.md" not in text
+    assert "In Review" not in text
     # Original rules are preserved: the setup only appends a section.
-    assert text.index("## Restrictions (Task Boundaries)") < text.index("## Research Task Workflow")
+    assert text.index("## Restrictions (Task Boundaries)") < text.index("## Skills")
+
+
+def test_skill_holds_workflow_permissions():
+    text = SKILL.read_text()
+    for phrase in (
+        "researcher-authorized and refine the task boundaries",
+        "within\n  `code/`, `tests/agent/` and `data/adjusted/`",
+        "Additionally update `tasks/README.md`, solely to track task status",
+        "explicit exception to the protection\n  of `tasks/` in `AGENTS.md`",
+        "Status values, in order: `Planned`, `In Progress`, `In Review`, `Completed`.",
+        "Only the researcher may set `Completed`.",
+        "`tasks/02_prepare_returns.md` means `agent/02_prepare_returns`",
+        "Stop after one task.",
+    ):
+        assert phrase in text
 
 
 def test_obsolete_setup_helpers_removed():
     assert not (ROOT / "tasks/AGENTS_workflow_update.md").exists()
     assert not (ROOT / "tasks/research-task-workflow").exists()
     assert "tasks/research-task-workflow/SKILL.md" not in read("AGENTS.md")
-
-
-def test_skill_identical_to_prepared_version():
-    digest = hashlib.sha256(SKILL.read_bytes()).hexdigest()
-    assert digest == BASELINE["sha256"]["tasks/research-task-workflow/SKILL.md"]
 
 
 @pytest.mark.parametrize("rel", PROTECTED)
