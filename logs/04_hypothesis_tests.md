@@ -92,3 +92,64 @@ Checks are reproducible by executing each fenced Python block with
 - Step 1 check executed with `.venv/bin/python -B`: PASS for numeric input
   preservation, counts in all nine periods and 13 rejection cases.
   `git diff --check` passed before staging this checked step.
+
+## Step 2 — H1 one-sided beta tests
+
+- Step 1 commit: `e083347aefd0a92985cf9db9de2ee0a7dcc5b074`; author verified
+  as Codex. Added H1a/H1b using the Full Sample betas and SEs from Task 02.
+- H1a uses the normal left tail; H1b uses the normal survival function,
+  equivalent to 1−Φ(t) but stable for small p-values. No coefficients are refit.
+- CSV fields n_obs_bai/n_obs_ai are not applicable to H1 and are blank;
+  hac_lags is 4. Nullable integer fields preserve integer formatting.
+
+### Step 2 check
+
+```python
+import sys
+from math import erfc, sqrt
+import numpy as np
+import pandas as pd
+sys.path.insert(0, "code")
+import hypothesis_tests as m
+w, s, p = m.load_inputs(m.WEEKLY_PATH, m.STATISTICS_PATH, m.PARTIAL_PATH)
+original = s.copy(deep=True)
+h = m.test_h1(s).set_index("hypothesis")
+full = s.set_index("period").loc["Full Sample"]
+for hypothesis, sector, left in [("H1a", "U", True), ("H1b", "T", False)]:
+    row = h.loc[hypothesis]
+    t, p_two = full[f"t_beta_1_{sector}"], full[f"p_beta_1_{sector}"]
+    np.testing.assert_allclose(row.test_statistic, t, atol=1e-12, rtol=1e-12)
+    correct_direction = t < 0 if left else t > 0
+    expected = p_two/2 if correct_direction else 1-p_two/2
+    np.testing.assert_allclose(row.p_value_one_sided, expected, atol=1e-15, rtol=1e-12)
+    assert row.estimate == full[f"beta_{sector}"] and row.std_error == full[f"se_beta_{sector}"]
+    assert row.n_obs == 1913 and row.hac_lags == 4
+    assert pd.isna(row.n_obs_bai) and pd.isna(row.n_obs_ai)
+for t in (-40., -2., 0., 2., 40.):
+    modified = s.copy()
+    select = modified.period.eq("Full Sample")
+    for sector in ("U", "T"):
+        modified.loc[select, f"beta_{sector}"] = 1 + t*0.1
+        modified.loc[select, f"se_beta_{sector}"] = 0.1
+    synthetic = m.test_h1(modified).set_index("hypothesis")
+    np.testing.assert_allclose(synthetic.loc["H1a", "p_value_one_sided"], erfc(-t/sqrt(2))/2, atol=1e-15, rtol=1e-12)
+    np.testing.assert_allclose(synthetic.loc["H1b", "p_value_one_sided"], erfc(t/sqrt(2))/2, atol=1e-15, rtol=1e-12)
+for bad in [s.loc[s.period.ne("Full Sample")], pd.concat([s, s.iloc[:1]]),
+            s.assign(se_beta_U=0), s.assign(se_beta_T=np.inf), s.assign(beta_U=np.nan)]:
+    try:
+        m.test_h1(bad)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Invalid H1 input accepted")
+pd.testing.assert_frame_equal(s, original, check_exact=True)
+print("PASS: H1 matches Task 02, both one-sided tails including reversed/null/extreme cases, 5 invalid cases")
+print(h.to_string())
+```
+
+- Step 2 block executed with `.venv/bin/python -B`: PASS. H1 test statistics
+  match Task 02 within 1e-12 absolute/relative; p-values meet 1e-15 absolute /
+  1e-12 relative tolerance, including wrong-direction, zero and extreme t.
+  Five invalid H1 cases rejected; source statistics unchanged.
+  Actual p-values: H1a 5.666856e-17, H1b 2.405260e-09.
+  `git diff --check` passed.

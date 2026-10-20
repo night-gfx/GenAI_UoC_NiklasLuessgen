@@ -8,6 +8,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from scipy.stats import norm
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -35,6 +36,37 @@ STATISTICS_REQUIRED = [
     "beta_T", "se_beta_T", "t_beta_1_T", "p_beta_1_T",
 ]
 PARTIAL_COLUMNS = ["period", "n_obs", "partial_correlation"]
+RESULT_COLUMNS = [
+    "hypothesis", "estimate", "std_error", "test_statistic", "p_value_one_sided",
+    "n_obs", "n_obs_bai", "n_obs_ai", "hac_lags",
+]
+HYPOTHESES = ["H1a", "H1b", "H2", "H3"]
+
+
+def _period_row(table, period, columns):
+    if not table.columns.is_unique or not {"period", *columns}.issubset(table.columns):
+        raise ValueError(f"{period}: missing or duplicate input columns")
+    matched = table.loc[table["period"].eq(period)]
+    if len(matched) != 1:
+        raise ValueError(f"Expected exactly one {period} row")
+    row = matched.iloc[0]
+    if not np.isfinite(row[columns].to_numpy(dtype=float)).all():
+        raise ValueError(f"{period}: nonfinite values")
+    return row
+
+
+def _result_frame(rows):
+    """Keep optional count/lag metadata nullable; never round test statistics."""
+    result = pd.DataFrame(rows, columns=RESULT_COLUMNS)
+    for column in ("n_obs", "n_obs_bai", "n_obs_ai", "hac_lags"):
+        result[column] = pd.array(result[column], dtype="Int64")
+    numeric = result[["estimate", "std_error", "test_statistic", "p_value_one_sided", "n_obs"]]
+    if (not np.isfinite(numeric.to_numpy(dtype=float)).all()
+            or (result["std_error"] <= 0).any()
+            or not result["p_value_one_sided"].between(0, 1).all()
+            or (result["n_obs"] < 1).any()):
+        raise ValueError("Nonfinite or invalid hypothesis test results")
+    return result
 
 
 def _validate_period_table(table, required, name):
@@ -92,3 +124,22 @@ def load_inputs(weekly_path, statistics_path, partial_path):
         if n != ss.loc[period, "n_obs"] or n != pp.loc[period, "n_obs"]:
             raise ValueError(f"{period}: n_obs differs across inputs")
     return weekly, statistics, partial
+
+
+def test_h1(regression_statistics):
+    """Test full-sample utilities beta < 1 and technology beta > 1."""
+    row = _period_row(regression_statistics, "Full Sample", [
+        "n_obs", "beta_U", "se_beta_U", "beta_T", "se_beta_T",
+    ])
+    if row.n_obs < 1 or row.n_obs != np.floor(row.n_obs):
+        raise ValueError("Invalid Full Sample observation count")
+    results = []
+    for hypothesis, sector in [("H1a", "U"), ("H1b", "T")]:
+        beta, se = row[f"beta_{sector}"], row[f"se_beta_{sector}"]
+        if se <= 0:
+            raise ValueError(f"{hypothesis}: nonpositive beta standard error")
+        statistic = (beta - 1) / se
+        # sf avoids cancellation in 1 - cdf for very large positive t values.
+        p = norm.cdf(statistic) if hypothesis == "H1a" else norm.sf(statistic)
+        results.append([hypothesis, beta, se, statistic, p, row.n_obs, None, None, HAC_LAGS])
+    return _result_frame(results)
