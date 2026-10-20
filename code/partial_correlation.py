@@ -32,6 +32,9 @@ RESIDUAL_COLUMNS = [
 STATISTICS_REQUIRED = [
     "period", "n_obs", "corr_UT", "corr_UM", "corr_TM", "vol_U", "vol_T", "vol_M",
 ]
+PARTIAL_COLUMNS = ["period", "n_obs", "partial_correlation"]
+CHECK_ATOL = 1e-12
+CHECK_RTOL = 1e-10
 
 
 def _validate_periods(table, name):
@@ -92,3 +95,38 @@ def load_inputs(residuals_path, statistics_path):
             if column in statistics and pd.Timestamp(keyed_statistics.loc[period, column]) != actual:
                 raise ValueError(f"{period}: {column} differs from residual dates")
     return residuals, statistics
+
+
+def _validate_partial_correlations(partial_correlations):
+    _validate_periods(partial_correlations, "Partial correlations")
+    if list(partial_correlations.columns) != PARTIAL_COLUMNS:
+        raise ValueError("Invalid partial correlation columns")
+    numbers = partial_correlations[PARTIAL_COLUMNS[1:]].to_numpy(dtype=float)
+    if not np.isfinite(numbers).all():
+        raise ValueError("Nonfinite partial correlations or counts")
+    n = partial_correlations["n_obs"].to_numpy(dtype=float)
+    if (n < 2).any() or (n != np.floor(n)).any():
+        raise ValueError("Invalid partial correlation observation counts")
+    if (partial_correlations["partial_correlation"].abs() > 1).any():
+        raise ValueError("Partial correlation outside [-1, 1]; no clipping is permitted")
+
+
+def calculate_partial_correlations(residuals):
+    """Compute Pearson correlations within each period, without clipping results."""
+    _validate_residuals(residuals)
+    rows = []
+    for period in PERIOD_NAMES:
+        group = residuals.loc[residuals["period"].eq(period)]
+        values = group[["utilities_residual", "technology_residual"]].to_numpy(dtype=float)
+        # Check the exact range too: constant decimals can have roundoff variance.
+        if len(values) < 2 or (np.ptp(values, axis=0) == 0).any():
+            raise ValueError(f"{period}: zero residual variance or insufficient observations")
+        centered = values - values.mean(axis=0)
+        sum_squares = np.sum(centered**2, axis=0)
+        if (sum_squares <= 0).any() or not np.isfinite(sum_squares).all():
+            raise ValueError(f"{period}: invalid residual variance")
+        correlation = np.dot(centered[:, 0], centered[:, 1]) / np.sqrt(sum_squares[0] * sum_squares[1])
+        rows.append([period, len(group), correlation])
+    partial_correlations = pd.DataFrame(rows, columns=PARTIAL_COLUMNS)
+    _validate_partial_correlations(partial_correlations)
+    return partial_correlations
