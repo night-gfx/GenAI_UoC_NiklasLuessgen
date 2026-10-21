@@ -20,22 +20,87 @@
 
 ### Defensiveness
 
-| Paper | PDF | Findings |
-| --- | --- | --- |
-| **González, Jareño & Skinner (2016). Interest and Inflation Risk: Investor Behavior.** | [Gonzalez_Jareno_Skinner_2016_Interest_and_Inflation_Risk.pdf](<pdf/Gonzalez_Jareno_Skinner_2016_Interest_and_Inflation_Risk.pdf>) | • Market beta of Tech / Utilities is 1.385 / 0.467 overall, 1.239 / 0.571 in contractions, and 1.473 / 0.379 in expansions (González et al., 2016, p. 7, Table 4, Model 1). • Monthly return volatility of Tech / Utilities is 7.5% / 4.4% (González et al., 2016, p. 6, Table 3). • Minimum monthly return of Tech / Utilities is −32.8% / −15.1% (González et al., 2016, p. 6, Table 3). **Extra:** ▪ All p < 0.01 versus zero (González et al., 2016, p. 7, Table 4, Model 1). ▪ Market: 4.3% (González et al., 2016, p. 6, Table 3). ▪ US GICS sectors (González et al., 2016, pp. 6–7). ▪ 292 monthly log returns, Nov. 1989–Feb. 2014 (González et al., 2016, pp. 6–7). ▪ SUR controls for market and nominal-rate changes (González et al., 2016, pp. 6–7). ▪ Model 2 gives similar betas (González et al., 2016, pp. 6–7). ▪ Pooled contractions: Jul. 1990–Feb. 1991, Apr.–Nov. 2001, Jan. 2008–Mar. 2011 (González et al., 2016, p. 5, Table 2). ▪ 55 contraction / 237 expansion months (González et al., 2016, p. 5, Table 2). ▪ Last contraction includes recovery (González et al., 2016, p. 5, Table 2). ▪ No direct tests of phase-beta/volatility differences or isolated financial-crisis estimate in Tables 3–4 (González et al., 2016, pp. 6–7). |
-| **Bernanke & Kuttner — What Explains the Stock Market’s Reaction to Federal Reserve Policy?** Researcher citation: **2005**; local version: **2003**. | [Bernanke_Kuttner_2003_Stock_Market_Reaction_to_Federal_Reserve_Policy_Working_Paper.pdf](<pdf/Bernanke_Kuttner_2003_Stock_Market_Reaction_to_Federal_Reserve_Policy_Working_Paper.pdf>) | • Market beta of Tech / Utilities is 1.61 / 0.32 (Bernanke & Kuttner, 2003, p. 30, Table 8; PDF p. 32). • Return response to a 1-pp unexpected Fed rate increase of Tech / Utilities is −14.73 / −5.42 pp (Bernanke & Kuttner, 2003, p. 30, Table 8; PDF p. 32). **Extra:** ▪ Beta significance not reported (Bernanke & Kuttner, 2003, p. 30, Table 8; PDF p. 32). ▪ Absolute t = 2.72 / 1.55 (Bernanke & Kuttner, 2003, p. 30, Table 8; PDF p. 32). ▪ Ten Fama–French US industries (Bernanke & Kuttner, 2003, pp. 30–31; PDF pp. 32–33). ▪ 164 monthly observations, May 1989–Dec. 2002 (Bernanke & Kuttner, 2003, pp. 30–31; PDF pp. 32–33). ▪ Regressions on expected/unexpected Fed changes (Bernanke & Kuttner, 2003, pp. 30–31; PDF pp. 32–33). ▪ Betas from market excess-return regressions (Bernanke & Kuttner, 2003, pp. 30–31; PDF pp. 32–33). ▪ Tech rate response significant at conventional 1% level (Bernanke & Kuttner, 2003, pp. 30–31; PDF pp. 32–33). ▪ Utilities not significant at 10% (Bernanke & Kuttner, 2003, pp. 30–31; PDF pp. 32–33). ▪ Rate sensitivity is distinct from market beta (Bernanke & Kuttner, 2003, pp. 30–31; PDF pp. 32–33). ▪ Local version is 2003, not 2005 (Bernanke & Kuttner, 2003, p. 30; PDF p. 32). ▪ Table 8 has no phase-specific estimates or unconditional volatility (Bernanke & Kuttner, 2003, p. 30; PDF p. 32). |
-| **Baele & Londono (2013). Understanding Industry Betas.** | [Baele_Londono_2013_Understanding_Industry_Betas.pdf](<pdf/Baele_Londono_2013_Understanding_Industry_Betas.pdf>)<br>[Baele_Londono_2012_Understanding_Industry_Betas_Manuscript.pdf](<pdf/Baele_Londono_2012_Understanding_Industry_Betas_Manuscript.pdf>) | • Unconditional market beta of Tech / Utilities is 1.31 / 0.59, highest / lowest among 30 industries (Baele & Londono, 2013, p. 33, Table 1; PDF p. 4). • Annualized daily excess-return volatility of Tech / Utilities is 29.19% / 15.66% (Baele & Londono, 2013, p. 33, Table 1; PDF p. 4). • NBER recession effect on kernel market beta of Tech / Utilities is −0.07 / +0.02 (Baele & Londono, 2013, p. 43, Table 9A; PDF p. 14). **Extra:** ▪ Significance not reported (Baele & Londono, 2013, p. 33, Table 1; PDF p. 4). ▪ Market: 18.58% (Baele & Londono, 2013, p. 33, Table 1; PDF p. 4). ▪ Neither significant (Baele & Londono, 2013, p. 43, Table 9A; PDF p. 14). ▪ Tech proxy = Business equipment, not exact GICS/XLK equivalent (Baele & Londono, 2013, p. 33, Table 1; PDF p. 4). ▪ Thirty value-weighted US industries (Baele & Londono, 2013, pp. 35, 41; PDF pp. 6, 12). ▪ Daily log excess returns, Jan. 1969–Dec. 2009 (Baele & Londono, 2013, pp. 35, 41; PDF pp. 6, 12). ▪ DCC–MIDAS/kernel betas (Baele & Londono, 2013, pp. 35, 41; PDF pp. 6, 12). ▪ Kernel sample ends Dec. 2008 (Baele & Londono, 2013, pp. 35, 41; PDF pp. 6, 12). ▪ Recession regressions: quarterly betas, Newey–West HAC with four lags (Baele & Londono, 2013, pp. 33, 43; PDF pp. 4, 14). ▪ No isolated financial-crisis estimate (Baele & Londono, 2013, pp. 33, 43; PDF pp. 4, 14). ▪ Table 1 gives no volatility-difference tests (Baele & Londono, 2013, pp. 33, 43; PDF pp. 4, 14). |
-| **Amankwah, Moradi-Motlagh & Valadkhani (2026). Asymmetric responses of the sectoral ETFs to market extremes: evidence from the left and right tails.** | [Amankwah_Moradi-Motlagh_Valadkhani_2026_Asymmetric_Responses_of_Sectoral_ETFs.pdf](<pdf/Amankwah_Moradi-Motlagh_Valadkhani_2026_Asymmetric_Responses_of_Sectoral_ETFs.pdf>) | • Downside beta of Tech / Utilities is 1.114 / 0.669 (optimal), 0.899 / 0.806 (10%), and 0.844 / 0.852 (5%) overall (Amankwah et al., 2026, p. 345, Table 3; PDF p. 12). • Upside beta of Tech / Utilities is 1.154 / 0.649 (optimal), 1.092 / 0.790 (10%), and 1.020 / 0.878 (5%) overall (Amankwah et al., 2026, p. 345, Table 3; PDF p. 12). • Downside beta of Tech / Utilities is 1.063 / 0.608 in 1999–2007 and 0.916 / 0.848 in 2008–2023, at 10% tails (Amankwah et al., 2026, pp. 347, 349, Tables 5, 7; PDF pp. 14, 16). • Upside beta of Tech / Utilities is 1.538 / 0.272 in 1999–2007 and 1.004 / 0.704 in 2008–2023, at 10% tails (Amankwah et al., 2026, pp. 347, 349, Tables 5, 7; PDF pp. 14, 16). • Daily return volatility of Tech / Utilities is 1.621% / 1.216% (Amankwah et al., 2026, p. 344, Table 2; PDF p. 11). • Minimum daily return of Tech / Utilities is −14.866% / −12.056% (Amankwah et al., 2026, p. 344, Table 2; PDF p. 11). **Extra:** ▪ SPY: 1.223% (Amankwah et al., 2026, p. 344, Table 2; PDF p. 11). ▪ Difference tests not reported (Amankwah et al., 2026, p. 344, Table 2; PDF p. 11). ▪ Nine sector ETFs plus SPY (Amankwah et al., 2026, pp. 339–341; PDF pp. 6–8). ▪ Daily data, 1 Jan. 1999–17 Oct. 2023 (Amankwah et al., 2026, pp. 339–341; PDF pp. 6–8). ▪ Threshold regressions (Amankwah et al., 2026, pp. 339–341; PDF pp. 6–8). ▪ Tech = XLK, Utilities = XLU (Amankwah et al., 2026, pp. 339–341; PDF pp. 6–8). ▪ Post-GFC starts 1 Jan. 2008 and includes the crisis (Amankwah et al., 2026, pp. 341, 348–349; PDF pp. 8, 15–16). ▪ Pre/post windows are not pure expansion/recession phases (Amankwah et al., 2026, pp. 341, 348–349; PDF pp. 8, 15–16). ▪ Tech upside exceeds downside beta at every threshold/period (Amankwah et al., 2026, pp. 347–350, Tables 4, 6, 8; PDF pp. 14–17). ▪ 10% Wald F = 27.68 / 12.76 / 9.53 overall/pre/post, all p < 0.01 (Amankwah et al., 2026, pp. 347–350, Tables 4, 6, 8; PDF pp. 14–17). ▪ Utilities downside beta stays below one at all thresholds/periods (Amankwah et al., 2026, pp. 345–350, Tables 3–8; PDF pp. 12–17). ▪ 10% asymmetry insignificant overall (F = 0.13), significant pre-GFC (F = 5.38, p < 0.05) (Amankwah et al., 2026, pp. 345–350, Tables 3–8; PDF pp. 12–17). ▪ Wald tests compare betas, not beta versus one (Amankwah et al., 2026, pp. 345–350, Tables 3–8; PDF pp. 12–17). ▪ Errors: wrong periods in Table 5 footnote / Table 6 heading (Amankwah et al., 2026, pp. 347–350; PDF pp. 14–17). ▪ Post-GFC XLU 10% beta difference is +0.144 in Table 7, not −0.06 in Table 8 (Amankwah et al., 2026, pp. 347–350; PDF pp. 14–17). ▪ Corresponding asymmetry test unreliable (Amankwah et al., 2026, pp. 347–350; PDF pp. 14–17). ▪ Downside beta is tail market sensitivity, not VaR/Expected Shortfall/drawdown (Amankwah et al., 2026, pp. 339, 344–345; PDF pp. 6, 11–12). ▪ Daily minima are observations, not loss quantiles (Amankwah et al., 2026, pp. 339, 344–345; PDF pp. 6, 11–12). ▪ Both minimum daily returns occur on 16 Mar. 2020 (Amankwah et al., 2026, p. 344, Table 2; PDF p. 11). |
+| Paper | PDF | LLM Findings | Human Review |
+| --- | --- | --- | --- |
+| **González, Jareño & Skinner (2016). Interest and Inflation Risk: Investor Behavior.** | [Gonzalez_Jareno_Skinner_2016_Interest_and_Inflation_Risk.pdf](<pdf/Gonzalez_Jareno_Skinner_2016_Interest_and_Inflation_Risk.pdf>) | • Market beta of Tech / Utilities is 1.385 / 0.467 overall, 1.239 / 0.571 in contractions, and 1.473 / 0.379 in expansions (González et al., 2016, p. 7, Table 4, Model 1). | ✅ Verified |
+|  |  | • Monthly return volatility of Tech / Utilities is 7.5% / 4.4% (González et al., 2016, p. 6, Table 3). |  |
+|  |  | • Minimum monthly return of Tech / Utilities is −32.8% / −15.1% (González et al., 2016, p. 6, Table 3). |  |
+|  |  | **Extra:** |  |
+|  |  | ▪ All p < 0.01 versus zero (González et al., 2016, p. 7, Table 4, Model 1). | ✅ Verified |
+|  |  | ▪ Market: 4.3% (González et al., 2016, p. 6, Table 3). |  |
+|  |  | ▪ US GICS sectors (González et al., 2016, pp. 6–7). |  |
+|  |  | ▪ 292 monthly log returns, Nov. 1989–Feb. 2014 (González et al., 2016, pp. 6–7). |  |
+|  |  | ▪ SUR controls for market and nominal-rate changes (González et al., 2016, pp. 6–7). |  |
+|  |  | ▪ Model 2 gives similar betas (González et al., 2016, pp. 6–7). |  |
+|  |  | ▪ Pooled contractions: Jul. 1990–Feb. 1991, Apr.–Nov. 2001, Jan. 2008–Mar. 2011 (González et al., 2016, p. 5, Table 2). |  |
+|  |  | ▪ 55 contraction / 237 expansion months (González et al., 2016, p. 5, Table 2). |  |
+|  |  | ▪ Last contraction includes recovery (González et al., 2016, p. 5, Table 2). |  |
+|  |  | ▪ No direct tests of phase-beta/volatility differences or isolated financial-crisis estimate in Tables 3–4 (González et al., 2016, pp. 6–7). |  |
+| **Bernanke & Kuttner — What Explains the Stock Market’s Reaction to Federal Reserve Policy?** Researcher citation: **2005**; local version: **2003**. | [Bernanke_Kuttner_2003_Stock_Market_Reaction_to_Federal_Reserve_Policy_Working_Paper.pdf](<pdf/Bernanke_Kuttner_2003_Stock_Market_Reaction_to_Federal_Reserve_Policy_Working_Paper.pdf>) | • Market beta of Tech / Utilities is 1.61 / 0.32 (Bernanke & Kuttner, 2003, p. 30, Table 8; PDF p. 32). | ✅ Verified |
+|  |  | • Return response to a 1-pp unexpected Fed rate increase of Tech / Utilities is −14.73 / −5.42 pp (Bernanke & Kuttner, 2003, p. 30, Table 8; PDF p. 32). |  |
+|  |  | **Extra:** |  |
+|  |  | ▪ Beta significance not reported (Bernanke & Kuttner, 2003, p. 30, Table 8; PDF p. 32). |  |
+|  |  | ▪ Absolute t = 2.72 / 1.55 (Bernanke & Kuttner, 2003, p. 30, Table 8; PDF p. 32). |  |
+|  |  | ▪ Ten Fama–French US industries (Bernanke & Kuttner, 2003, pp. 30–31; PDF pp. 32–33). |  |
+|  |  | ▪ 164 monthly observations, May 1989–Dec. 2002 (Bernanke & Kuttner, 2003, pp. 30–31; PDF pp. 32–33). |  |
+|  |  | ▪ Regressions on expected/unexpected Fed changes (Bernanke & Kuttner, 2003, pp. 30–31; PDF pp. 32–33). |  |
+|  |  | ▪ Betas from market excess-return regressions (Bernanke & Kuttner, 2003, pp. 30–31; PDF pp. 32–33). |  |
+|  |  | ▪ Tech rate response significant at conventional 1% level (Bernanke & Kuttner, 2003, pp. 30–31; PDF pp. 32–33). |  |
+|  |  | ▪ Utilities not significant at 10% (Bernanke & Kuttner, 2003, pp. 30–31; PDF pp. 32–33). |  |
+|  |  | ▪ Rate sensitivity is distinct from market beta (Bernanke & Kuttner, 2003, pp. 30–31; PDF pp. 32–33). |  |
+|  |  | ▪ Local version is 2003, not 2005 (Bernanke & Kuttner, 2003, p. 30; PDF p. 32). |  |
+|  |  | ▪ Table 8 has no phase-specific estimates or unconditional volatility (Bernanke & Kuttner, 2003, p. 30; PDF p. 32). |  |
+| **Baele & Londono (2013). Understanding Industry Betas.** | [Baele_Londono_2013_Understanding_Industry_Betas.pdf](<pdf/Baele_Londono_2013_Understanding_Industry_Betas.pdf>) | • Unconditional market beta of Tech / Utilities is 1.31 / 0.59, highest / lowest among 30 industries (Baele & Londono, 2013, p. 33, Table 1; PDF p. 4). | ✅ Verified |
+|  |  | • Annualized daily excess-return volatility of Tech / Utilities is 29.19% / 15.66% (Baele & Londono, 2013, p. 33, Table 1; PDF p. 4). |  |
+|  |  | • NBER recession effect on kernel market beta of Tech / Utilities is −0.07 / +0.02 (Baele & Londono, 2013, p. 43, Table 9A; PDF p. 14). |  |
+|  |  | **Extra:** |  |
+|  |  | ▪ Significance not reported (Baele & Londono, 2013, p. 33, Table 1; PDF p. 4). |  |
+|  |  | ▪ Market: 18.58% (Baele & Londono, 2013, p. 33, Table 1; PDF p. 4). |  |
+|  |  | ▪ Neither significant (Baele & Londono, 2013, p. 43, Table 9A; PDF p. 14). |  |
+|  |  | ▪ Tech proxy = Business equipment, not exact GICS/XLK equivalent (Baele & Londono, 2013, p. 33, Table 1; PDF p. 4). |  |
+|  |  | ▪ Thirty value-weighted US industries (Baele & Londono, 2013, pp. 35, 41; PDF pp. 6, 12). |  |
+|  |  | ▪ Daily log excess returns, Jan. 1969–Dec. 2009 (Baele & Londono, 2013, pp. 35, 41; PDF pp. 6, 12). |  |
+|  |  | ▪ DCC–MIDAS/kernel betas (Baele & Londono, 2013, pp. 35, 41; PDF pp. 6, 12). |  |
+|  |  | ▪ Kernel sample ends Dec. 2008 (Baele & Londono, 2013, pp. 35, 41; PDF pp. 6, 12). |  |
+|  |  | ▪ Recession regressions: quarterly betas, Newey–West HAC with four lags (Baele & Londono, 2013, pp. 33, 43; PDF pp. 4, 14). |  |
+|  |  | ▪ No isolated financial-crisis estimate (Baele & Londono, 2013, pp. 33, 43; PDF pp. 4, 14). |  |
+|  |  | ▪ Table 1 gives no volatility-difference tests (Baele & Londono, 2013, pp. 33, 43; PDF pp. 4, 14). |  |
+| **Amankwah, Moradi-Motlagh & Valadkhani (2026). Asymmetric responses of the sectoral ETFs to market extremes: evidence from the left and right tails.** | [Amankwah_Moradi-Motlagh_Valadkhani_2026_Asymmetric_Responses_of_Sectoral_ETFs.pdf](<pdf/Amankwah_Moradi-Motlagh_Valadkhani_2026_Asymmetric_Responses_of_Sectoral_ETFs.pdf>) | • Downside beta of Tech / Utilities is 1.114 / 0.669 (optimal), 0.899 / 0.806 (10%), and 0.844 / 0.852 (5%) overall (Amankwah et al., 2026, p. 345, Table 3; PDF p. 12). |  |
+|  |  | • Upside beta of Tech / Utilities is 1.154 / 0.649 (optimal), 1.092 / 0.790 (10%), and 1.020 / 0.878 (5%) overall (Amankwah et al., 2026, p. 345, Table 3; PDF p. 12). |  |
+|  |  | • Downside beta of Tech / Utilities is 1.063 / 0.608 in 1999–2007 and 0.916 / 0.848 in 2008–2023, at 10% tails (Amankwah et al., 2026, pp. 347, 349, Tables 5, 7; PDF pp. 14, 16). |  |
+|  |  | • Upside beta of Tech / Utilities is 1.538 / 0.272 in 1999–2007 and 1.004 / 0.704 in 2008–2023, at 10% tails (Amankwah et al., 2026, pp. 347, 349, Tables 5, 7; PDF pp. 14, 16). |  |
+|  |  | • Daily return volatility of Tech / Utilities is 1.621% / 1.216% (Amankwah et al., 2026, p. 344, Table 2; PDF p. 11). |  |
+|  |  | • Minimum daily return of Tech / Utilities is −14.866% / −12.056% (Amankwah et al., 2026, p. 344, Table 2; PDF p. 11). |  |
+|  |  | **Extra:** |  |
+|  |  | ▪ SPY: 1.223% (Amankwah et al., 2026, p. 344, Table 2; PDF p. 11). |  |
+|  |  | ▪ Difference tests not reported (Amankwah et al., 2026, p. 344, Table 2; PDF p. 11). |  |
+|  |  | ▪ Nine sector ETFs plus SPY (Amankwah et al., 2026, pp. 339–341; PDF pp. 6–8). |  |
+|  |  | ▪ Daily data, 1 Jan. 1999–17 Oct. 2023 (Amankwah et al., 2026, pp. 339–341; PDF pp. 6–8). |  |
+|  |  | ▪ Threshold regressions (Amankwah et al., 2026, pp. 339–341; PDF pp. 6–8). |  |
+|  |  | ▪ Tech = XLK, Utilities = XLU (Amankwah et al., 2026, pp. 339–341; PDF pp. 6–8). |  |
+|  |  | ▪ Post-GFC starts 1 Jan. 2008 and includes the crisis (Amankwah et al., 2026, pp. 341, 348–349; PDF pp. 8, 15–16). |  |
+|  |  | ▪ Pre/post windows are not pure expansion/recession phases (Amankwah et al., 2026, pp. 341, 348–349; PDF pp. 8, 15–16). |  |
+|  |  | ▪ Tech upside exceeds downside beta at every threshold/period (Amankwah et al., 2026, pp. 347–350, Tables 4, 6, 8; PDF pp. 14–17). |  |
+|  |  | ▪ 10% Wald F = 27.68 / 12.76 / 9.53 overall/pre/post, all p < 0.01 (Amankwah et al., 2026, pp. 347–350, Tables 4, 6, 8; PDF pp. 14–17). |  |
+|  |  | ▪ Utilities downside beta stays below one at all thresholds/periods (Amankwah et al., 2026, pp. 345–350, Tables 3–8; PDF pp. 12–17). |  |
+|  |  | ▪ 10% asymmetry insignificant overall (F = 0.13), significant pre-GFC (F = 5.38, p < 0.05) (Amankwah et al., 2026, pp. 345–350, Tables 3–8; PDF pp. 12–17). |  |
+|  |  | ▪ Wald tests compare betas, not beta versus one (Amankwah et al., 2026, pp. 345–350, Tables 3–8; PDF pp. 12–17). |  |
+|  |  | ▪ Errors: wrong periods in Table 5 footnote / Table 6 heading (Amankwah et al., 2026, pp. 347–350; PDF pp. 14–17). |  |
+|  |  | ▪ Post-GFC XLU 10% beta difference is +0.144 in Table 7, not −0.06 in Table 8 (Amankwah et al., 2026, pp. 347–350; PDF pp. 14–17). |  |
+|  |  | ▪ Corresponding asymmetry test unreliable (Amankwah et al., 2026, pp. 347–350; PDF pp. 14–17). |  |
+|  |  | ▪ Downside beta is tail market sensitivity, not VaR/Expected Shortfall/drawdown (Amankwah et al., 2026, pp. 339, 344–345; PDF pp. 6, 11–12). |  |
+|  |  | ▪ Daily minima are observations, not loss quantiles (Amankwah et al., 2026, pp. 339, 344–345; PDF pp. 6, 11–12). |  |
+|  |  | ▪ Both minimum daily returns occur on 16 Mar. 2020 (Amankwah et al., 2026, p. 344, Table 2; PDF p. 11). |  |
 
 ### Interconnection
 
-| Paper | PDF | Findings |
-| --- | --- | --- |
-| **Ferreira & Gama (2010). Correlation dynamics of global industry portfolios.** | [Ferreira_Gama_2010_Correlation_Dynamics_of_Global_Industry_Portfolios.pdf](<pdf/Ferreira_Gama_2010_Correlation_Dynamics_of_Global_Industry_Portfolios.pdf>) |  |
-| **Mensi, Nekhili, Vo, Suleman & Kang (2021). Asymmetric volatility connectedness among U.S. stock sectors.** | [Mensi_et_al_2021_Asymmetric_Volatility_Connectedness.pdf](<pdf/Mensi_et_al_2021_Asymmetric_Volatility_Connectedness.pdf>) |  |
-| **Ngene (2021). What drives dynamic connectedness of the U.S equity sectors during different business cycles?** | [Ngene_2021_Dynamic_Connectedness_of_US_Equity_Sectors.pdf](<pdf/Ngene_2021_Dynamic_Connectedness_of_US_Equity_Sectors.pdf>) |  |
-| **Kallberg & Pasquariello (2008). Time-series and cross-sectional excess comovement in stock indexes.** | [Kallberg_Pasquariello_2008_Excess_Comovement_in_Stock_Indexes.pdf](<pdf/Kallberg_Pasquariello_2008_Excess_Comovement_in_Stock_Indexes.pdf>) |  |
-| **Buccheri, Marmi & Mantegna (2013). Evolution of correlation structure of industrial indices of U.S. equity markets.** | [Buccheri_Marmi_Mantegna_2013_Evolution_of_Correlation_Structure.pdf](<pdf/Buccheri_Marmi_Mantegna_2013_Evolution_of_Correlation_Structure.pdf>) |  |
+| Paper | PDF | LLM Findings | Human Review |
+| --- | --- | --- | --- |
+| **Ferreira & Gama (2010). Correlation dynamics of global industry portfolios.** | [Ferreira_Gama_2010_Correlation_Dynamics_of_Global_Industry_Portfolios.pdf](<pdf/Ferreira_Gama_2010_Correlation_Dynamics_of_Global_Industry_Portfolios.pdf>) |  |  |
+| **Mensi, Nekhili, Vo, Suleman & Kang (2021). Asymmetric volatility connectedness among U.S. stock sectors.** | [Mensi_et_al_2021_Asymmetric_Volatility_Connectedness.pdf](<pdf/Mensi_et_al_2021_Asymmetric_Volatility_Connectedness.pdf>) |  |  |
+| **Ngene (2021). What drives dynamic connectedness of the U.S equity sectors during different business cycles?** | [Ngene_2021_Dynamic_Connectedness_of_US_Equity_Sectors.pdf](<pdf/Ngene_2021_Dynamic_Connectedness_of_US_Equity_Sectors.pdf>) |  |  |
+| **Kallberg & Pasquariello (2008). Time-series and cross-sectional excess comovement in stock indexes.** | [Kallberg_Pasquariello_2008_Excess_Comovement_in_Stock_Indexes.pdf](<pdf/Kallberg_Pasquariello_2008_Excess_Comovement_in_Stock_Indexes.pdf>) |  |  |
+| **Buccheri, Marmi & Mantegna (2013). Evolution of correlation structure of industrial indices of U.S. equity markets.** | [Buccheri_Marmi_Mantegna_2013_Evolution_of_Correlation_Structure.pdf](<pdf/Buccheri_Marmi_Mantegna_2013_Evolution_of_Correlation_Structure.pdf>) |  |  |
 
 ## Methodological
 
