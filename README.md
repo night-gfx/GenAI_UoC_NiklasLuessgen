@@ -17,7 +17,14 @@ python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 ```
 
-## Execution
+## Reproduce Workflow
+
+- **Start:** Invoke `$research-task-workflow` in Codex.
+- **Tasks:** The skill reads `tasks/README.md` and executes one pending task per invocation (`agent/<task>`), in order 01–04, on its prepared branch.
+- **Checks:** Codex validates results, logs checks, commits changes, and marks the task `Ready for Review`.
+- **Approval:** The researcher reviews the code and independently tests inputs and outputs before merging. After approval, Codex marks the task `Completed`; invoke the skill again for the next task.
+
+## Execution of Scripts
 
 Run in order; results are written to `output/`.
 
@@ -43,6 +50,7 @@ Run in order; results are written to `output/`.
 | `logs/` | Task execution logs |
 | `literature/` | Literature matrix and PDFs |
 
-## Workflow
+## AI Use Statement
 
-Scripts are implemented by an AI agent, one task per branch (`agent/<task>`), following [AGENTS.md](AGENTS.md) and the [research-task-workflow skill](.agents/skills/research-task-workflow/SKILL.md). The researcher reviews and merges.
+- **Model:** GPT-6.1 with medium reasoning effort.
+- **Tool:** Codex, used for code implementation, automated checks, and documentation under researcher review.

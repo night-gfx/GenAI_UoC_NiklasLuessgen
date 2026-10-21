@@ -52,8 +52,6 @@ def _read_daily_block(path, *, section=None):
     table = pd.DataFrame(records, columns=header, dtype=str)
     table.attrs.update(source=str(path), units="percent", section=section or "daily factors")
     return table
-
-
 def load_daily_returns(industry_path, factors_path):
     """Return raw value-weighted industry and factor tables without scaling."""
     industry = _read_daily_block(
@@ -61,8 +59,6 @@ def load_daily_returns(industry_path, factors_path):
     )
     factors = _read_daily_block(factors_path)
     return industry, factors
-
-
 def _sample_table(table, columns, name):
     """Validate raw dates/units and return a numeric copy of the fixed sample."""
     required = {"date", *columns}
@@ -91,8 +87,6 @@ def _sample_table(table, columns, name):
     if (sample[total_columns].to_numpy(dtype=float) < -100).any():
         raise ValueError(f"{name}: daily return below -100 percent")
     return sample.astype(float)
-
-
 def _aligned_sample(industry, factors):
     """Check daily coverage before joining, so no observation is silently lost."""
     sectors = _sample_table(industry, ("Utils", "BusEq"), "industry")
@@ -113,8 +107,6 @@ def _aligned_sample(industry, factors):
     if not pd.DatetimeIndex(labels.unique()).equals(expected):
         raise ValueError("Missing shared sample weeks or incomplete sample boundaries")
     return daily
-
-
 def validate_daily_returns(industry, factors):
     """Reject invalid selected daily series; never mutate, fill or drop input rows.
 
@@ -123,8 +115,6 @@ def validate_daily_returns(industry, factors):
     documented convention, not an inference from the size of observed returns.
     """
     _aligned_sample(industry, factors)
-
-
 def calculate_weekly_returns(
     industry, factors, week_rule="W-FRI", boundary_rule="full_sample_weeks"
 ):
@@ -152,8 +142,6 @@ def calculate_weekly_returns(
     }).rename_axis("week_end").reset_index()
     weekly.attrs["units"] = "percent"
     return weekly
-
-
 def save_weekly_returns(weekly, output_path):
     """Write the verified schema only to the task's authorized CSV path."""
     destination = Path(output_path)
