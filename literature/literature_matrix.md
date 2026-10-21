@@ -96,11 +96,98 @@
 
 | Paper | PDF | LLM Findings | Human Review |
 | --- | --- | --- | --- |
-| **Ferreira & Gama (2010). Correlation dynamics of global industry portfolios.** | [Ferreira_Gama_2010_Correlation_Dynamics_of_Global_Industry_Portfolios.pdf](<pdf/Ferreira_Gama_2010_Correlation_Dynamics_of_Global_Industry_Portfolios.pdf>) |  |  |
-| **Mensi, Nekhili, Vo, Suleman & Kang (2021). Asymmetric volatility connectedness among U.S. stock sectors.** | [Mensi_et_al_2021_Asymmetric_Volatility_Connectedness.pdf](<pdf/Mensi_et_al_2021_Asymmetric_Volatility_Connectedness.pdf>) |  |  |
-| **Ngene (2021). What drives dynamic connectedness of the U.S equity sectors during different business cycles?** | [Ngene_2021_Dynamic_Connectedness_of_US_Equity_Sectors.pdf](<pdf/Ngene_2021_Dynamic_Connectedness_of_US_Equity_Sectors.pdf>) |  |  |
-| **Kallberg & Pasquariello (2008). Time-series and cross-sectional excess comovement in stock indexes.** | [Kallberg_Pasquariello_2008_Excess_Comovement_in_Stock_Indexes.pdf](<pdf/Kallberg_Pasquariello_2008_Excess_Comovement_in_Stock_Indexes.pdf>) |  |  |
-| **Buccheri, Marmi & Mantegna (2013). Evolution of correlation structure of industrial indices of U.S. equity markets.** | [Buccheri_Marmi_Mantegna_2013_Evolution_of_Correlation_Structure.pdf](<pdf/Buccheri_Marmi_Mantegna_2013_Evolution_of_Correlation_Structure.pdf>) |  |  |
+| **Ferreira & Gama (2010). Correlation dynamics of global industry portfolios.** | [Ferreira_Gama_2010_Correlation_Dynamics_of_Global_Industry_Portfolios.pdf](<pdf/Ferreira_Gama_2010_Correlation_Dynamics_of_Global_Industry_Portfolios.pdf>) | • Pairwise Tech–Utilities correlation (raw or market-adjusted) is not reported; only each industry's correlation with the world market (Ferreira & Gama, 2010, p. 37, Eq. 1; PDF p. 3). |  |
+|  |  | • Mean monthly realized correlation with the world market of Tech / Utilities is 0.681 / 0.692 [1979–2008] (Ferreira & Gama, 2010, p. 40, Table 1; PDF p. 6). |  |
+|  |  | • Linear trend coefficient (×10,000) of this correlation of Tech / Utilities is 4.412 / −0.328; t-PST 0.57 / −0.36 (Ferreira & Gama, 2010, p. 40, Table 1; PDF p. 6). |  |
+|  |  | • Mean correlation with the world market of Tech / Utilities is 0.697 / 0.680 (1979–83), 0.596 / 0.684 (1984–88), 0.617 / 0.800 (1989–93), 0.613 / 0.707 (1994–98), 0.811 / 0.517 (1999–2003), and 0.751 / 0.764 (2004–08) (Ferreira & Gama, 2010, p. 40, Table 2; PDF p. 6). |  |
+|  |  | • Contemporaneous (lag 0) correlation between this market-correlation series and an NBER expansion dummy of Tech / Utilities is −0.17 / −0.05 (Ferreira & Gama, 2010, p. 41, Table 3; PDF p. 7). |  |
+|  |  | • Mean correlation with the world market of Tech / Utilities is 0.704 / 0.719 in down months and 0.668 / 0.677 in up months (Ferreira & Gama, 2010, p. 42, Table 4; PDF p. 8). |  |
+|  |  | • Slope of this correlation on the world market return of Tech / Utilities is 0.797 / 0.324 in down months and 0.268 / −0.584 in up months (Ferreira & Gama, 2010, p. 43, Table 5; PDF p. 9). |  |
+|  |  | **Extra:** |  |
+|  |  | ▪ Trends insignificant: t-PST below the 5% critical value of 1.72 (Ferreira & Gama, 2010, p. 40, Table 1; PDF p. 6). |  |
+|  |  | ▪ Time effects p = 0.000 for both; H0: equal means across the six 60-month subperiods (Ferreira & Gama, 2010, p. 40, Table 2; PDF p. 6). |  |
+|  |  | ▪ Down = Up p-value of Tech / Utilities is 0.072 / 0.016 for mean correlations and 0.072 / 0.013 for slopes (Ferreira & Gama, 2010, pp. 42–43, Tables 4–5; PDF pp. 8–9). |  |
+|  |  | ▪ Slope t-statistics: Tech 3.56 (down) / 0.94 (up); Utilities 0.92 (down) / −1.83 (up) (Ferreira & Gama, 2010, p. 43, Table 5; PDF p. 9). |  |
+|  |  | ▪ Recession increase in correlation ranges from 9.2% (Basic Materials) to 2.8% (Utilities); Tech value not reported (Ferreira & Gama, 2010, p. 42, fn. 5; PDF p. 8). |  |
+|  |  | ▪ Technology is the only industry without a late-1990s correlation decline; its market correlation rose from the mid-1990s until stabilizing in 2004 (Ferreira & Gama, 2010, p. 38, Fig. 1; PDF p. 4). |  |
+|  |  | ▪ Correlation with the market proxies an industry's average pairwise correlation with the other industries (Ferreira & Gama, 2010, p. 37, fn. 2; PDF p. 3). |  |
+|  |  | ▪ Global ICB industries from Datastream; USD total-return indexes incl. dividends; 53 countries in 2008; industry value = cross-sectional average of Level-4 sector correlations; not U.S.-only (Ferreira & Gama, 2010, p. 37; PDF p. 3). |  |
+|  |  | ▪ Daily returns, monthly realized correlations, Jan. 1979–Dec. 2008; market = Datastream value-weighted world portfolio (Ferreira & Gama, 2010, p. 37; PDF p. 3). |  |
+|  |  | ▪ SUR across ten industries, Newey–West with 5 lags; Vogelsang (1998) t-PST trend test (Ferreira & Gama, 2010, pp. 40–43; PDF pp. 6–9). |  |
+|  |  | ▪ Recessions = NBER-dated U.S. cycles as world proxy; down/up = sign of monthly world return (Ferreira & Gama, 2010, pp. 39, 41–42; PDF pp. 5, 7–8). |  |
+|  |  | ▪ Error: text announces five 60-month subperiods, Table 2 shows six (Ferreira & Gama, 2010, pp. 40–41; PDF pp. 6–7). |  |
+|  |  | ▪ Error: text says Down = Up is rejected for all ten groups, but Tech p = 0.072 (Ferreira & Gama, 2010, pp. 43–44, Table 5; PDF pp. 9–10). |  |
+|  |  | ▪ Contradiction: conclusion says the correlation–volatility link is stronger in rising markets, contrary to Section 4 (Ferreira & Gama, 2010, pp. 44, 46; PDF pp. 10, 12). |  |
+| **Mensi, Nekhili, Vo, Suleman & Kang (2021). Asymmetric volatility connectedness among U.S. stock sectors.** | [Mensi_et_al_2021_Asymmetric_Volatility_Connectedness.pdf](<pdf/Mensi_et_al_2021_Asymmetric_Volatility_Connectedness.pdf>) | • Pairwise return correlation of Tech–Utilities is 0.5591 [unconditional, 2012–2018] (Mensi et al., 2021, p. 8, Table 2). |  |
+|  |  | • Pairwise volatility spillover received by Tech from Utilities / by Utilities from Tech is 0.34 / 0.56 [% of 10-day forecast error variance; realized volatility] (Mensi et al., 2021, p. 9, Table 3). |  |
+|  |  | • Same pairwise spillover is 0.61 / 0.54 for good volatility (positive semivariance) (Mensi et al., 2021, p. 10, Table 4). |  |
+|  |  | • Same pairwise spillover is 0.39 / 0.70 for bad volatility (negative semivariance) (Mensi et al., 2021, p. 11, Table 5). |  |
+|  |  | • Net total directional spillover of Tech / Utilities is −29.9 / −9.5 (realized volatility), −29.3 / −7.5 (good), and −25.6 / −9.0 (bad); both are net receivers (Mensi et al., 2021, pp. 9–11, Tables 3–5). |  |
+|  |  | • Market-adjusted correlation is not reported (Mensi et al., 2021, pp. 5–11). |  |
+|  |  | **Extra:** |  |
+|  |  | ▪ Ten U.S. sector indices plus Total Market; index provider not named (Mensi et al., 2021, p. 5). |  |
+|  |  | ▪ Five-minute intraday data, 21 Sept. 2012–31 Dec. 2018; 1578 daily realized-volatility observations (Mensi et al., 2021, p. 5). |  |
+|  |  | ▪ Diebold–Yilmaz (2012) generalized VAR(2), 10-day horizon; realized semivariances (Baruník et al., 2017) (Mensi et al., 2021, pp. 3–4, 9). |  |
+|  |  | ▪ No significance tests for spillovers or correlations (Mensi et al., 2021, pp. 8–11, Tables 2–5). |  |
+|  |  | ▪ No market phases; time variation via rolling windows; Markov regime-switching as robustness (Mensi et al., 2021, pp. 2, 4, 16). |  |
+|  |  | ▪ Text: Technology receives more risk under bad than good volatility; Utilities shows asymmetry between good and bad volatility transmission (Mensi et al., 2021, p. 20). |  |
+|  |  | ▪ Contradiction: rolling window is 180 days in text but 200 observations in footnote 2 (Mensi et al., 2021, p. 4). |  |
+|  |  | ▪ Data error: Utilities statistics are identical to Financials (Mensi et al., 2021, p. 7, Table 1). |  |
+|  |  | ▪ Data error: Utilities rows in Tables 3–5 equal the Financials rows, with 41–42% spillover between the two (Mensi et al., 2021, pp. 9–11, Tables 3–5). |  |
+|  |  | ▪ Data error: Utilities row in Table 2 duplicates the Con. Services column (Utilities–Con. Services = 1.0000); Tech–Utilities = Tech–Con. Services = 0.5591 (Mensi et al., 2021, p. 8, Table 2). |  |
+|  |  | ▪ Utilities results are therefore unreliable; Con. Goods correlations of ≈0 with all sectors are also implausible (Mensi et al., 2021, p. 8, Table 2). |  |
+|  |  | ▪ Volatility connectedness differs from return correlation (Mensi et al., 2021, pp. 3–5). |  |
+| **Ngene (2021). What drives dynamic connectedness of the U.S equity sectors during different business cycles?** | [Ngene_2021_Dynamic_Connectedness_of_US_Equity_Sectors.pdf](<pdf/Ngene_2021_Dynamic_Connectedness_of_US_Equity_Sectors.pdf>) | • Pairwise volatility spillover received by Tech from Utilities / by Utilities from Tech is 5.7 / 5.8 [% of 24-week forecast error variance; full sample] (Ngene, 2021, p. 9, Table 2). |  |
+|  |  | • Net directional spillover of Tech / Utilities is −9.3 / −10.6 [%]; both are net receivers (Ngene, 2021, p. 9, Table 2). |  |
+|  |  | • Spillover to others of Tech / Utilities is 60.5 / 58.0 and from others 69.8 / 68.6 [%] (Ngene, 2021, p. 9, Table 2). |  |
+|  |  | • Own-variance share of Tech / Utilities is 30.2 / 31.4 [%] (Ngene, 2021, p. 9, Table 2). |  |
+|  |  | • Net pairwise index (NPDI) Tech–Utilities and phase-specific pairwise values are not reported; NPDI is only defined (Ngene, 2021, p. 7, Eq. 8). |  |
+|  |  | • Market-adjusted correlation is not reported (Ngene, 2021, pp. 3–14). |  |
+|  |  | **Extra:** |  |
+|  |  | ▪ Nine MSCI U.S. sector indices in USD; TEC = Technology, UTL = Utilities (Ngene, 2021, p. 3). |  |
+|  |  | ▪ Weekly Friday-to-Friday log returns, 1 June 1994–15 Jan. 2021; 1392 observations (Ngene, 2021, p. 3). |  |
+|  |  | ▪ GJR-GARCH(1,1) conditional variances in a TVP-VAR(1) (BIC); generalized FEVD, 24-week horizon (Ngene, 2021, pp. 6–7, 9). |  |
+|  |  | ▪ No significance tests for connectedness measures (Ngene, 2021, p. 9, Table 2). |  |
+|  |  | ▪ NBER recession dummy only in total-connectedness regressions, not in pairwise results (Ngene, 2021, pp. 7–8). |  |
+|  |  | ▪ TEC is a net receiver until ≈2013 and shows intensifying transmission after ≈2014–15 (Ngene, 2021, pp. 10–11, Fig. 3; Fig. 3 on p. 12). |  |
+|  |  | ▪ UTL is a net receiver over the whole sample; its receiving role intensifies after ≈2014–15 (Ngene, 2021, pp. 10–11, Fig. 3; Fig. 3 on p. 12). |  |
+|  |  | ▪ Error: text refers to Table 3 for connectedness results shown in Table 2 (Ngene, 2021, p. 9). |  |
+|  |  | ▪ Error: text lists −10.6 / −9.3 / −5.8 for UTL / CSI / HCI, but Table 2 gives CSI −7.57 and TEC −9.3 (Ngene, 2021, p. 9, Table 2). |  |
+|  |  | ▪ Volatility connectedness differs from return correlation (Ngene, 2021, pp. 6–7). |  |
+| **Kallberg & Pasquariello (2008). Time-series and cross-sectional excess comovement in stock indexes.** | [Kallberg_Pasquariello_2008_Excess_Comovement_in_Stock_Indexes.pdf](<pdf/Kallberg_Pasquariello_2008_Excess_Comovement_in_Stock_Indexes.pdf>) | • Pairwise Tech–Utilities excess correlation is not reported; sector values average each industry's significant squared residual correlations with all other industries (Kallberg & Pasquariello, 2008, p. 484, Eq. 5; p. 490, Table 2; PDF pp. 4, 10). |  |
+|  |  | • Mean excess square correlation (FGLS residuals) of Tech / Utilities is 0.081 / 0.099 [weekly, Oct. 1979–Dec. 2001] (Kallberg & Pasquariello, 2008, p. 490, Table 2; PDF p. 10). |  |
+|  |  | • Benchmark raw square correlation of Tech / Utilities is 0.278 / 0.153 (Kallberg & Pasquariello, 2008, p. 490, Table 2; PDF p. 10). |  |
+|  |  | • Mean ratio of excess to raw square correlation of Tech / Utilities is 29% / 64% (Kallberg & Pasquariello, 2008, p. 490, Table 2; PDF p. 10). |  |
+|  |  | • NBER recession dummy effect on excess comovement of Tech / Utilities is −0.0020 / −0.0042 (model 1) and −0.0023 / −0.0032 (model 2) (Kallberg & Pasquariello, 2008, p. 497, Table 4; PDF p. 17). |  |
+|  |  | • Restrictive-Fed dummy effect of Tech / Utilities is 0.0091 / −0.0046 (model 1) and 0.0096 / −0.0031 (model 2) (Kallberg & Pasquariello, 2008, p. 498, Table 4; PDF p. 18). |  |
+|  |  | • Three-month T-bill coefficient of Tech / Utilities is 0.0952 / −0.2104 (model 1) and 0.0700 / −0.1760 (model 2) (Kallberg & Pasquariello, 2008, p. 497, Table 4; PDF p. 17). |  |
+|  |  | **Extra:** |  |
+|  |  | ▪ Excess square correlations significant at 1% for both; H0: ρ* = 0 vs. ρ* > 0 (Kallberg & Pasquariello, 2008, p. 490, Table 2; PDF p. 10). |  |
+|  |  | ▪ Recession: Tech not significant (t = −1.01 / −1.32); Utilities significant at 10% in model 1 (t = −1.83), not in model 2 (t = −1.52) (Kallberg & Pasquariello, 2008, p. 497, Table 4; PDF p. 17). |  |
+|  |  | ▪ Restrictive Fed: Tech significant at 1%; Utilities at 5% / 10% (Kallberg & Pasquariello, 2008, p. 498, Table 4; PDF p. 18). |  |
+|  |  | ▪ T-bill coefficients all significant at 1% (Kallberg & Pasquariello, 2008, p. 497, Table 4; PDF p. 17). |  |
+|  |  | ▪ Adjusted R² of Tech / Utilities is 70.71–72.76% / 19.63–19.64% (Kallberg & Pasquariello, 2008, p. 498, Table 4; PDF p. 18). |  |
+|  |  | ▪ 82 Datastream U.S. industry indexes (FTSE classification), value-weighted, dividend-adjusted weekly log returns, 5 Jan. 1976–31 Dec. 2001 (Kallberg & Pasquariello, 2008, pp. 486–487; PDF pp. 6–7). |  |
+|  |  | ▪ Tech = Information Technology (Computer Hardware & Service, Semiconductors, Telecom Equipment); Utilities = Electricity, Gas Distribution, Water (Kallberg & Pasquariello, 2008, p. 491; PDF p. 11). |  |
+|  |  | ▪ Joint FGLS rolling regressions (N = 100 weeks) on sector, macro-sector, market, HML, and SMB factors (Kallberg & Pasquariello, 2008, p. 488, Eq. 19; PDF p. 8). |  |
+|  |  | ▪ Residual correlations volatility-adjusted (4-year window); only correlations significant at 10% kept, then squared (Kallberg & Pasquariello, 2008, pp. 484, 488; PDF pp. 4, 8). |  |
+|  |  | ▪ Table 4: OLS with Newey–West standard errors (Kallberg & Pasquariello, 2008, p. 498; PDF p. 18). |  |
+|  |  | ▪ Phases: NBER recession weeks (165 of 1158); restrictive Fed per Jensen et al. (1996) (Kallberg & Pasquariello, 2008, p. 498; PDF p. 18). |  |
+|  |  | ▪ Excess comovement peaks in 1990 and 1996–97 for many sectors, except Utilities and IT, which show the widest fluctuations (Kallberg & Pasquariello, 2008, p. 491; PDF p. 11). |  |
+|  |  | ▪ Controls include sector factors, unlike a market-only partial correlation; squaring removes the sign (Kallberg & Pasquariello, 2008, pp. 484, 488; PDF pp. 4, 8). |  |
+| **Buccheri, Marmi & Mantegna (2013). Evolution of correlation structure of industrial indices of U.S. equity markets.** | [Buccheri_Marmi_Mantegna_2013_Evolution_of_Correlation_Structure.pdf](<pdf/Buccheri_Marmi_Mantegna_2013_Evolution_of_Correlation_Structure.pdf>) | • Pairwise Tech–Utilities correlation values are not reported; only network and eigenvalue analyses (Buccheri et al., 2013, pp. 012806-2–012806-6). |  |
+|  |  | • Cluster membership of Tech / Utilities is C4 (Hardw, Softw, Chips, LabEq, Other) / C1 (financial, business services, construction, wholesale, utilities) [PMFG, full-sample daily correlations] (Buccheri et al., 2013, pp. 012806-2–012806-3, Figs. 2–4). |  |
+|  |  | • Dot-com period (Mar. 1999–Apr. 2001): second eigenvector loads strongly positive on the C4 tech industries, while most others are near zero or negative; tech correlations decouple from the rest (Buccheri et al., 2013, p. 012806-6, Fig. 10). |  |
+|  |  | • Variance explained by the first eigenvalue is ≈31% in the dot-com period and ≈70% in 2008–09; the second explains up to ≈16% (Buccheri et al., 2013, p. 012806-6). |  |
+|  |  | **Extra:** |  |
+|  |  | ▪ 49 Fama–French value-weighted U.S. industry portfolios; daily returns, July 1969–Dec. 2011; 10,621 trading days (Buccheri et al., 2013, pp. 012806-1–012806-2). |  |
+|  |  | ▪ Monthly Pearson correlation matrices from 3-month windows; PMFG, Infomap clusters, link mutual information, Spearman rank correlation, eigenvalues (Buccheri et al., 2013, pp. 012806-1–012806-5). |  |
+|  |  | ▪ No significance tests; raw correlations without market adjustment (Buccheri et al., 2013, pp. 012806-1–012806-6). |  |
+|  |  | ▪ Periods: dot-com Mar. 1999–Apr. 2001; subprime Aug. 2008–Aug. 2009 (Buccheri et al., 2013, p. 012806-1). |  |
+|  |  | ▪ Error: Fig. 1 caption dates the 9/11 attack to September 2011 (Buccheri et al., 2013, p. 012806-2). |  |
+|  |  | ▪ Error: second-eigenvalue change dated “June–March 2001” (Buccheri et al., 2013, p. 012806-5). |  |
+|  |  | ▪ Inconsistency: dot-com window ends April 2001 in text but May 2001 in Fig. 10 (Buccheri et al., 2013, p. 012806-6). |  |
+|  |  | ▪ Inconsistency: start date June 1969 in appendix vs. July 1969 elsewhere (Buccheri et al., 2013, pp. 012806-1, 012806-7). |  |
 
 ## Methodological
 
