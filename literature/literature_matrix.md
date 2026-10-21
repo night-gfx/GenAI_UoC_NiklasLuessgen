@@ -176,11 +176,11 @@
 |  |  | ▪ Excess comovement peaks in 1990 and 1996–97 for many sectors, except Utilities and IT, which show the widest fluctuations (Kallberg & Pasquariello, 2008, p. 491; PDF p. 11). |  |
 |  |  | ▪ Controls include sector factors, unlike a market-only partial correlation; squaring removes the sign (Kallberg & Pasquariello, 2008, pp. 484, 488; PDF pp. 4, 8). |  |
 | **Buccheri, Marmi & Mantegna (2013). Evolution of correlation structure of industrial indices of U.S. equity markets.** | [Buccheri_Marmi_Mantegna_2013_Evolution_of_Correlation_Structure.pdf](<pdf/Buccheri_Marmi_Mantegna_2013_Evolution_of_Correlation_Structure.pdf>) | • Pairwise Tech–Utilities correlation values are not reported; only network and eigenvalue analyses (Buccheri et al., 2013, pp. 012806-2–012806-6). |  |
-|  |  | • Cluster membership of Tech / Utilities is C4 (Hardw, Softw, Chips, LabEq, Other) / C1 (financial, business services, construction, wholesale, utilities) [PMFG, full-sample daily correlations] (Buccheri et al., 2013, pp. 012806-2–012806-3, Figs. 2–4). |  |
+|  |  | • Cluster membership of Tech / Utilities is C4 (Hardw, Softw, Chips, LabEq, Other) / C1 (financial, business services, construction, wholesale, utilities) [PMFG, full-sample daily correlations] (Buccheri et al., 2013, pp. 012806-2–012806-3, Figs. 2–4). | ✅ Verified |
 |  |  | • Dot-com period (Mar. 1999–Apr. 2001): second eigenvector loads strongly positive on the C4 tech industries, while most others are near zero or negative; tech correlations decouple from the rest (Buccheri et al., 2013, p. 012806-6, Fig. 10). |  |
 |  |  | • Variance explained by the first eigenvalue is ≈31% in the dot-com period and ≈70% in 2008–09; the second explains up to ≈16% (Buccheri et al., 2013, p. 012806-6). |  |
 |  |  | **Extra:** |  |
-|  |  | ▪ 49 Fama–French value-weighted U.S. industry portfolios; daily returns, July 1969–Dec. 2011; 10,621 trading days (Buccheri et al., 2013, pp. 012806-1–012806-2). |  |
+|  |  | ▪ 49 Fama–French value-weighted U.S. industry portfolios; daily returns, July 1969–Dec. 2011; 10,621 trading days (Buccheri et al., 2013, pp. 012806-1–012806-2). | ✅ Verified |
 |  |  | ▪ Monthly Pearson correlation matrices from 3-month windows; PMFG, Infomap clusters, link mutual information, Spearman rank correlation, eigenvalues (Buccheri et al., 2013, pp. 012806-1–012806-5). |  |
 |  |  | ▪ No significance tests; raw correlations without market adjustment (Buccheri et al., 2013, pp. 012806-1–012806-6). |  |
 |  |  | ▪ Periods: dot-com Mar. 1999–Apr. 2001; subprime Aug. 2008–Aug. 2009 (Buccheri et al., 2013, p. 012806-1). |  |
