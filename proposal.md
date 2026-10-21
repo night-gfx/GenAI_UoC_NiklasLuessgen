@@ -86,7 +86,7 @@ The analysis uses data from the **Kenneth French Data Library**:
 
   **Interpretation:** Positive (negative) values indicate positive (negative) remaining linear co-movement; zero indicates no remaining linear correlation. This does not establish causality.
 
-*Source: Gallup (2019), p. 602.*
+*Source: Kenett et al. (2014), p. 4.*
 
 ## 4. Identification and Specification
 
@@ -98,7 +98,7 @@ The study uses an empirical analysis to examine utilities’ market sensitivity 
 
 All estimates use the same aligned weekly observations within the full sample and each predefined comparison period.
 
-- **Market Beta Estimation:** Estimate separate OLS regressions with intercepts for utilities and technology:
+- **Market Beta Estimation:** Estimate separate OLS regressions with intercepts for utilities and technology (Newey–West standard errors with four lags for all regressions):
 
   $$R^e_{U,t} = \alpha_U + \beta_U R^e_{M,t} + \varepsilon_{U,t}, \qquad R^e_{T,t} = \alpha_T + \beta_T R^e_{M,t} + \varepsilon_{T,t}$$
 
@@ -108,12 +108,6 @@ All estimates use the same aligned weekly observations within the full sample an
 
 *Source: Black, Jensen and Scholes (1972), p. 7, Eq. (6), adapted to weekly sector excess returns.*
 
-- **Robust Standard Errors:** All regression standard errors ($\operatorname{SE}$) are Newey–West standard errors with a lag length of four weeks; point estimates remain the OLS estimates.
-
-  **Interpretation:** Unlike conventional OLS standard errors, they remain valid when return volatility changes over time or returns are serially correlated.
-
-*Source: Newey and West (1987).*
-
 - **Partial Correlation Estimation:** Calculate residuals from the two regressions above and then their Pearson correlation:
 
   $$\hat{\varepsilon}_{U,t} = R^e_{U,t} - \hat{\alpha}_U - \hat{\beta}_U R^e_{M,t}, \qquad \hat{\varepsilon}_{T,t} = R^e_{T,t} - \hat{\alpha}_T - \hat{\beta}_T R^e_{M,t}$$
@@ -122,7 +116,7 @@ All estimates use the same aligned weekly observations within the full sample an
 
   **Interpretation:** The estimate measures period-specific utilities–technology co-movement after removing their linear market association.
 
-*Source: Gallup (2019), p. 602 (residual correlation), p. 606 (separate residual regressions), applied to sector excess returns with market excess returns and an intercept as controls.*
+*Source: Kenett et al. (2014), p. 4 (both series regressed on the market index; Pearson correlation of the residuals; Eq. (3)), applied to sector excess returns with market excess returns and an intercept as controls.*
 
 - **H1 Test (Beta Against One):** One-sided t-tests of the full-sample OLS betas against one:
 
@@ -147,8 +141,6 @@ All estimates use the same aligned weekly observations within the full sample an
   $\ln$ denotes the natural logarithm; $N_k$ is the number of weekly observations in period $k$. The subtracted 4 accounts for the controlled market variable. $H_3$ is supported for a significantly positive $Z$ (one-sided, standard normal).
 
   **Interpretation:** $Z > 0$ indicates stronger market-adjusted utility–technology co-movement during the AI boom than before it. (Limitation: The test assumes independent, approximately normal observations; fat-tailed weekly returns may make it less accurate.)
-
-*Sources: Fisher (1921), p. 7 (z-transformation), p. 14 (weight n − 3 for a simple correlation); Fisher (1924) (weight n − 3 − k for a partial correlation with k controls, here k = 1, giving n − 4).*
 
 **Regression Table: Market Betas**
 
