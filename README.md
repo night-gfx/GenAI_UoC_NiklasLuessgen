@@ -6,10 +6,6 @@ Has the defensive role of U.S. utility stocks changed during the AI boom? The pr
 
 Kenneth French Data Library, daily: 12 industry portfolios (`Utils`, `BusEq`) and Fama–French factors (`Mkt-RF`, `RF`). Details: [data/README.md](data/README.md).
 
-## Method
-
-Weekly excess returns (Monday–Friday, labeled by Friday) from 1 January 1990 to 28 August 2026, full sample and eight predefined comparison periods. Per period: OLS market betas with Newey–West standard errors (test of β = 1) and partial correlations from regression residuals. Hypothesis tests: betas against one (H1), AI-boom beta difference via a dummy-interaction regression (H2), and partial-correlation difference via a Fisher z-test (H3).
-
 ## Reproduce Workflow
 
 - **Start:** Invoke `$research-task-workflow` in Codex.
