@@ -201,6 +201,9 @@ literature/pdf/
 # Generated script results in output/ are not version controlled
 /output/
 
+# Human tests are version controlled; retain a placeholder while empty
+!/tests/.gitkeep
+
 # Credentials
 .env.*
 !.env.example
