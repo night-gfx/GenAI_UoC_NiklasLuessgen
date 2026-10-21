@@ -14,7 +14,7 @@
 
 | Paper | PDF | LLM Findings | Human Review |
 | --- | --- | --- | --- |
-| **González, Jareño & Skinner (2016)**: *Interest and Inflation Risk: Investor Behavior* | [Gonzalez_Jareno_Skinner_2016_Interest_and_Inflation_Risk.pdf](<pdf/Gonzalez_Jareno_Skinner_2016_Interest_and_Inflation_Risk.pdf>) | • Market beta of Tech / Utilities is 1.385 / 0.467 overall, 1.239 / 0.571 in contractions, and 1.473 / 0.379 in expansions (González et al., 2016, p. 7, Table 4, Model 1). | ✅ Verified |
+| **González, M. O., Jareño, F., & Skinner, F. S. (2016).** Interest and inflation risk: Investor behavior. *Frontiers in Psychology, 7*, Article 390. <https://doi.org/10.3389/fpsyg.2016.00390> | [Gonzalez_Jareno_Skinner_2016_Interest_and_Inflation_Risk.pdf](<pdf/Gonzalez_Jareno_Skinner_2016_Interest_and_Inflation_Risk.pdf>) | • Market beta of Tech / Utilities is 1.385 / 0.467 overall, 1.239 / 0.571 in contractions, and 1.473 / 0.379 in expansions (González et al., 2016, p. 7, Table 4, Model 1). | ✅ Verified |
 |  |  | • Monthly return volatility of Tech / Utilities is 7.5% / 4.4% (González et al., 2016, p. 6, Table 3). |  |
 |  |  | • Minimum monthly return of Tech / Utilities is −32.8% / −15.1% (González et al., 2016, p. 6, Table 3). |  |
 |  |  | **Extra:** |  |
@@ -28,7 +28,7 @@
 |  |  | ▪ 55 contraction / 237 expansion months (González et al., 2016, p. 5, Table 2). |  |
 |  |  | ▪ Last contraction includes recovery (González et al., 2016, p. 5, Table 2). |  |
 |  |  | ▪ No direct tests of phase-beta/volatility differences or isolated financial-crisis estimate in Tables 3–4 (González et al., 2016, pp. 6–7). |  |
-| **Bernanke & Kuttner (2003)**: *What Explains the Stock Market’s Reaction to Federal Reserve Policy?* | [Bernanke_Kuttner_2003_Stock_Market_Reaction_to_Federal_Reserve_Policy_Working_Paper.pdf](<pdf/Bernanke_Kuttner_2003_Stock_Market_Reaction_to_Federal_Reserve_Policy_Working_Paper.pdf>) | • Market beta of Tech / Utilities is 1.61 / 0.32 (Bernanke & Kuttner, 2003, p. 30, Table 8; PDF p. 32). | ✅ Verified |
+| **Bernanke, B. S., & Kuttner, K. N. (2003).** *What explains the stock market’s reaction to Federal Reserve policy?* (Staff Report No. 174). Federal Reserve Bank of New York. | [Bernanke_Kuttner_2003_Stock_Market_Reaction_to_Federal_Reserve_Policy_Working_Paper.pdf](<pdf/Bernanke_Kuttner_2003_Stock_Market_Reaction_to_Federal_Reserve_Policy_Working_Paper.pdf>) | • Market beta of Tech / Utilities is 1.61 / 0.32 (Bernanke & Kuttner, 2003, p. 30, Table 8; PDF p. 32). | ✅ Verified |
 |  |  | • Return response to a 1-pp unexpected Fed rate increase of Tech / Utilities is −14.73 / −5.42 pp (Bernanke & Kuttner, 2003, p. 30, Table 8; PDF p. 32). |  |
 |  |  | **Extra:** |  |
 |  |  | ▪ Beta significance not reported (Bernanke & Kuttner, 2003, p. 30, Table 8; PDF p. 32). |  |
@@ -41,7 +41,7 @@
 |  |  | ▪ Utilities not significant at 10% (Bernanke & Kuttner, 2003, pp. 30–31; PDF pp. 32–33). |  |
 |  |  | ▪ Rate sensitivity is distinct from market beta (Bernanke & Kuttner, 2003, pp. 30–31; PDF pp. 32–33). |  |
 |  |  | ▪ Table 8 has no phase-specific estimates or unconditional volatility (Bernanke & Kuttner, 2003, p. 30; PDF p. 32). |  |
-| **Baele & Londono (2013)**: *Understanding Industry Betas* | [Baele_Londono_2013_Understanding_Industry_Betas.pdf](<pdf/Baele_Londono_2013_Understanding_Industry_Betas.pdf>) | • Unconditional market beta of Tech / Utilities is 1.31 / 0.59, highest / lowest among 30 industries (Baele & Londono, 2013, p. 33, Table 1; PDF p. 4). | ✅ Verified |
+| **Baele, L., & Londono, J. M. (2013).** Understanding industry betas. *Journal of Empirical Finance, 22*, 30–51. <https://doi.org/10.1016/j.jempfin.2013.02.003> | [Baele_Londono_2013_Understanding_Industry_Betas.pdf](<pdf/Baele_Londono_2013_Understanding_Industry_Betas.pdf>) | • Unconditional market beta of Tech / Utilities is 1.31 / 0.59, highest / lowest among 30 industries (Baele & Londono, 2013, p. 33, Table 1; PDF p. 4). | ✅ Verified |
 |  |  | • Annualized daily excess-return volatility of Tech / Utilities is 29.19% / 15.66% (Baele & Londono, 2013, p. 33, Table 1; PDF p. 4). |  |
 |  |  | • NBER recession effect on kernel market beta of Tech / Utilities is −0.07 / +0.02 (Baele & Londono, 2013, p. 43, Table 9A; PDF p. 14). |  |
 |  |  | **Extra:** |  |
@@ -61,7 +61,7 @@
 
 | Paper | PDF | LLM Findings | Human Review |
 | --- | --- | --- | --- |
-| **Buccheri, Marmi & Mantegna (2013)**: *Evolution of correlation structure of industrial indices of U.S. equity markets* | [Buccheri_Marmi_Mantegna_2013_Evolution_of_Correlation_Structure.pdf](<pdf/Buccheri_Marmi_Mantegna_2013_Evolution_of_Correlation_Structure.pdf>) | • Pairwise Tech–Utilities correlation values are not reported; only network and eigenvalue analyses (Buccheri et al., 2013, pp. 2–6). |  |
+| **Buccheri, G., Marmi, S., & Mantegna, R. N. (2013).** Evolution of correlation structure of industrial indices of U.S. equity markets. *Physical Review E, 88*(1), Article 012806. <https://doi.org/10.1103/PhysRevE.88.012806> | [Buccheri_Marmi_Mantegna_2013_Evolution_of_Correlation_Structure.pdf](<pdf/Buccheri_Marmi_Mantegna_2013_Evolution_of_Correlation_Structure.pdf>) | • Pairwise Tech–Utilities correlation values are not reported; only network and eigenvalue analyses (Buccheri et al., 2013, pp. 2–6). |  |
 |  |  | • Cluster membership of Tech / Utilities is C4 (Hardw, Softw, Chips, LabEq, Other) / C1 (financial, business services, construction, wholesale, utilities) [PMFG, full-sample daily correlations] (Buccheri et al., 2013, pp. 012806-2–012806-3, Figs. 2–4). | ✏️ Corrected: • Cluster membership of Tech / Utilities is C4 (Hardw, Softw, Chips, LabEq, Other) / C1 (financial, business services, construction, wholesale, utilities) [PMFG, full-sample daily correlations] (Buccheri et al., 2013, **pp. 2–3**, Figs. 2–4). |
 |  |  | • Dot-com period (Mar. 1999–Apr. 2001): second eigenvector loads strongly positive on the C4 tech industries, while most others are near zero or negative; tech correlations decouple from the rest (Buccheri et al., 2013, p. 6, Fig. 10). |  |
 |  |  | • Variance explained by the first eigenvalue is ≈31% in the dot-com period and ≈70% in 2008–09; the second explains up to ≈16% (Buccheri et al., 2013, p. 6). |  |
@@ -81,7 +81,7 @@
 
 | Paper | PDF | LLM Findings | Human Review |
 | --- | --- | --- | --- |
-| **Black, Jensen & Scholes (1972)**: *The Capital Asset Pricing Model: Some Empirical Tests* | [Black_Jensen_Scholes_1972_CAPM_Some_Empirical_Tests.pdf](<pdf/Black_Jensen_Scholes_1972_CAPM_Some_Empirical_Tests.pdf>) | • Excess return is the holding-period return (P_t − P_t−1 + D_t) / P_t−1 minus the riskless rate r_Ft; market beta is β_j = cov(R_j, R_M) / σ²(R_M) of excess returns (Black, Jensen & Scholes, 1972, p. 2, Eq. 1; PDF p. 4). | ✅ Verified |
+| **Black, F., Jensen, M. C., & Scholes, M. (1972).** The capital asset pricing model: Some empirical tests. In M. C. Jensen (Ed.), *Studies in the theory of capital markets*. Praeger. <https://papers.ssrn.com/abstract=908569> | [Black_Jensen_Scholes_1972_CAPM_Some_Empirical_Tests.pdf](<pdf/Black_Jensen_Scholes_1972_CAPM_Some_Empirical_Tests.pdf>) | • Excess return is the holding-period return (P_t − P_t−1 + D_t) / P_t−1 minus the riskless rate r_Ft; market beta is β_j = cov(R_j, R_M) / σ²(R_M) of excess returns (Black, Jensen & Scholes, 1972, p. 2, Eq. 1; PDF p. 4). | ✅ Verified |
 |  |  | • Time-series test: the market model (Eq. 3) plus an intercept gives the regression R_jt = α_j + β_j R_Mt + e_jt on excess returns; the traditional CAPM implies α_j = 0 (Black, Jensen & Scholes, 1972, pp. 6–7, Eqs. 3, 6; PDF pp. 8–9). | ✅ Verified |
 |  |  | • Grouping: Eq. 6 is estimated on portfolios instead of single securities, so the intercept's standard error reflects cross-sectional dependence of residuals (Black, Jensen & Scholes, 1972, pp. 8–9; PDF pp. 10–11). |  |
 |  |  | • Ranking: each January 1931–1965, NYSE securities with ≥ 24 monthly returns are ranked by β from the preceding five years and sorted into ten portfolios; portfolio returns are computed for the next 12 months, avoiding selection bias in β (Black, Jensen & Scholes, 1972, pp. 9, 11–12; PDF pp. 11, 13–14). |  |
@@ -101,7 +101,7 @@
 
 | Paper | PDF | LLM Findings | Human Review |
 | --- | --- | --- | --- |
-| **Kenett, Huang, Vodenska, Havlin & Stanley (2014)**: *Partial correlation analysis: Applications for financial markets* | [Kenett_et_al_2014_Partial_Correlation_Analysis_Preprint.pdf](<pdf/Kenett_et_al_2014_Partial_Correlation_Analysis_Preprint.pdf>) | • Partial correlation ρ(X, Y : M) is the Pearson correlation of the residuals of X and Y after both are regressed on the market index M; it removes the common driving factors represented by the index (Kenett et al., 2014, p. 4). | ✅ Verified |
+| **Kenett, D. Y., Huang, X., Vodenska, I., Havlin, S., & Stanley, H. E. (2014).** *Partial correlation analysis: Applications for financial markets* (arXiv:1402.1405v1) [Preprint]. arXiv. <https://arxiv.org/abs/1402.1405> | [Kenett_et_al_2014_Partial_Correlation_Analysis_Preprint.pdf](<pdf/Kenett_et_al_2014_Partial_Correlation_Analysis_Preprint.pdf>) | • Partial correlation ρ(X, Y : M) is the Pearson correlation of the residuals of X and Y after both are regressed on the market index M; it removes the common driving factors represented by the index (Kenett et al., 2014, p. 4). | ✅ Verified |
 |  |  | • Equivalent formula from raw correlations: ρ(X, Y : M) = [ρ(X, Y) − ρ(X, M)ρ(Y, M)] / √([1 − ρ²(X, M)][1 − ρ²(Y, M)]) (Kenett et al., 2014, p. 4, Eq. 3). |  |
 |  |  | • Raw correlation is the Pearson correlation of daily log returns r_i(t) = log[P_i(t)/P_i(t − 1)] (Kenett et al., 2014, p. 4, Eqs. 1–2). |  |
 |  |  | • Conditioning on the S&P 500 lowers the correlation of every stock pair; the index influence on pairwise correlations is always positive (Kenett et al., 2014, pp. 4–5, Fig. 1a). |  |
@@ -122,5 +122,5 @@
 
 | Paper | PDF | LLM Findings | Human Review |
 | --- | --- | --- | --- |
-| **Valadkhani (2025)**: *Inflation-driven instability in US sectoral betas* | [Valadkhani_2025_Inflation_Driven_Instability_in_US_Sectoral_Betas.pdf](<pdf/Valadkhani_2025_Inflation_Driven_Instability_in_US_Sectoral_Betas.pdf>) |  |  |
-| **Ramesh, Low & Faff (2025)**: *Modelling time-varying volatility spillovers across crises: Evidence from major commodity futures and the US stock market* | [Ramesh_Low_Faff_2025_Time_Varying_Volatility_Spillovers_Across_Crises.pdf](<pdf/Ramesh_Low_Faff_2025_Time_Varying_Volatility_Spillovers_Across_Crises.pdf>) |  |  |
+| **Valadkhani, A. (2025).** Inflation-driven instability in US sectoral betas. *Journal of Asset Management, 26*, 506–513. <https://doi.org/10.1057/s41260-025-00413-3> | [Valadkhani_2025_Inflation_Driven_Instability_in_US_Sectoral_Betas.pdf](<pdf/Valadkhani_2025_Inflation_Driven_Instability_in_US_Sectoral_Betas.pdf>) |  |  |
+| **Ramesh, S., Low, R. K. Y., & Faff, R. (2025).** Modelling time-varying volatility spillovers across crises: Evidence from major commodity futures and the US stock market. *Energy Economics, 143*, Article 108225. <https://doi.org/10.1016/j.eneco.2025.108225> | [Ramesh_Low_Faff_2025_Time_Varying_Volatility_Spillovers_Across_Crises.pdf](<pdf/Ramesh_Low_Faff_2025_Time_Varying_Volatility_Spillovers_Across_Crises.pdf>) |  |  |
