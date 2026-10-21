@@ -10,13 +10,6 @@ Kenneth French Data Library, daily: 12 industry portfolios (`Utils`, `BusEq`) an
 
 Weekly excess returns (Monday–Friday, labeled by Friday) from 1 January 1990 to 28 August 2026, full sample and eight predefined comparison periods. Per period: OLS market betas with Newey–West standard errors (test of β = 1) and partial correlations from regression residuals. Hypothesis tests: betas against one (H1), AI-boom beta difference via a dummy-interaction regression (H2), and partial-correlation difference via a Fisher z-test (H3).
 
-## Setup
-
-```bash
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-```
-
 ## Reproduce Workflow
 
 - **Start:** Invoke `$research-task-workflow` in Codex.
@@ -25,6 +18,11 @@ python3 -m venv .venv
 - **Approval:** The researcher reviews the code and independently tests inputs and outputs before merging. After approval, Codex marks the task `Completed`; invoke the skill again for the next task.
 
 ## Execution of Scripts
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+```
 
 Run in order; results are written to `output/`.
 
@@ -38,17 +36,6 @@ Run in order; results are written to `output/`.
 ```bash
 .venv/bin/python -B code/prepare_returns.py
 ```
-
-## Structure
-
-| Path | Content |
-| --- | --- |
-| `code/` | Analysis scripts |
-| `data/` | Raw data (read-only) |
-| `output/` | Generated tables (not tracked by Git) |
-| `tasks/` | Agent task specifications and status ([tasks/README.md](tasks/README.md)) |
-| `logs/` | Task execution logs |
-| `literature/` | Literature matrix and PDFs |
 
 ## AI Use Statement
 
